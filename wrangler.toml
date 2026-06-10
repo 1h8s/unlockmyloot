@@ -1,0 +1,15 @@
+# Конфиг воркера-счётчика UnlockMyLoot.
+# Cloudflare Workers Builds деплоит его сам при каждом пуше в main.
+name = "unlockmyloot"
+main = "counter-worker.js"
+compatibility_date = "2026-06-01"
+
+# API-домен счётчика (создаётся автоматически при деплое)
+routes = [
+  { pattern = "api.unlockmyloot.com", custom_domain = true }
+]
+
+# Хранилище счётчика
+[[kv_namespaces]]
+binding = "COUNTER"
+id = "4d93f48984724c4d87a1158e99257356"
