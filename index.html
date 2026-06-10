@@ -207,6 +207,16 @@
   .cta svg{transition:transform .3s var(--ease);}
   .cta:hover svg{transform:translateY(2px);}
 
+  /* счётчик взломанных замков */
+  .lockstat{
+    display:none;margin-top:26px;
+    font-family:var(--mono);font-size:13.5px;color:var(--ink-3);
+    align-items:center;gap:10px;letter-spacing:.02em;
+  }
+  .lockstat.on{display:flex;animation:rise .8s var(--ease) backwards;}
+  .lockstat b{color:var(--accent-ink);font-weight:600;font-size:15px;}
+  .lockstat svg{flex:none;color:var(--accent);}
+
   /* появление каскадом */
   .rise{opacity:0;transform:translateY(16px);
     animation:rise .9s var(--ease) forwards;animation-delay:calc(var(--d,0)*120ms);}
@@ -527,6 +537,10 @@
         Начать взлом
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M2 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+      <div class="lockstat" id="lockstat">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M13.5 9V6.2a3.5 3.5 0 0 0-6.55-1.72" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="4" y="9" width="12" height="8.4" rx="2.4" stroke="currentColor" stroke-width="1.7"/><circle cx="10" cy="12.7" r="1.1" fill="currentColor"/></svg>
+        <span><b id="lockstatN">0</b> <span id="lockstatW">замков уже взломано</span></span>
+      </div>
     </section>
   </div>
 </div>
@@ -1016,6 +1030,8 @@ function solveNow() {
       return;
     }
 
+    counterBump();
+
     var groups = groupSteps(seq);
     var html =
       '<div class="sol-head"><span class="sol-title">Решение</span>' +
@@ -1092,6 +1108,51 @@ document.getElementById('shareBtn').onclick = function () {
     .then(function () { toast('Ссылка на замок скопирована'); })
     .catch(function () { prompt('Скопируй ссылку:', url); });
 };
+/* ---------- счётчик взломанных замков ---------- */
+var COUNTER_API = 'https://api.unlockmyloot.com';
+var lastCounted = 0;
+
+function pluralRu(n, one, few, many) {
+  var m = n % 10, h = n % 100;
+  if (h >= 11 && h <= 14) return many;
+  if (m === 1) return one;
+  if (m >= 2 && m <= 4) return few;
+  return many;
+}
+function fmtNum(n) {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+function showCounter(n) {
+  var box = document.getElementById('lockstat');
+  var num = document.getElementById('lockstatN');
+  var w = document.getElementById('lockstatW');
+  box.classList.add('on');
+  w.textContent = pluralRu(n, 'замок уже взломан', 'замка уже взломано', 'замков уже взломано');
+  var from = parseInt(num.dataset.v || '0', 10), t0 = performance.now();
+  function tick(t) {
+    var p = Math.min(1, (t - t0) / 900);
+    p = 1 - Math.pow(1 - p, 3);
+    num.textContent = fmtNum(Math.round(from + (n - from) * p));
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  num.dataset.v = n;
+}
+function counterLoad() {
+  fetch(COUNTER_API + '/count').then(function (r) { return r.json(); })
+    .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
+    .catch(function () {});
+}
+function counterBump() {
+  var now = Date.now();
+  if (now - lastCounted < 8000) return;
+  lastCounted = now;
+  fetch(COUNTER_API + '/opened', { method: 'POST' }).then(function (r) { return r.json(); })
+    .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
+    .catch(function () {});
+}
+try { counterLoad(); } catch (e) {}
+
 init(6);
 if (location.hash.length > 1) decodeConfig(decodeURIComponent(location.hash.slice(1)));
 </script>
