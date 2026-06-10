@@ -621,6 +621,7 @@
           <summary>Что значит «влево» и «вправо»</summary>
           <div class="body">
             <p>Все направления на сайте — это движение <b>штифта</b> (блестящего пина), а не нажатие кнопки. «Влево» = позиция штифта уменьшается на 1, например 5 &rarr; 4. В игре нажми ту стрелку, от которой штифт уходит в нужную сторону.</p>
+            <p>Если в твоей игре кнопки двигают штифт наоборот — включи переключатель <b>«инвертировать ВЛЕВО/ВПРАВО»</b> в блоке решения, и подписи шагов поменяются местами. Выбор запоминается.</p>
             <p>После каждого шага показано, где должны оказаться все штифты. Если картинка разошлась с игрой — где-то неверно записана связь: вернись к шагу 03 и перепроверь эту плитку.</p>
           </div>
         </details>
@@ -1032,36 +1033,67 @@ function solveNow() {
 
     counterBump();
 
-    var groups = groupSteps(seq);
-    var html =
-      '<div class="sol-head"><span class="sol-title">Решение</span>' +
-      '<span class="sol-meta"><b>' + seq.length + '</b> ходов &middot; ' + groups.length +
-      ' действий &middot; ' + dt + ' мс &middot; без ударов о стену</span></div>' +
-      '<label class="pvtoggle"><input type="checkbox" id="pvToggle" checked> позиции штифтов после каждого шага</label>' +
-      '<div class="steps">';
-
-    for (var g = 0; g < groups.length; g++) {
-      var gr = groups[g];
-      var chip = gr.d === -1
-        ? '<span class="dirchip L">&larr; ВЛЕВО</span>'
-        : '<span class="dirchip R">ВПРАВО &rarr;</span>';
-      var after = check.states[gr.endIdx + 1];
-      html += '<div class="step" style="--i:' + g + '" onclick="this.classList.toggle(\'done\')">' +
-        '<div class="stephead"><span class="stepnum">' + String(g + 1).padStart(2, '0') + '</span>' +
-        '<span class="stepmove">Плитка <b>' + (gr.plate + 1) + '</b> ' + chip +
-        (gr.count > 1 ? ' <span class="mult">&times;' + gr.count + '</span>' : '') +
-        '</span></div>' +
-        '<div class="steppv">' + miniTracks(after) + '</div>' +
-        '</div>';
-    }
-    html += '</div><div class="msg ok">После последнего шага все штифты встанут в центр — замок откроется. ' +
-      'Решение проверено симуляцией перед выводом. Кликай по шагам, чтобы отмечать выполненные.</div>';
-    body.innerHTML = html;
-    document.getElementById('pvToggle').onchange = function () {
-      var pvs = document.querySelectorAll('.steppv');
-      for (var k = 0; k < pvs.length; k++) pvs[k].style.display = this.checked ? '' : 'none';
-    };
+    SOL = { seq: seq, check: check, dt: dt };
+    renderSolution(true);
   }, 350);
+}
+
+/* отрисовка решения; INVERT меняет подписи направлений местами,
+   если в игре кнопки двигают штифт наоборот */
+var SOL = null;
+var INVERT = false;
+var PV_ON = true;
+try { INVERT = localStorage.getItem('uml-invert') === '1'; } catch (e) {}
+
+function dirChipHtml(d) {
+  var shown = INVERT ? -d : d;
+  return shown === -1
+    ? '<span class="dirchip L">&larr; ВЛЕВО</span>'
+    : '<span class="dirchip R">ВПРАВО &rarr;</span>';
+}
+
+function renderSolution(fresh) {
+  if (!SOL) return;
+  var body = document.getElementById('solbody');
+  var seq = SOL.seq, check = SOL.check, dt = SOL.dt;
+  var doneMap = {};
+  if (!fresh) {
+    var olds = document.querySelectorAll('.step.done');
+    for (var k0 = 0; k0 < olds.length; k0++) doneMap[olds[k0].getAttribute('data-g')] = true;
+  }
+  var groups = groupSteps(seq);
+  var html =
+    '<div class="sol-head"><span class="sol-title">Решение</span>' +
+    '<span class="sol-meta"><b>' + seq.length + '</b> ходов &middot; ' + groups.length +
+    ' действий &middot; ' + dt + ' мс &middot; без ударов о стену</span></div>' +
+    '<label class="pvtoggle"><input type="checkbox" id="pvToggle"' + (PV_ON ? ' checked' : '') + '> позиции штифтов после каждого шага</label>' +
+    '<label class="pvtoggle"><input type="checkbox" id="invToggle"' + (INVERT ? ' checked' : '') + '> инвертировать ВЛЕВО/ВПРАВО — если в игре штифт едет не туда, куда написано</label>' +
+    '<div class="steps">';
+
+  for (var g = 0; g < groups.length; g++) {
+    var gr = groups[g];
+    var after = check.states[gr.endIdx + 1];
+    html += '<div class="step' + (doneMap[g] ? ' done' : '') + '" data-g="' + g + '" style="--i:' + (fresh ? g : 0) + '" onclick="this.classList.toggle(\'done\')">' +
+      '<div class="stephead"><span class="stepnum">' + String(g + 1).padStart(2, '0') + '</span>' +
+      '<span class="stepmove">Плитка <b>' + (gr.plate + 1) + '</b> ' + dirChipHtml(gr.d) +
+      (gr.count > 1 ? ' <span class="mult">&times;' + gr.count + '</span>' : '') +
+      '</span></div>' +
+      '<div class="steppv"' + (PV_ON ? '' : ' style="display:none"') + '>' + miniTracks(after) + '</div>' +
+      '</div>';
+  }
+  html += '</div><div class="msg ok">После последнего шага все штифты встанут в центр — замок откроется. ' +
+    'Решение проверено симуляцией перед выводом. Кликай по шагам, чтобы отмечать выполненные.</div>';
+  body.innerHTML = html;
+  document.getElementById('pvToggle').onchange = function () {
+    PV_ON = this.checked;
+    var pvs = document.querySelectorAll('.steppv');
+    for (var k = 0; k < pvs.length; k++) pvs[k].style.display = this.checked ? '' : 'none';
+  };
+  document.getElementById('invToggle').onchange = function () {
+    INVERT = this.checked;
+    try { localStorage.setItem('uml-invert', INVERT ? '1' : '0'); } catch (e) {}
+    renderSolution(false);
+  };
 }
 
 /* ---------- ссылки / пресеты / сброс ---------- */
