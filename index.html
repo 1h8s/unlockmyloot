@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnlockMyLoot — решатель замков Gothic 1 Remake</title>
+<meta name="description" content="Введи позиции штифтов и зависимости плиток — получи кратчайшую безопасную последовательность ходов, которая никогда не сломает отмычку. Gothic 1 Remake.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://unlockmyloot.com/">
+<meta property="og:site_name" content="UnlockMyLoot">
+<meta property="og:title" content="UnlockMyLoot — решатель замков Gothic 1 Remake">
+<meta property="og:description" content="Кратчайшая последовательность ходов для любого замка. Ни одного движения в стену — ноль сломанных отмычек.">
+<meta property="og:image" content="https://unlockmyloot.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UnlockMyLoot — решатель замков Gothic 1 Remake">
+<meta name="twitter:description" content="Кратчайшая последовательность ходов для любого замка. Ни одного движения в стену — ноль сломанных отмычек.">
+<meta name="twitter:image" content="https://unlockmyloot.com/og.png">
+<script>
+  (function(){
+    var t = null;
+    try { t = localStorage.getItem('uml-theme'); } catch(e) {}
+    document.documentElement.dataset.theme = (t === 'light' || t === 'dark') ? t : 'dark';
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8f9;
+    --surface:#ffffff;
+    --ink:#1c2024;
+    --ink-2:#5b636b;
+    --ink-3:#9aa3ab;
+    --line:#e4e7ea;
+    --line-2:#d3d8dc;
+    --accent:#0e8a6a;
+    --accent-ink:#0b6b53;
+    --accent-soft:#e3f2ec;
+    --accent-border:#bcdfd2;
+    --danger:#b3564a;
+    --danger-soft:#f6e9e6;
+    --danger-border:#e6cdc8;
+    --danger-text:#8c4338;
+    --pos:#0e8a6a;
+    --pos-ink:#0b6b53;
+    --pos-soft:#e3f2ec;
+    --pos-border:#bcdfd2;
+    --pos-glow:0 8px 18px -8px rgba(14,138,106,.5);
+    --on-ink:#ffffff;
+    --on-accent:#ffffff;
+    --skel-mid:#eef1f3;
+    --panel-shadow:0 30px 60px -40px rgba(28,32,36,.18);
+    --card-shadow:0 24px 48px -28px rgba(28,32,36,.14);
+    --ink-shadow:0 10px 22px -12px rgba(28,32,36,.5);
+    --pin-shadow:0 8px 18px -8px rgba(28,32,36,.45);
+    --pin-shadow-goal:0 8px 18px -8px rgba(14,138,106,.55);
+    --pin-shadow-danger:0 8px 18px -8px rgba(179,86,74,.5);
+    --cta-glow:0 14px 30px -14px rgba(14,138,106,.45);
+    --cta-glow-hover:0 20px 36px -14px rgba(14,138,106,.5);
+    --toast-shadow:0 20px 40px -16px rgba(28,32,36,.45);
+    --bgpin:#39414a;
+    --bgpin-glow:none;
+    --bgline:rgba(28,32,36,.10);
+    --bgcenter:rgba(14,138,106,.35);
+    --hero-glow:transparent;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  [data-theme="dark"]{
+    --bg:#101214;
+    --surface:#17191d;
+    --ink:#e7eaec;
+    --ink-2:#9ba3ab;
+    --ink-3:#5f6770;
+    --line:#24272c;
+    --line-2:#32373d;
+    --accent:#34a883;
+    --accent-ink:#62c7a4;
+    --accent-soft:#16241f;
+    --accent-border:#2a4a3d;
+    --danger:#cf7f6e;
+    --danger-soft:#2c1d19;
+    --danger-border:#4a2c24;
+    --danger-text:#e0a293;
+    --pos:#34a883;
+    --pos-ink:#62c7a4;
+    --pos-soft:#16241f;
+    --pos-border:#2a4a3d;
+    --pos-glow:0 0 14px rgba(52,168,131,.35),0 6px 16px -6px rgba(0,0,0,.6);
+    --on-ink:#121416;
+    --on-accent:#0a1712;
+    --skel-mid:#1f2227;
+    --panel-shadow:0 30px 60px -40px rgba(0,0,0,.7);
+    --card-shadow:0 24px 48px -28px rgba(0,0,0,.6);
+    --ink-shadow:0 10px 22px -12px rgba(0,0,0,.7);
+    --pin-shadow:0 6px 16px -6px rgba(0,0,0,.65);
+    --pin-shadow-goal:0 0 14px rgba(52,168,131,.45),0 6px 16px -6px rgba(0,0,0,.6);
+    --pin-shadow-danger:0 0 14px rgba(207,127,110,.4),0 6px 16px -6px rgba(0,0,0,.6);
+    --cta-glow:0 0 26px -2px rgba(52,168,131,.3),0 14px 30px -14px rgba(0,0,0,.65);
+    --cta-glow-hover:0 0 34px 0 rgba(52,168,131,.42),0 18px 34px -14px rgba(0,0,0,.7);
+    --toast-shadow:0 0 24px -4px rgba(52,168,131,.25),0 20px 40px -16px rgba(0,0,0,.7);
+    --bgpin:#3db48d;
+    --bgpin-glow:0 0 10px rgba(61,180,141,.6),0 0 26px rgba(61,180,141,.28);
+    --bgline:rgba(231,234,236,.07);
+    --bgcenter:rgba(61,180,141,.4);
+    --hero-glow:radial-gradient(ellipse 60% 55% at 24% 38%,rgba(52,168,131,.11),transparent 70%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Outfit',system-ui,sans-serif;
+    line-height:1.55;font-size:16px;
+    -webkit-font-smoothing:antialiased;
+    transition:background .45s var(--ease),color .45s var(--ease);
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  ::selection{background:var(--accent-soft);}
+
+  /* ---------- header ---------- */
+  .topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 0;position:relative;z-index:2;
+  }
+  .wordmark{font-weight:700;letter-spacing:-.02em;font-size:18px;display:flex;align-items:center;gap:10px;}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);
+    box-shadow:var(--bgpin-glow);
+    animation:breathe 2.6s var(--ease) infinite;}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.72);opacity:.55}}
+  .topnav{display:flex;align-items:center;gap:18px;}
+  .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;}
+  .topnav a:hover{color:var(--ink);}
+  .themebtn{
+    width:42px;height:42px;border-radius:12px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s var(--ease);
+  }
+  .themebtn:hover{border-color:var(--ink-3);color:var(--ink);transform:translateY(-2px);}
+  .themebtn:active{transform:scale(.93);}
+  .themebtn .ic-sun{display:none;}
+  .themebtn .ic-moon{display:block;}
+  [data-theme="dark"] .themebtn .ic-sun{display:block;}
+  [data-theme="dark"] .themebtn .ic-moon{display:none;}
+
+  /* ---------- hero с фоновой анимацией штифтов ---------- */
+  .herozone{position:relative;overflow:hidden;}
+  .herozone::before{
+    content:"";position:absolute;inset:-90px 0 0 0;pointer-events:none;
+    background:var(--hero-glow);z-index:0;
+    transition:opacity .45s;
+  }
+  .hero{
+    position:relative;z-index:1;
+    padding:84px 0 120px;
+    max-width:640px;
+  }
+  .herobg{
+    position:absolute;inset:0;
+    overflow:hidden;pointer-events:none;z-index:0;
+    -webkit-mask-image:radial-gradient(ellipse 48% 52% at 28% 52%,transparent 0 44%,rgba(0,0,0,.3) 62%,rgba(0,0,0,.7) 80%,#000 100%);
+    mask-image:radial-gradient(ellipse 48% 52% at 28% 52%,transparent 0 44%,rgba(0,0,0,.3) 62%,rgba(0,0,0,.7) 80%,#000 100%);
+  }
+  .herobg .centerline{
+    position:absolute;top:6%;bottom:6%;left:68vw;width:1px;
+    background:linear-gradient(180deg,transparent,var(--bgcenter) 20%,var(--bgcenter) 80%,transparent);
+  }
+  .bgtrack{position:absolute;left:0;right:0;height:1px;background:var(--bgline);}
+  .bgpin{
+    position:absolute;top:50%;left:0;
+    width:9px;height:9px;border-radius:50%;
+    background:var(--bgpin);box-shadow:var(--bgpin-glow);
+    animation:glide var(--dur) var(--ease) infinite;
+    animation-delay:var(--del);
+    will-change:transform;
+  }
+  @keyframes glide{
+    0%   {transform:translate3d(var(--x0),-50%,0);opacity:0;}
+    10%  {opacity:var(--op);}
+    42%,68%{transform:translate3d(calc(68vw - 50%),-50%,0);opacity:var(--op);}
+    90%  {opacity:var(--op);}
+    100% {transform:translate3d(var(--x0),-50%,0);opacity:0;}
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent-ink);margin-bottom:18px;
+  }
+  h1{
+    font-size:clamp(36px,5.2vw,62px);font-weight:600;letter-spacing:-.035em;line-height:1.04;
+    max-width:13ch;
+  }
+  .hero p{color:var(--ink-2);max-width:44ch;margin:22px 0 34px;font-size:17px;}
+  .cta{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--accent);color:var(--on-accent);border:none;cursor:pointer;
+    font-family:inherit;font-size:16px;font-weight:600;letter-spacing:-.01em;
+    padding:14px 28px;border-radius:14px;text-decoration:none;
+    box-shadow:var(--cta-glow);
+    transition:transform .3s var(--ease),box-shadow .3s var(--ease),background .25s,color .25s;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:var(--cta-glow-hover);}
+  .cta:active{transform:translateY(0) scale(.98);}
+  .cta svg{transition:transform .3s var(--ease);}
+  .cta:hover svg{transform:translateY(2px);}
+
+  /* появление каскадом */
+  .rise{opacity:0;transform:translateY(16px);
+    animation:rise .9s var(--ease) forwards;animation-delay:calc(var(--d,0)*120ms);}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  /* ---------- секции конфигуратора ---------- */
+  .panel{
+    position:relative;z-index:1;
+    background:var(--surface);border:1px solid var(--line);border-radius:24px;
+    box-shadow:var(--panel-shadow);
+    overflow:hidden;margin-bottom:96px;
+    transition:background .45s var(--ease),border-color .45s var(--ease);
+  }
+  .pstep{padding:38px 40px;}
+  .pstep + .pstep{border-top:1px solid var(--line);}
+  .phead{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;margin-bottom:6px;}
+  .pnum{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
+  .ptitle{font-size:21px;font-weight:600;letter-spacing:-.02em;}
+  .pdesc{grid-column:2;color:var(--ink-2);font-size:15px;max-width:68ch;}
+  .pbody{margin-top:22px;}
+  @media(min-width:769px){.pbody{margin-left:82px;}}
+
+  /* количество плиток */
+  .countrow{display:flex;gap:10px;flex-wrap:wrap;}
+  .countrow button{
+    width:52px;height:52px;border-radius:14px;cursor:pointer;
+    font-family:var(--mono);font-size:17px;
+    background:var(--bg);border:1px solid var(--line-2);color:var(--ink-2);
+    transition:all .3s var(--ease);
+  }
+  .countrow button:hover{border-color:var(--ink-3);transform:translateY(-2px);}
+  .countrow button:active{transform:scale(.95);}
+  .countrow button.on{
+    background:var(--ink);border-color:var(--ink);color:var(--on-ink);
+    box-shadow:var(--ink-shadow);
+  }
+
+  /* дорожки штифтов */
+  .platerow{display:flex;align-items:center;gap:18px;padding:11px 0;}
+  .platerow + .platerow{border-top:1px dashed var(--line);}
+  .platename{width:92px;font-size:14.5px;color:var(--ink-2);white-space:nowrap;}
+  .platename b{color:var(--ink);font-weight:600;}
+  .track{display:flex;gap:7px;}
+  .hole{
+    width:38px;height:38px;border-radius:12px;cursor:pointer;border:1px solid var(--line-2);
+    background:var(--bg);color:var(--ink-3);
+    font-family:var(--mono);font-size:12.5px;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease);position:relative;
+  }
+  .hole:hover{border-color:var(--ink-3);transform:translateY(-2px);}
+  .hole:active{transform:scale(.93);}
+  .hole.center{border-style:dashed;}
+  .hole.center::after{
+    content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+    width:4px;height:4px;border-radius:50%;background:var(--ink-3);opacity:.5;
+  }
+  .hole.pin{
+    background:var(--ink);border-color:var(--ink);color:var(--on-ink);font-weight:600;
+    box-shadow:var(--pin-shadow);
+  }
+  .hole.pin.atgoal{
+    background:var(--accent);border-color:var(--accent);color:var(--on-accent);
+    box-shadow:var(--pin-shadow-goal);
+  }
+  .edgewarn{
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--danger);padding:4px 0 8px 110px;
+  }
+  .edgewarn svg{flex:none;}
+
+  /* матрица зависимостей */
+  .depscroll{overflow-x:auto;padding-bottom:4px;}
+  table{border-collapse:separate;border-spacing:6px 6px;}
+  th{font-weight:500;}
+  th.corner{
+    font-family:var(--mono);font-size:10.5px;font-weight:400;color:var(--ink-3);
+    text-align:left;letter-spacing:.05em;padding-right:14px;
+    line-height:1.7;vertical-align:bottom;
+  }
+  th.colh{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-3);
+    padding-bottom:6px;transition:color .2s,transform .25s var(--ease);
+  }
+  th.rowh{
+    text-align:left;color:var(--ink-2);font-size:14px;white-space:nowrap;
+    padding-right:16px;transition:color .2s;font-weight:500;
+  }
+  th.rowh b{color:var(--ink);font-weight:600;font-family:var(--mono);font-size:13px;transition:color .2s;}
+  th.colh.hl{color:var(--accent-ink);transform:translateY(-2px);}
+  th.rowh.hl,th.rowh.hl b{color:var(--accent-ink);}
+  .dep{
+    width:46px;height:46px;border-radius:13px;cursor:pointer;
+    background:var(--bg);border:1px solid var(--line);color:var(--ink-3);
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease);padding:0;
+  }
+  .dep:hover{border-color:var(--ink-3);transform:translateY(-2px);box-shadow:var(--card-shadow);}
+  .dep:active{transform:scale(.92);}
+  .dep.same{background:var(--pos-soft);border-color:var(--pos-border);color:var(--pos-ink);}
+  .dep.same:hover{box-shadow:var(--pos-glow);}
+  .dep.opp{background:var(--danger-soft);border-color:var(--danger-border);color:var(--danger);}
+  .dep.opp:hover{box-shadow:var(--pin-shadow-danger);}
+  .dep.diag{
+    cursor:default;background:transparent;border:1px dashed var(--line);
+  }
+  .dep.diag::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--line-2);}
+  .legend{display:flex;gap:26px;margin-top:18px;font-size:13.5px;color:var(--ink-2);flex-wrap:wrap;align-items:center;}
+  .legend span{display:inline-flex;align-items:center;gap:8px;}
+  .linksum{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;align-content:center;
+    min-height:64px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--line);
+  }
+  .lchip{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12px;font-weight:600;
+    padding:7px 11px;border-radius:10px;border:1px solid var(--line);
+    background:var(--bg);cursor:pointer;transition:all .25s var(--ease);
+    animation:chipin .35s var(--ease) backwards;
+  }
+  @keyframes chipin{from{opacity:0;transform:scale(.9) translateY(4px);}to{opacity:1;transform:none;}}
+  .lempty{animation:chipin .35s var(--ease) backwards;}
+  .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
+  .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
+  .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
+  .lchip:hover{transform:translateY(-1px);}
+  .lchip:hover .x{opacity:1;}
+  .lempty{font-size:13.5px;color:var(--ink-3);}
+  @media(max-width:860px){
+    .dep{width:40px;height:40px;border-radius:11px;}
+    th.rowh{font-size:13px;padding-right:10px;}
+  }
+
+  /* действия */
+  .actionsbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .btn{
+    font-family:inherit;font-size:15px;font-weight:500;
+    display:inline-flex;align-items:center;gap:9px;
+    padding:13px 20px;border-radius:13px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink);
+    transition:all .3s var(--ease);
+  }
+  .btn svg{flex:none;color:var(--ink-3);transition:color .25s;}
+  .btn:hover{border-color:var(--ink-3);transform:translateY(-2px);}
+  .btn:hover svg{color:var(--ink);}
+  .btn:active{transform:scale(.97);}
+  .btn.primary{
+    background:var(--accent);border-color:var(--accent);color:var(--on-accent);
+    font-weight:600;font-size:16px;padding:14px 28px;
+    box-shadow:var(--cta-glow);
+  }
+  .btn.primary svg{color:var(--on-accent);}
+  .btn.primary:hover{box-shadow:var(--cta-glow-hover);}
+  .btn.primary:hover svg{color:var(--on-accent);}
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--ink-2);margin-left:auto;}
+  .btn.ghost:hover{border-color:var(--line-2);color:var(--ink);}
+  @media(max-width:860px){.btn.ghost{margin-left:0;}}
+
+  /* анимация замка на кнопке «Взломать» */
+  .lockic{overflow:visible;}
+  .lockic .shk{
+    transform-origin:6.5px 9px;
+    transition:transform .55s cubic-bezier(.34,1.56,.64,1);
+  }
+  .lockic .pick{
+    transform:translateX(9px);opacity:0;
+    transition:transform .4s var(--ease),opacity .25s;
+  }
+  #solveBtn:hover .lockic .pick{transform:translateX(0);opacity:1;}
+  #solveBtn.picking .lockic{animation:jiggle .45s ease-in-out infinite;}
+  #solveBtn.picking .lockic .pick{transform:translateX(0);opacity:1;}
+  @keyframes jiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+  #solveBtn.open .lockic .shk{transform:rotate(-42deg);}
+  #solveBtn.open .lockic .pick{transform:translateX(9px);opacity:0;}
+
+  /* ---------- решение ---------- */
+  #solution{display:none;scroll-margin-top:24px;}
+  .sol-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+  .sol-title{font-size:21px;font-weight:600;letter-spacing:-.02em;}
+  .sol-meta{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
+  .sol-meta b{color:var(--accent-ink);font-weight:600;}
+  .skel{height:54px;border-radius:13px;margin:10px 0;
+    background:linear-gradient(100deg,var(--bg) 40%,var(--skel-mid) 50%,var(--bg) 60%);
+    background-size:200% 100%;animation:shimmer 1.2s linear infinite;}
+  @keyframes shimmer{to{background-position:-200% 0;}}
+  .msg{border-radius:14px;padding:16px 20px;font-size:15px;margin-top:14px;}
+  .msg.err{background:var(--danger-soft);color:var(--danger-text);border:1px solid var(--danger-border);}
+  .msg.ok{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent-border);}
+  .pvtoggle{display:flex;align-items:center;gap:9px;margin:14px 0 4px;
+    font-size:13.5px;color:var(--ink-2);cursor:pointer;user-select:none;width:fit-content;}
+  .pvtoggle input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
+
+  .steps{margin-top:10px;}
+  .step{
+    display:flex;flex-direction:column;gap:10px;
+    padding:16px 4px;cursor:pointer;border-top:1px solid var(--line);
+    opacity:0;transform:translateY(12px);
+    animation:rise .7s var(--ease) forwards;
+    animation-delay:calc(var(--i)*70ms);
+    transition:opacity .35s,filter .35s;
+  }
+  .step:hover .stepnum{background:var(--ink);color:var(--on-ink);border-color:var(--ink);}
+  .step.done{opacity:.3;filter:grayscale(1);}
+  .stephead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .stepnum{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-2);
+    min-width:36px;height:36px;border-radius:10px;border:1px solid var(--line-2);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease);
+  }
+  .stepmove{font-size:16.5px;}
+  .stepmove b{font-weight:600;}
+  .dirchip{
+    display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.04em;
+    padding:4px 11px;border-radius:9px;margin:0 2px;
+  }
+  .dirchip.L{background:var(--bg);border:1px solid var(--line-2);color:var(--ink);}
+  .dirchip.R{background:var(--ink);color:var(--on-ink);}
+  .mult{font-family:var(--mono);font-size:12.5px;font-weight:600;
+    background:var(--accent-soft);color:var(--accent-ink);border-radius:8px;padding:3px 9px;}
+  .mini{display:flex;gap:14px;flex-wrap:wrap;padding-left:50px;}
+  .minilock{display:flex;flex-direction:column;gap:3px;align-items:center;}
+  .minilock .lbl{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);}
+  .minitrack{display:flex;gap:3px;}
+  .minihole{width:10px;height:10px;border-radius:3.5px;background:var(--bg);border:1px solid var(--line);transition:all .3s var(--ease);}
+  .minihole.c{border-style:dashed;}
+  .minihole.p{background:var(--ink);border-color:var(--ink);}
+  .minihole.pg{background:var(--accent);border-color:var(--accent);box-shadow:var(--bgpin-glow);}
+
+  /* ---------- FAQ ---------- */
+  .faq{padding:0 0 80px;}
+  .faq-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:56px;align-items:start;}
+  .faq h2{font-size:clamp(24px,3vw,32px);font-weight:600;letter-spacing:-.03em;line-height:1.15;}
+  .faq .sub{color:var(--ink-2);margin-top:12px;font-size:15px;max-width:36ch;}
+  details{border-top:1px solid var(--line);}
+  details:last-child{border-bottom:1px solid var(--line);}
+  summary{
+    padding:20px 36px 20px 4px;cursor:pointer;font-weight:500;font-size:16px;
+    list-style:none;position:relative;transition:color .25s;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{
+    content:"";position:absolute;right:10px;top:50%;width:9px;height:9px;
+    border-right:1.8px solid var(--ink-3);border-bottom:1.8px solid var(--ink-3);
+    transform:translateY(-70%) rotate(45deg);transition:transform .35s var(--ease);
+  }
+  details[open] summary::after{transform:translateY(-30%) rotate(225deg);}
+  summary:hover{color:var(--accent-ink);}
+  details .body{padding:0 24px 22px 4px;color:var(--ink-2);font-size:14.5px;}
+  details .body p{margin-bottom:10px;}
+  details .body ul{margin:0 0 10px 18px;}
+  details .body li{margin-bottom:7px;}
+  details .body b{color:var(--ink);font-weight:600;}
+  code{font-family:var(--mono);font-size:12.5px;background:var(--bg);
+    border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--ink);}
+
+  footer{
+    border-top:1px solid var(--line);padding:30px 0 44px;
+    color:var(--ink-3);font-size:13.5px;
+    display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  }
+  .credit{display:inline-flex;align-items:center;gap:8px;}
+  .credit a{
+    color:var(--ink-2);text-decoration:none;font-weight:500;
+    display:inline-flex;align-items:center;gap:7px;
+    transition:color .25s;
+  }
+  .credit a:hover{color:var(--accent-ink);}
+  .credit svg{flex:none;}
+  .toast{
+    position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);
+    background:var(--ink);color:var(--on-ink);padding:12px 24px;border-radius:13px;
+    font-size:14.5px;font-weight:500;opacity:0;pointer-events:none;
+    transition:all .4s var(--ease);z-index:50;
+    box-shadow:var(--toast-shadow);
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  @media(max-width:860px){
+    .hero{padding:48px 0 80px;}
+    .faq-grid{grid-template-columns:1fr;gap:28px;}
+    .pstep{padding:26px 20px;}
+    .phead{grid-template-columns:1fr;gap:4px;}
+    .pdesc{grid-column:1;}
+    .pbody{margin-left:0;}
+    .hole{width:32px;height:32px;border-radius:10px;}
+    .platename{width:74px;font-size:13px;}
+    .edgewarn{padding-left:0;}
+    .mini{padding-left:0;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="herozone">
+  <div class="herobg" id="herobg" aria-hidden="true"><div class="centerline"></div></div>
+  <div class="wrap">
+    <header class="topbar rise" style="--d:0">
+      <div class="wordmark"><span class="dot"></span>UnlockMyLoot</div>
+      <nav class="topnav">
+        <a href="#faq">Как пользоваться</a>
+        <button class="themebtn" id="themeBtn" type="button" aria-label="Переключить тему">
+          <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <svg class="ic-sun" width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="3.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 1v1.8M8.5 14.2V16M16 8.5h-1.8M2.8 8.5H1M13.8 3.2l-1.3 1.3M4.5 12.5l-1.3 1.3M13.8 13.8l-1.3-1.3M4.5 4.5 3.2 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow rise" style="--d:1">Gothic 1 Remake · взлом замков</div>
+      <h1 class="rise" style="--d:2">Любой замок. Ноль сломанных отмычек.</h1>
+      <p class="rise" style="--d:3">Опиши замок — позиции штифтов и связи между плитками — и получи кратчайшую последовательность ходов. Каждый шаг проверен: ни одного движения в стену.</p>
+      <a class="cta rise" style="--d:4" href="#solver">
+        Начать взлом
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M2 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+  <main class="panel rise" style="--d:5" id="solver">
+    <div class="pstep">
+      <div class="phead">
+        <span class="pnum">01</span>
+        <span class="ptitle">Сколько плиток в замке</span>
+        <p class="pdesc">Простые замки — 4–5 плиток, обычные — 6, сложные — 7–8. Нумерация от ближней плитки (1) к дальней.</p>
+      </div>
+      <div class="pbody"><div class="countrow" id="countrow"></div></div>
+    </div>
+
+    <div class="pstep">
+      <div class="phead">
+        <span class="pnum">02</span>
+        <span class="ptitle">Где сейчас штифты</span>
+        <p class="pdesc">У каждой плитки 7 отверстий, счёт слева направо. Кликни на текущую позицию штифта. Цель — позиция 4 (с точкой): там штифт выскакивает вверх.</p>
+      </div>
+      <div class="pbody" id="pins"></div>
+    </div>
+
+    <div class="pstep">
+      <div class="phead">
+        <span class="pnum">03</span>
+        <span class="ptitle">Связи между плитками</span>
+        <p class="pdesc">Сдвинь в игре каждую плитку на один шаг и верни обратно. Запиши, какие плитки дёрнулись вместе с ней и куда. Связи бывают односторонними: плитка 1 может тянуть плитку 3, даже если плитка 3 не тянет плитку 1.</p>
+      </div>
+      <div class="pbody">
+        <div class="depscroll"><table id="deps"></table></div>
+        <div class="legend">
+          <span><svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="#7d858d"/></svg> не двигается</span>
+          <span style="color:var(--pos-ink)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в ту же сторону</span>
+          <span style="color:var(--danger)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в противоположную</span>
+        </div>
+        <div class="linksum" id="linksum"></div>
+      </div>
+    </div>
+
+    <div class="pstep">
+      <div class="actionsbar">
+        <button class="btn primary" id="solveBtn">
+          <svg class="lockic" width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path class="shk" d="M6.5 9V6.2a3.5 3.5 0 0 1 7 0V9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <rect x="4" y="9" width="12" height="8.4" rx="2.4" stroke="currentColor" stroke-width="1.7"/>
+            <circle cx="10" cy="12.4" r="1.1" fill="currentColor"/>
+            <path d="M10 13.3v1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <path class="pick" d="M11 12.4h7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>Взломать</span>
+        </button>
+        <button class="btn" id="shareBtn">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5 9.5 6.5M7 4.5l1.3-1.3a3 3 0 0 1 4.5 4.5L11.5 9M9 11.5l-1.3 1.3a3 3 0 0 1-4.5-4.5L4.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Скопировать ссылку
+        </button>
+        <button class="btn ghost" id="resetBtn">
+          <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M13 7.5a5.5 5.5 0 1 1-1.6-3.9M13 1.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Сбросить
+        </button>
+      </div>
+    </div>
+
+    <div class="pstep" id="solution">
+      <div id="solbody"></div>
+    </div>
+  </main>
+
+  <section class="faq" id="faq">
+    <div class="faq-grid">
+      <div>
+        <h2 class="rise" style="--d:0">Как это работает</h2>
+        <p class="sub">Короткие ответы на то, обо что все ломают отмычки.</p>
+      </div>
+      <div>
+        <details open>
+          <summary>Что значит «влево» и «вправо»</summary>
+          <div class="body">
+            <p>Все направления на сайте — это движение <b>штифта</b> (блестящего пина), а не нажатие кнопки. «Влево» = позиция штифта уменьшается на 1, например 5 &rarr; 4. В игре нажми ту стрелку, от которой штифт уходит в нужную сторону.</p>
+            <p>После каждого шага показано, где должны оказаться все штифты. Если картинка разошлась с игрой — где-то неверно записана связь: вернись к шагу 03 и перепроверь эту плитку.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Как безопасно определить связи</summary>
+          <div class="body">
+            <ul>
+              <li><b>Сохранись</b> перед замком — бесплатная страховка.</li>
+              <li>Двигай плитку на один шаг в сторону, где у неё есть запас хода, и сразу возвращай. Состояние замка не изменится.</li>
+              <li>Следи за остальными плитками: кто дёрнулся и куда.</li>
+              <li>Если связанная плитка стоит у края (позиция 1 или 7) — ход в стену повредит отмычку. Решатель такие ходы не предлагает никогда, но при разведке проверяй края глазами.</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Правила механики, кратко</summary>
+          <div class="body">
+            <ul>
+              <li>Замок открыт, когда <b>все штифты в позиции 4</b> — каждый выскакивает вверх.</li>
+              <li>Движение плитки за край (позиции 1 и 7 — стены), в том числе через связь, <b>напрягает отмычку</b>. Несколько ошибок — поломка.</li>
+              <li>Без обучения — 2 ошибки и сброс прогресса при поломке. Тренер <b>Фингерс в Старом Лагере</b>: 4–6 ошибок, прогресс сохраняется, на уровне «мастер» замок упрощается после каждой поломки.</li>
+              <li>Решатель перебирает все состояния замка (BFS) и находит <b>кратчайший</b> путь без единого хода в стену. Перед выводом решение ещё раз проверяется симуляцией.</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary>Пишет «нет решения» — что делать</summary>
+          <div class="body">
+            <p>Для записанной конфигурации безопасного пути не существует. В 99% случаев это ошибка ввода: не та сторона связи, пропущенная связь или неверная стартовая позиция. Перепроверь шаги 02–03.</p>
+            <p>Математически нерешаемые конфигурации существуют (жёстко сцепленные плитки с несовместимым смещением), но в игре такие замки не встречаются — у каждого игрового замка решение есть.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Фанатский инструмент для Gothic 1 Remake. Не аффилирован с Alkimia Interactive / THQ Nordic.</span>
+    <span class="credit">Сайт создан каналом
+      <a href="https://www.youtube.com/@1h8s" target="_blank" rel="noopener">
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="15" height="11" rx="2.6" stroke="currentColor"/><path d="M6.5 3.8v4.4L10.5 6 6.5 3.8Z" fill="currentColor"/></svg>
+        108 seconds
+      </a>
+    </span>
+    <span>Алгоритм проверен на реальных замках и тысячах случайных конфигураций.</span>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script id="solver-core">
+/* ===================== ЯДРО РЕШАТЕЛЯ =====================
+   Состояние: массив позиций штифтов (1..7), цель — все 4.
+   Ход (i, d): pin[i] += d; для j != i: pin[j] += link[i][j] * d.
+   link[i][j]: +1 та же сторона, -1 противоположная, 0 нет связи.
+   Ход недопустим, если любой штифт выходит за [1,7]. */
+function solveLock(start, link) {
+  var n = start.length;
+  var pow = [1];
+  for (var i = 1; i <= n; i++) pow[i] = pow[i-1] * 7;
+  var total = pow[n];
+  function encode(s) {
+    var x = 0;
+    for (var k = n - 1; k >= 0; k--) x = x * 7 + (s[k] - 1);
+    return x;
+  }
+  var goal = encode(new Array(n).fill(4));
+  var startIdx = encode(start);
+  if (startIdx === goal) return [];
+
+  // эффекты всех 2n ходов
+  var moves = [];
+  for (var p = 0; p < n; p++) {
+    for (var dd = 0; dd < 2; dd++) {
+      var d = dd === 0 ? -1 : 1;
+      var eff = new Int8Array(n);
+      eff[p] = d;
+      for (var j = 0; j < n; j++)
+        if (j !== p && link[p][j]) eff[j] = link[p][j] * d;
+      var delta = 0;
+      for (var j2 = 0; j2 < n; j2++) delta += eff[j2] * pow[j2];
+      moves.push({ plate: p, d: d, delta: delta, eff: eff });
+    }
+  }
+
+  var visited = new Uint8Array(total);
+  var parent = new Int32Array(total);
+  var pmove = new Uint8Array(total);
+  var queue = new Int32Array(total);
+  var head = 0, tail = 0;
+  queue[tail++] = startIdx;
+  visited[startIdx] = 1;
+  var digits = new Uint8Array(n);
+
+  while (head < tail) {
+    var cur = queue[head++];
+    var x = cur;
+    for (var j3 = 0; j3 < n; j3++) { digits[j3] = x % 7; x = (x - digits[j3]) / 7; }
+    for (var m = 0; m < moves.length; m++) {
+      var mv = moves[m], ok = true;
+      for (var j4 = 0; j4 < n; j4++) {
+        var nd = digits[j4] + mv.eff[j4];
+        if (nd < 0 || nd > 6) { ok = false; break; }
+      }
+      if (!ok) continue;
+      var nxt = cur + mv.delta;
+      if (visited[nxt]) continue;
+      visited[nxt] = 1; parent[nxt] = cur; pmove[nxt] = m;
+      if (nxt === goal) {
+        var seq = [], k2 = nxt;
+        while (k2 !== startIdx) { seq.push(pmove[k2]); k2 = parent[k2]; }
+        seq.reverse();
+        return seq.map(function (mi) { return { plate: moves[mi].plate, d: moves[mi].d }; });
+      }
+      queue[tail++] = nxt;
+    }
+  }
+  return null;
+}
+
+/* Независимая проверка: воспроизводит решение отдельной физикой.
+   Возвращает {ok, states} — states[t] = позиции после t ходов. */
+function verifySolution(start, link, seq) {
+  var n = start.length;
+  var cur = start.slice();
+  var states = [cur.slice()];
+  for (var t = 0; t < seq.length; t++) {
+    var i = seq[t].plate, d = seq[t].d;
+    var nxt = cur.slice();
+    nxt[i] += d;
+    for (var j = 0; j < n; j++)
+      if (j !== i && link[i][j]) nxt[j] += link[i][j] * d;
+    for (var j2 = 0; j2 < n; j2++)
+      if (nxt[j2] < 1 || nxt[j2] > 7) return { ok: false, states: states };
+    cur = nxt;
+    states.push(cur.slice());
+  }
+  for (var j3 = 0; j3 < n; j3++)
+    if (cur[j3] !== 4) return { ok: false, states: states };
+  return { ok: true, states: states };
+}
+</script>
+
+<script>
+/* ===================== UI ===================== */
+var N = 6;
+var pins = [];
+var link = [];
+
+var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="currentColor" opacity=".55"/></svg>';
+var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+var SVG_OPP  = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+var SVG_WARN = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 13 12H1L7 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 5.5V8.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="10.2" r=".8" fill="currentColor"/></svg>';
+
+/* ночной режим */
+document.getElementById('themeBtn').onclick = function () {
+  var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('uml-theme', next); } catch (e) {}
+};
+
+/* фоновая анимация штифтов за hero */
+(function buildHeroBg() {
+  var bg = document.getElementById('herobg');
+  var rows = [
+    { top: 8,  x0: '12vw', dur: 7.2,  del: 0,    op: .8  },
+    { top: 20, x0: '78vw', dur: 8.6,  del: .9,   op: .55 },
+    { top: 33, x0: '30vw', dur: 6.4,  del: 1.7,  op: .7  },
+    { top: 46, x0: '88vw', dur: 9.4,  del: .4,   op: .5  },
+    { top: 59, x0: '20vw', dur: 7.8,  del: 2.3,  op: .65 },
+    { top: 72, x0: '70vw', dur: 6.9,  del: 1.2,  op: .8  },
+    { top: 85, x0: '38vw', dur: 8.1,  del: 2.9,  op: .5  }
+  ];
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var tr = document.createElement('div');
+    tr.className = 'bgtrack';
+    tr.style.top = row.top + '%';
+    var pin = document.createElement('div');
+    pin.className = 'bgpin';
+    pin.style.setProperty('--x0', row.x0);
+    pin.style.setProperty('--dur', row.dur + 's');
+    pin.style.setProperty('--del', row.del + 's');
+    pin.style.setProperty('--op', row.op);
+    tr.appendChild(pin);
+    bg.appendChild(tr);
+  }
+})();
+
+function init(n) {
+  N = n;
+  pins = new Array(N).fill(4);
+  link = [];
+  for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
+  renderCount(); renderPins(); renderDeps();
+  document.getElementById('solution').style.display = 'none';
+}
+
+function renderCount() {
+  var row = document.getElementById('countrow');
+  row.innerHTML = '';
+  for (var c = 3; c <= 8; c++) (function (c) {
+    var b = document.createElement('button');
+    b.textContent = c;
+    if (c === N) b.className = 'on';
+    b.onclick = function () {
+      var oldPins = pins, oldLink = link, oldN = N;
+      N = c;
+      pins = new Array(N).fill(4);
+      link = [];
+      for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
+      for (var i2 = 0; i2 < Math.min(oldN, N); i2++) {
+        pins[i2] = oldPins[i2];
+        for (var j = 0; j < Math.min(oldN, N); j++) link[i2][j] = oldLink[i2][j];
+      }
+      renderCount(); renderPins(); renderDeps();
+    };
+    row.appendChild(b);
+  })(c);
+}
+
+function renderPins() {
+  var box = document.getElementById('pins');
+  box.innerHTML = '';
+  for (var i = 0; i < N; i++) (function (i) {
+    var row = document.createElement('div');
+    row.className = 'platerow';
+    var name = document.createElement('div');
+    name.className = 'platename';
+    name.innerHTML = 'Плитка <b>' + (i + 1) + '</b>';
+    row.appendChild(name);
+    var tr = document.createElement('div');
+    tr.className = 'track';
+    for (var p = 1; p <= 7; p++) (function (p) {
+      var h = document.createElement('div');
+      h.className = 'hole' + (p === 4 ? ' center' : '');
+      if (pins[i] === p) h.className += p === 4 ? ' pin atgoal' : ' pin';
+      h.textContent = p;
+      h.onclick = function () { pins[i] = p; renderPins(); };
+      tr.appendChild(h);
+    })(p);
+    row.appendChild(tr);
+    box.appendChild(row);
+    if (pins[i] === 1 || pins[i] === 7) {
+      var w = document.createElement('div');
+      w.className = 'edgewarn';
+      w.innerHTML = SVG_WARN + 'штифт у стены — ходы в эту сторону ломают отмычку';
+      box.appendChild(w);
+    }
+  })(i);
+}
+
+var DEPSTATE = [
+  { v: 0,  cls: '',     icon: SVG_NONE, txt: 'не двигается' },
+  { v: 1,  cls: 'same', icon: SVG_SAME, txt: 'в ту же сторону' },
+  { v: -1, cls: 'opp',  icon: SVG_OPP,  txt: 'в противоположную' }
+];
+function depMeta(v) {
+  return DEPSTATE.find(function (s) { return s.v === v; });
+}
+
+function renderDeps() {
+  var t = document.getElementById('deps');
+  var html = '<tr><th class="corner">двигаю &darr;<br>реагирует &rarr;</th>';
+  for (var j = 0; j < N; j++) html += '<th class="colh" id="ch' + j + '">' + (j + 1) + '</th>';
+  html += '</tr>';
+  for (var i = 0; i < N; i++) {
+    html += '<tr><th class="rowh" id="rh' + i + '">плитка <b>' + (i + 1) + '</b></th>';
+    for (var j2 = 0; j2 < N; j2++) {
+      if (i === j2) {
+        html += '<td><span class="dep diag"></span></td>';
+      } else {
+        var st = depMeta(link[i][j2]);
+        html += '<td><button type="button" class="dep ' + st.cls + '" data-i="' + i + '" data-j="' + j2 +
+          '" title="Плитка ' + (i + 1) + ' двигается — плитка ' + (j2 + 1) + ': ' + st.txt + '">' +
+          st.icon + '</button></td>';
+      }
+    }
+    html += '</tr>';
+  }
+  t.innerHTML = html;
+  renderLinkSum();
+}
+
+function renderLinkSum() {
+  var box = document.getElementById('linksum');
+  var html = '';
+  for (var i = 0; i < N; i++)
+    for (var j = 0; j < N; j++)
+      if (i !== j && link[i][j]) {
+        var st = depMeta(link[i][j]);
+        html += '<button type="button" class="lchip ' + st.cls + '" data-i="' + i + '" data-j="' + j +
+          '" title="Связь: плитка ' + (i + 1) + ' тянет плитку ' + (j + 1) + ' ' + st.txt +
+          '. Нажми, чтобы убрать.">' + (i + 1) + '&rarr;' + (j + 1) + ' ' + st.icon +
+          '<span class="x">&times;</span></button>';
+      }
+  box.innerHTML = html ||
+    '<span class="lempty">Связи не отмечены. Если плитки замка двигаются независимо — так и оставь, просто жми &laquo;Взломать&raquo;.</span>';
+}
+
+(function bindDeps() {
+  var t = document.getElementById('deps');
+  t.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.dep[data-i]') : null;
+    if (!b) return;
+    var i = +b.dataset.i, j = +b.dataset.j;
+    var idx = DEPSTATE.findIndex(function (s) { return s.v === link[i][j]; });
+    var st = DEPSTATE[(idx + 1) % 3];
+    link[i][j] = st.v;
+    b.className = 'dep ' + st.cls;
+    b.innerHTML = st.icon;
+    b.title = 'Плитка ' + (i + 1) + ' двигается — плитка ' + (j + 1) + ': ' + st.txt;
+    renderLinkSum();
+  });
+  t.addEventListener('mouseover', function (e) {
+    var b = e.target.closest ? e.target.closest('.dep[data-i]') : null;
+    if (!b) return;
+    var ch = document.getElementById('ch' + b.dataset.j);
+    var rh = document.getElementById('rh' + b.dataset.i);
+    if (ch) ch.classList.add('hl');
+    if (rh) rh.classList.add('hl');
+  });
+  t.addEventListener('mouseout', function (e) {
+    var b = e.target.closest ? e.target.closest('.dep[data-i]') : null;
+    if (!b) return;
+    var ch = document.getElementById('ch' + b.dataset.j);
+    var rh = document.getElementById('rh' + b.dataset.i);
+    if (ch) ch.classList.remove('hl');
+    if (rh) rh.classList.remove('hl');
+  });
+  document.getElementById('linksum').addEventListener('click', function (e) {
+    var c = e.target.closest ? e.target.closest('.lchip') : null;
+    if (!c) return;
+    link[+c.dataset.i][+c.dataset.j] = 0;
+    renderDeps();
+  });
+})();
+
+/* ---------- решение ---------- */
+function groupSteps(seq) {
+  var groups = [];
+  for (var t = 0; t < seq.length; t++) {
+    var last = groups[groups.length - 1];
+    if (last && last.plate === seq[t].plate && last.d === seq[t].d) {
+      last.count++; last.endIdx = t;
+    } else {
+      groups.push({ plate: seq[t].plate, d: seq[t].d, count: 1, endIdx: t });
+    }
+  }
+  return groups;
+}
+
+function miniTracks(state) {
+  var html = '<div class="mini">';
+  for (var i = 0; i < state.length; i++) {
+    html += '<div class="minilock"><span class="lbl">' + (i + 1) + '</span><span class="minitrack">';
+    for (var p = 1; p <= 7; p++) {
+      var cls = 'minihole' + (p === 4 ? ' c' : '');
+      if (state[i] === p) cls += p === 4 ? ' pg' : ' p';
+      html += '<span class="' + cls + '"></span>';
+    }
+    html += '</span></div>';
+  }
+  return html + '</div>';
+}
+
+function solveNow() {
+  var body = document.getElementById('solbody');
+  var panel = document.getElementById('solution');
+  var sbtn = document.getElementById('solveBtn');
+  sbtn.classList.remove('open');
+  sbtn.classList.add('picking');
+  panel.style.display = 'block';
+  body.innerHTML =
+    '<div class="sol-head"><span class="sol-title">Решение</span><span class="sol-meta">перебираю состояния&hellip;</span></div>' +
+    '<div class="skel"></div><div class="skel" style="animation-delay:.15s"></div><div class="skel" style="animation-delay:.3s"></div>';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  setTimeout(function () {
+    var t0 = performance.now();
+    var seq = solveLock(pins.slice(), link);
+    var dt = Math.round(performance.now() - t0);
+
+    sbtn.classList.remove('picking');
+    if (seq !== null) {
+      sbtn.classList.add('open');
+      setTimeout(function () { sbtn.classList.remove('open'); }, 2000);
+    }
+
+    if (seq === null) {
+      body.innerHTML =
+        '<div class="sol-head"><span class="sol-title">Решение</span></div>' +
+        '<div class="msg err"><b>Безопасного решения не существует</b> для этой конфигурации. ' +
+        'Почти наверняка ошибка во вводе: перепроверь стартовые позиции и связи — особенно направление ' +
+        '«та же / противоположная» и односторонние связи. Подробнее в разделе ниже.</div>';
+      return;
+    }
+    if (seq.length === 0) {
+      body.innerHTML =
+        '<div class="sol-head"><span class="sol-title">Решение</span></div>' +
+        '<div class="msg ok">Все штифты уже в центре — замок открыт. Ходов не нужно.</div>';
+      return;
+    }
+
+    var check = verifySolution(pins.slice(), link, seq);
+    if (!check.ok) {
+      body.innerHTML = '<div class="msg err">Внутренняя ошибка проверки решения — сообщите автору сайта.</div>';
+      return;
+    }
+
+    var groups = groupSteps(seq);
+    var html =
+      '<div class="sol-head"><span class="sol-title">Решение</span>' +
+      '<span class="sol-meta"><b>' + seq.length + '</b> ходов &middot; ' + groups.length +
+      ' действий &middot; ' + dt + ' мс &middot; без ударов о стену</span></div>' +
+      '<label class="pvtoggle"><input type="checkbox" id="pvToggle" checked> позиции штифтов после каждого шага</label>' +
+      '<div class="steps">';
+
+    for (var g = 0; g < groups.length; g++) {
+      var gr = groups[g];
+      var chip = gr.d === -1
+        ? '<span class="dirchip L">&larr; ВЛЕВО</span>'
+        : '<span class="dirchip R">ВПРАВО &rarr;</span>';
+      var after = check.states[gr.endIdx + 1];
+      html += '<div class="step" style="--i:' + g + '" onclick="this.classList.toggle(\'done\')">' +
+        '<div class="stephead"><span class="stepnum">' + String(g + 1).padStart(2, '0') + '</span>' +
+        '<span class="stepmove">Плитка <b>' + (gr.plate + 1) + '</b> ' + chip +
+        (gr.count > 1 ? ' <span class="mult">&times;' + gr.count + '</span>' : '') +
+        '</span></div>' +
+        '<div class="steppv">' + miniTracks(after) + '</div>' +
+        '</div>';
+    }
+    html += '</div><div class="msg ok">После последнего шага все штифты встанут в центр — замок откроется. ' +
+      'Решение проверено симуляцией перед выводом. Кликай по шагам, чтобы отмечать выполненные.</div>';
+    body.innerHTML = html;
+    document.getElementById('pvToggle').onchange = function () {
+      var pvs = document.querySelectorAll('.steppv');
+      for (var k = 0; k < pvs.length; k++) pvs[k].style.display = this.checked ? '' : 'none';
+    };
+  }, 350);
+}
+
+/* ---------- ссылки / пресеты / сброс ---------- */
+function encodeConfig() {
+  var s = 'v1.' + N + '.' + pins.join('');
+  var cells = '';
+  for (var i = 0; i < N; i++)
+    for (var j = 0; j < N; j++)
+      if (i !== j) cells += link[i][j] === 1 ? 'S' : (link[i][j] === -1 ? 'O' : '-');
+  return s + '.' + cells;
+}
+function decodeConfig(code) {
+  var m = /^v1\.(\d)\.(\d+)\.([SO-]+)$/.exec(code);
+  if (!m) return false;
+  var n = parseInt(m[1], 10);
+  if (n < 3 || n > 8 || m[2].length !== n || m[3].length !== n * (n - 1)) return false;
+  var ps = m[2].split('').map(Number);
+  if (ps.some(function (p) { return p < 1 || p > 7; })) return false;
+  var lk = [], c = 0;
+  for (var i = 0; i < n; i++) {
+    lk.push(new Array(n).fill(0));
+    for (var j = 0; j < n; j++) {
+      if (i === j) continue;
+      var ch = m[3][c++];
+      lk[i][j] = ch === 'S' ? 1 : (ch === 'O' ? -1 : 0);
+    }
+  }
+  N = n; pins = ps; link = lk;
+  renderCount(); renderPins(); renderDeps();
+  return true;
+}
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function () { t.classList.remove('show'); }, 2200);
+}
+
+document.getElementById('solveBtn').onclick = solveNow;
+document.getElementById('resetBtn').onclick = function () { init(6); history.replaceState(null, '', location.pathname); };
+document.getElementById('shareBtn').onclick = function () {
+  var url = location.origin + location.pathname + '#' + encodeConfig();
+  (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
+    .then(function () { toast('Ссылка на замок скопирована'); })
+    .catch(function () { prompt('Скопируй ссылку:', url); });
+};
+init(6);
+if (location.hash.length > 1) decodeConfig(decodeURIComponent(location.hash.slice(1)));
+</script>
+</body>
+</html>
