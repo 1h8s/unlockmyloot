@@ -1,5 +1,5 @@
 # Конфиг воркера-счётчика UnlockMyLoot.
-# KV id не менять — оттуда подтянется текущее значение при миграции на DO.
+# KV id не менять - оттуда подтянется текущее значение при миграции на DO.
 name = "unlockmyloot"
 main = "counter-worker.js"
 compatibility_date = "2026-06-01"

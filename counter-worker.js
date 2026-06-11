@@ -1,5 +1,5 @@
 /**
- * UnlockMyLoot — счётчик взломанных замков.
+ * UnlockMyLoot - счётчик взломанных замков.
  * GET  /count  -> {"opened": N}
  * POST /opened -> инкремент, {"opened": N+1}
  *

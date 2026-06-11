@@ -426,7 +426,7 @@
   .btn.primary:hover svg{color:var(--on-accent);}
   .btn.ghost{background:transparent;border-color:transparent;color:var(--ink-2);margin-left:auto;}
   .btn.ghost:hover{border-color:var(--line-2);color:var(--ink);}
-  @media(max-width:860px){.btn.ghost{margin-left:0;}}
+  .btn-label-short{display:none;}
 
   /* анимация замка на кнопке «Взломать» */
   .lockic{overflow:visible;}
@@ -583,6 +583,14 @@
     .pbody{margin-left:0;}
     .hole{width:40px;height:40px;border-radius:11px;}
     .mini{padding-left:0;}
+    .actionsbar{gap:10px;}
+    .btn.primary{width:100%;justify-content:center;}
+    .actionsbar .btn:not(.primary){
+      flex:1;justify-content:center;padding:12px 10px;font-size:14px;white-space:nowrap;
+    }
+    .btn.ghost{margin-left:0;border-color:var(--line-2);}
+    .btn-label-full{display:none;}
+    .btn-label-short{display:inline;}
   }
   @media(max-width:560px){
     .wrap{padding:0 16px;}
@@ -597,11 +605,6 @@
     th.rowh .pside{display:none;}
     th.rowh{padding-right:8px;}
     th.corner{font-size:9.5px;padding-right:8px;}
-    /* кнопки: главная на всю ширину, остальные делят строку */
-    .actionsbar{gap:10px;}
-    .btn.primary{width:100%;justify-content:center;}
-    .actionsbar .btn:not(.primary){flex:1;justify-content:center;padding:12px 10px;font-size:14px;}
-    .btn.ghost{border-color:var(--line-2);}
     /* решение */
     .stepmove{font-size:15px;}
     .stepnum{min-width:32px;height:32px;}
@@ -709,7 +712,7 @@
           "name": "How to pick a Gothic 1 Remake lock without breaking lockpicks?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Enter plate count, pin positions (1–7) and plate links in UnlockMyLoot - it returns the shortest safe sequence where no pin hits the wall."
+            "text": "Enter plate count, pin positions (1-7) and plate links in UnlockMyLoot - it returns the shortest safe sequence where no pin hits the wall."
           }
         },
         {
@@ -733,7 +736,7 @@
           "name": "How many plates are in Gothic 1 Remake locks?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "3 to 8 plates. Simple locks 4–5, normal 6, hard 7–8. Each plate has 7 holes; goal is center position 4."
+            "text": "3 to 8 plates. Simple locks 4-5, normal 6, hard 7-8. Each plate has 7 holes; goal is center position 4."
           }
         }
       ]
@@ -789,7 +792,7 @@
           <div class="phead">
             <span class="pnum">01</span>
             <span class="ptitle">How many plates in the lock</span>
-            <p class="pdesc">Simple locks - 4–5 plates, normal - 6, hard - 7–8.</p>
+            <p class="pdesc">Simple locks - 4-5 plates, normal - 6, hard - 7-8.</p>
           </div>
           <div class="pbody"><div class="countrow" id="countrow"></div></div>
         </div>
@@ -867,9 +870,9 @@
           </svg>
           <span>Pick lock</span>
         </button>
-        <button class="btn" id="shareBtn">
+        <button class="btn" id="shareBtn" type="button" aria-label="Copy lock link">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5 9.5 6.5M7 4.5l1.3-1.3a3 3 0 0 1 4.5 4.5L11.5 9M9 11.5l-1.3 1.3a3 3 0 0 1-4.5-4.5L4.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Copy link
+          <span class="btn-label-full">Copy link</span><span class="btn-label-short">Link</span>
         </button>
         <button class="btn ghost" id="resetBtn">
           <svg width="14" height="14" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M13 7.5a5.5 5.5 0 1 1-1.6-3.9M13 1.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -886,7 +889,7 @@
   <section class="dtfband rise" style="--d:0">
     <div class="db-lead">
       <div class="db-title">How this site came to be - story on DTF</div>
-      <div class="db-sub">The chest that ate six lockpicks, a sheet of arrows, and the algorithm that ended it all</div>
+      <div class="db-sub">The mechanic that cost me hours hunting solutions, formulas, and research - until I found the algorithm</div>
     </div>
     <div class="db-stats">
       <span><b>78 000+</b>views</span>
@@ -926,7 +929,7 @@
           <div class="body">
             <p>By default, step directions show where to move the <b>plate</b> - which button to press in-game. Plate and pin move opposite: press left - plate goes left, pin shifts right in its track.</p>
             <p>Prefer thinking in <b>pin</b> movement? Toggle it in the solution block. The choice is saved. If in-game movement does not match, this toggle usually fixes it.</p>
-            <p>Step previews always show pin positions (1–7 left to right, goal 4). If preview mismatches the game - a link is wrong: recheck step 03.</p>
+            <p>Step previews always show pin positions (1-7 left to right, goal 4). If preview mismatches the game - a link is wrong: recheck step 03.</p>
           </div>
         </details>
         <details>
@@ -946,7 +949,7 @@
             <ul>
               <li>Lock opens when <b>all pins are at position 4</b> - each pops up.</li>
               <li>Moving a plate past the edge (positions 1 and 7 - walls), including via links, <b>stresses the pick</b>. Too many - break.</li>
-              <li>Without training - 2 mistakes and progress reset on break. Trainer <b>Fingers in Old Camp</b>: 4–6 mistakes, progress kept; at master level lock simplifies after each break.</li>
+              <li>Without training - 2 mistakes and progress reset on break. Trainer <b>Fingers in Old Camp</b>: 4-6 mistakes, progress kept; at master level lock simplifies after each break.</li>
               <li>Solver runs BFS over all states and finds the <b>shortest</b> wall-free path. Solution is verified by simulation before display.</li>
             </ul>
           </div>
@@ -954,7 +957,7 @@
         <details>
           <summary>Says no solution - what to do</summary>
           <div class="body">
-            <p>No safe path exists for this input. 99% of the time it is a typo: wrong link direction, missing link, or wrong start pin. Recheck steps 02–03.</p>
+            <p>No safe path exists for this input. 99% of the time it is a typo: wrong link direction, missing link, or wrong start pin. Recheck steps 02-03.</p>
             <p>Mathematically unsolvable configs exist, but in-game locks always have a solution.</p>
           </div>
         </details>
@@ -1079,7 +1082,7 @@ var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy=
 var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 var SVG_OPP  = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 
-/* theme toggle — one crossfade, not hundreds of property transitions */
+/* theme toggle - one crossfade, not hundreds of property transitions */
 function applyTheme(next) {
   var root = document.documentElement;
   root.classList.add('theme-changing');
