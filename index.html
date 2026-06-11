@@ -130,7 +130,15 @@
     font-family:'Outfit',system-ui,sans-serif;
     line-height:1.55;font-size:16px;
     -webkit-font-smoothing:antialiased;
-    transition:background .45s var(--ease),color .45s var(--ease);
+  }
+  /* смена темы: без каскада transition:all по всей странице */
+  html.theme-changing,
+  html.theme-changing *,
+  html.theme-changing *::before,
+  html.theme-changing *::after{transition:none !important;}
+  @media(prefers-reduced-motion:no-preference){
+    ::view-transition-old(root),
+    ::view-transition-new(root){animation-duration:.22s;animation-timing-function:var(--ease);}
   }
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
   ::selection{background:var(--accent-soft);}
@@ -167,7 +175,6 @@
   .herozone::before{
     content:"";position:absolute;inset:-90px 0 0 0;pointer-events:none;
     background:var(--hero-glow);z-index:0;
-    transition:opacity .45s;
   }
   .hero{
     position:relative;z-index:1;
@@ -253,7 +260,6 @@
     background:var(--surface);border:1px solid var(--line);border-radius:24px;
     box-shadow:var(--panel-shadow);
     overflow:hidden;margin-bottom:96px;
-    transition:background .45s var(--ease),border-color .45s var(--ease);
   }
   .pstep{padding:38px 40px;}
   .panel > * + *{border-top:1px solid var(--line);}
@@ -500,7 +506,6 @@
     background:var(--surface);border:1px solid var(--line);border-radius:20px;
     box-shadow:var(--card-shadow);
     padding:22px 28px;margin:-44px 0 72px;
-    transition:background .45s var(--ease),border-color .45s var(--ease);
   }
   .db-lead{flex:1;min-width:260px;}
   .db-title{font-weight:600;font-size:16.5px;letter-spacing:-.01em;}
@@ -1074,11 +1079,25 @@ var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy=
 var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 var SVG_OPP  = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 
-/* ночной режим */
+/* ночной режим — один crossfade, без анимации сотен свойств */
+function applyTheme(next) {
+  var root = document.documentElement;
+  root.classList.add('theme-changing');
+  root.dataset.theme = next;
+  try { localStorage.setItem('uml-theme', next); } catch (e) {}
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = next === 'dark' ? '#101214' : '#f7f8f9';
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { root.classList.remove('theme-changing'); });
+  });
+}
 document.getElementById('themeBtn').onclick = function () {
   var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = next;
-  try { localStorage.setItem('uml-theme', next); } catch (e) {}
+  if (document.startViewTransition) {
+    document.startViewTransition(function () { applyTheme(next); });
+  } else {
+    applyTheme(next);
+  }
 };
 
 /* фоновая анимация штифтов за hero */
