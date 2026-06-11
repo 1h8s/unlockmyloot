@@ -1,5 +1,5 @@
 # Конфиг воркера-счётчика UnlockMyLoot.
-# НЕ менять id KV — там хранится текущее значение opened.
+# KV id не менять — оттуда подтянется текущее значение при миграции на DO.
 name = "unlockmyloot"
 main = "counter-worker.js"
 compatibility_date = "2026-06-01"
@@ -11,3 +11,11 @@ routes = [
 [[kv_namespaces]]
 binding = "COUNTER"
 id = "4d93f48984724c4d87a1158e99257356"
+
+[[durable_objects.bindings]]
+name = "COUNTER_DO"
+class_name = "Counter"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["Counter"]
