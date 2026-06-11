@@ -340,6 +340,102 @@
   .flipbtn:hover{border-color:var(--ink-3);color:var(--ink);}
   .flipbtn:active{transform:scale(.95);}
   .flipbtn svg{flex:none;}
+  .helpbtn{
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;font-weight:600;
+    background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-ink);
+    border-radius:9px;padding:6px 12px;transition:all .25s var(--ease);
+  }
+  .helpbtn:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--cta-glow);}
+  .helpbtn:active{transform:scale(.95);}
+  .helpbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+  .helpbtn svg{flex:none;}
+  .helpbtn.pulse{animation:helppulse 1.1s var(--ease) 3;}
+  @keyframes helppulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 4px var(--accent),var(--cta-glow);}}
+  .wizback{
+    position:fixed;inset:0;z-index:60;padding:20px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(8,10,12,.55);backdrop-filter:blur(10px);
+    opacity:0;pointer-events:none;transition:opacity .35s var(--ease);
+  }
+  .wizback.open{opacity:1;pointer-events:auto;}
+  .wizpanel{
+    width:min(520px,100%);max-height:min(90vh,720px);overflow:auto;
+    background:var(--surface);border:1px solid var(--line);border-radius:22px;
+    box-shadow:var(--panel-shadow);position:relative;
+    transform:translateY(18px) scale(.97);transition:transform .4s var(--ease);
+    scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;
+  }
+  .wizpanel::-webkit-scrollbar{width:10px;}
+  .wizpanel::-webkit-scrollbar-track{background:transparent;margin:22px 0;}
+  .wizpanel::-webkit-scrollbar-thumb{
+    background:var(--line-2);border-radius:10px;
+    border:3px solid transparent;background-clip:content-box;
+  }
+  .wizpanel::-webkit-scrollbar-thumb:hover{background:var(--ink-3);background-clip:content-box;}
+  .wizpanel::-webkit-scrollbar-corner{background:transparent;}
+  .wizback.open .wizpanel{transform:none;}
+  .wizclose{
+    position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;
+    border:1px solid var(--line-2);background:var(--bg);color:var(--ink-2);cursor:pointer;
+    font-size:20px;line-height:1;transition:all .2s;
+  }
+  .wizclose:hover{border-color:var(--ink-3);color:var(--ink);}
+  .wizhead{padding:26px 26px 0;}
+  .wiztag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:8px;}
+  .wiztitle{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px;padding-right:36px;}
+  .wizsub{color:var(--ink-2);font-size:14px;line-height:1.5;}
+  .wizprog{height:4px;background:var(--line);border-radius:4px;margin:18px 26px 0;overflow:hidden;}
+  .wizprog i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .5s var(--ease);}
+  .wizbody{padding:20px 26px;}
+  .wizcmd{text-align:center;padding:22px 18px;border-radius:16px;background:linear-gradient(165deg,var(--accent-soft),var(--bg));border:1px solid var(--accent-border);margin-bottom:16px;}
+  .wizcmd .lbl{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;}
+  .wizcmd .plate{font-size:13px;color:var(--ink-2);margin-bottom:4px;}
+  .wizcmd .move{font-size:clamp(28px,7vw,36px);font-weight:700;letter-spacing:-.03em;color:var(--accent-ink);display:flex;align-items:center;justify-content:center;gap:12px;}
+  .wizcmd .move svg{flex:none;color:var(--accent);}
+  .wizwhy{font-size:13.5px;color:var(--ink-2);padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);margin-bottom:16px;line-height:1.45;}
+  .wizpins{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-family:var(--mono);font-size:12px;}
+  .wizpin{padding:6px 10px;border-radius:9px;background:var(--bg);border:1px solid var(--line-2);color:var(--ink-2);}
+  .wizpin b{color:var(--ink);font-weight:600;}
+  .wizpin.wall{border-color:var(--danger-border);color:var(--danger-text);background:var(--danger-soft);}
+  .wizpick{font-size:14px;font-weight:600;margin-bottom:10px;}
+  .wizchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .wizchip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--bg);cursor:pointer;transition:all .2s;font-size:13.5px;user-select:none;}
+  .wizchip:active{transform:scale(.97);}
+  .wizchip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .wizchip input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
+  .wizmovers{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
+  .wizmover{display:none;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);}
+  .wizmover.show{display:block;}
+  .wizmover-head{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--ink-2);line-height:1.4;}
+  .wizmover-head b{color:var(--ink);}
+  .wizmover-head .wizwas{font-weight:400;color:var(--ink-3);font-size:12px;}
+  .wizposrow{display:flex;flex-direction:column;gap:6px;}
+  .wizpos{padding:9px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;text-align:left;cursor:pointer;transition:all .15s;color:var(--ink-2);}
+  .wizpos:hover{border-color:var(--ink-3);}
+  .wizpos:active{transform:scale(.97);}
+  .wizpos:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .wizpos.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .wizlockreset{display:flex;align-items:flex-start;gap:10px;margin:4px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--danger-border);background:var(--danger-soft);font-size:13px;line-height:1.45;color:var(--ink-2);cursor:pointer;}
+  .wizlockreset[hidden]{display:none;}
+  .wizlockreset input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
+  .wizlockreset b{color:var(--ink);}
+  .wizfoot{display:flex;flex-direction:column;gap:12px;padding:0 22px 22px;}
+  .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .wizfoot-actions .btn{width:100%;justify-content:center;min-width:0;}
+  .wizfoot-aside{text-align:center;line-height:1.35;}
+  .wizfoot-aside button{background:none;border:none;padding:4px 6px;font-size:12px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;}
+  .wizfoot-aside button:hover{color:var(--ink);}
+  .wizfoot-aside button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
+  @media(max-width:430px){.wizfoot-actions{grid-template-columns:1fr;}}
+  .wizmeta{font-size:12px;color:var(--ink-3);text-align:center;margin-top:10px;}
+  .wizpin.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .dep.wizflash{animation:wizflash .9s var(--ease);}
+  @keyframes wizflash{0%,100%{box-shadow:none;}40%{box-shadow:0 0 0 3px var(--accent),var(--pos-glow);}}
+  .annpanel{max-width:440px;}
+  .annfeat{list-style:none;margin:18px 0 4px;display:flex;flex-direction:column;gap:14px;}
+  .annfeat li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:var(--ink-2);line-height:1.45;}
+  .annfeat i{flex:none;width:26px;height:26px;border-radius:8px;background:var(--accent-soft);border:1px solid var(--accent-border);font-family:var(--mono);font-size:12px;font-style:normal;font-weight:600;color:var(--accent-ink);display:flex;align-items:center;justify-content:center;margin-top:1px;}
 
   /* матрица зависимостей */
   .depscroll{overflow-x:auto;padding-bottom:4px;}
@@ -841,9 +937,13 @@
     </div>
 
     <div class="pstep">
-      <div class="phead">
+      <div class="phead phead-flip">
         <span class="pnum">03</span>
         <span class="ptitle">Links between plates</span>
+        <button class="helpbtn" id="linkHelpBtn" type="button" disabled title="Set pin positions in step 02 first">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.8" stroke="currentColor" stroke-width="1.5"/><path d="M5.4 5.1a1.8 1.8 0 0 1 3.5.7c0 1.1-1.7 1.2-1.7 2.4M7 10.2h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Help
+        </button>
         <p class="pdesc">Move each plate one step and back. Note which plates moved with it and where. Links can be one-way: plate 1 may pull plate 3 even if plate 3 does not pull plate 1.</p>
       </div>
       <div class="pbody">
@@ -977,6 +1077,42 @@
     <span>Algorithm verified on real in-game locks and thousands of random configs.</span>
   </footer>
 </div>
+<div class="wizback" id="linkHelpAnn" aria-hidden="true">
+  <div class="wizpanel annpanel" role="dialog" aria-modal="true" aria-labelledby="linkHelpAnnTitle">
+    <button class="wizclose" id="linkHelpAnnClose" type="button" aria-label="Close">&times;</button>
+    <div class="wizhead">
+      <div class="wiztag">New</div>
+      <div class="wiztitle" id="linkHelpAnnTitle">Link discovery help</div>
+      <p class="wizsub">Step 03 has a <b>Help</b> button - a safe way to map plate links.</p>
+    </div>
+    <div class="wizbody">
+      <ol class="annfeat">
+        <li><i>1</i><span>Set pin positions in <b>step 02</b> first - the wizard needs them.</span></li>
+        <li><i>2</i><span>We tell you which plate to move. Mark what <b>jerked</b> - the link saves itself.</span></li>
+        <li><i>3</i><span>No undo needed - every next command accounts for current positions.</span></li>
+      </ol>
+    </div>
+    <div class="wizfoot">
+      <div class="wizfoot-actions">
+        <button class="btn" type="button" id="linkHelpAnnOk">Got it</button>
+        <button class="btn primary" type="button" id="linkHelpAnnGo">Show me</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wizback" id="linkWizBack" aria-hidden="true">
+  <div class="wizpanel" role="dialog" aria-modal="true" aria-labelledby="linkWizTitle">
+    <button class="wizclose" id="linkWizClose" type="button" aria-label="Close">&times;</button>
+    <div class="wizhead">
+      <div class="wiztag" id="linkWizTag">Step-by-step discovery</div>
+      <div class="wiztitle" id="linkWizTitle">Safe link finder</div>
+      <p class="wizsub" id="linkWizSub"></p>
+      <div class="wizprog" id="linkWizProg" hidden><i id="linkWizProgBar" style="width:0%"></i></div>
+    </div>
+    <div class="wizbody" id="linkWizBody"></div>
+    <div class="wizfoot" id="linkWizFoot"></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script id="solver-core">
@@ -1077,6 +1213,7 @@ function verifySolution(start, link, seq) {
 var N = 6;
 var pins = [];
 var link = [];
+var pinsTouched = false;
 
 var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="currentColor" opacity=".55"/></svg>';
 var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
@@ -1136,6 +1273,7 @@ function init(n) {
   pins = new Array(N).fill(4);
   link = [];
   for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
+  wizMemReset();
   renderCount(); renderPins(); renderDeps();
   document.getElementById('solution').style.display = 'none';
 }
@@ -1157,6 +1295,7 @@ function renderCount() {
         pins[i2] = oldPins[i2];
         for (var j = 0; j < Math.min(oldN, N); j++) link[i2][j] = oldLink[i2][j];
       }
+      wizMemReset();
       renderCount(); renderPins(); renderDeps();
     };
     row.appendChild(b);
@@ -1165,8 +1304,13 @@ function renderCount() {
 
 /* порядок строк: по умолчанию как в игре - 1 снизу (N..1 сверху вниз),
    опционально списком 1..N сверху */
-var FLIP = true;
-try { FLIP = localStorage.getItem('uml-flip') !== '0'; } catch (e) {}
+/* row order: default 1 on top (near → far); button toggles in-game order */
+var FLIP = false;
+try {
+  var flipPref = localStorage.getItem('uml-flip');
+  if (flipPref === '1') FLIP = true;
+  else if (flipPref === '0') FLIP = false;
+} catch (e) {}
 
 function plateOrder() {
   var order = [];
@@ -1199,6 +1343,7 @@ function renderPins() {
     html += '</tr>';
   }
   t.innerHTML = html;
+  updateLinkHelpBtn();
 }
 
 /* FLIP-анимация перестановки строк: замеряем позиции до, рендерим,
@@ -1250,23 +1395,22 @@ function animateRowSwap(tableIds, rerender) {
   document.getElementById('pins').addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('.hole[data-i]') : null;
     if (!b) return;
+    pinsTouched = true;
     pins[+b.dataset.i] = +b.dataset.p;
+    WIZ_MEM.base = null; /* manual pin edit: re-snapshot base state on next wizard open */
     renderPins();
   });
   var fb = document.getElementById('flipBtn');
-  function flipLbl() {
-    document.getElementById('flipLbl').textContent = FLIP ? '1 at bottom, in-game order' : '1 on top';
-  }
   fb.onclick = function () {
     FLIP = !FLIP;
     try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
-    flipLbl();
+    updateFlipLabel();
     animateRowSwap(['pins', 'deps'], function () {
       renderPins();
       renderDeps();
     });
   };
-  flipLbl();
+  updateFlipLabel();
 })();
 
 var DEPSTATE = [
@@ -1355,6 +1499,406 @@ function renderLinkSum() {
     link[+c.dataset.i][+c.dataset.j] = 0;
     renderDeps();
   });
+})();
+
+/* ---------- safe link discovery wizard ---------- */
+var LINK_WIZ = null;
+/* wizard memory across opens: confirmed "no link" marks and the lock's base positions (for R) */
+var WIZ_MEM = { zero: null, base: null };
+function wizMemReset() {
+  WIZ_MEM.zero = null;
+  WIZ_MEM.base = null;
+}
+function wizSyncPins(wiz) {
+  for (var i = 0; i < N; i++) pins[i] = wiz.sim[i];
+  pinsTouched = true;
+  renderPins();
+}
+var WIZ_SVG_L = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 6H6v8M6 6l10 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var WIZ_SVG_R = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M10 6h8v8M18 6 8 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function pinsConfigured() { return pinsTouched && pins.length === N; }
+function updateLinkHelpBtn() {
+  var b = document.getElementById('linkHelpBtn');
+  if (!b) return;
+  var ok = pinsConfigured();
+  b.disabled = !ok;
+  b.title = ok ? 'Find links step by step without wall hits' : 'Set pin positions in step 02 first';
+}
+function plateMoveLabel(d) { return d > 0 ? 'LEFT' : 'RIGHT'; }
+/* wiz-core-start
+   Game mechanics: if a linked plate would hit the wall (pin outside [1,7]),
+   the WHOLE move does not happen - it jerks in place, the pick loses
+   durability, positions stay. Otherwise the move succeeds and linked plates
+   slide by link[i][j]*d. A successful probe closes the whole row i; a failed
+   one only reveals the jerking links - we return to the plate later, once
+   other moves pull the blocker off the wall. */
+function wizMk2d(fill) {
+  var a = [];
+  for (var i = 0; i < N; i++) { a[i] = []; for (var j = 0; j < N; j++) a[i][j] = fill; }
+  return a;
+}
+function wizRowNeedsProbe(wiz, i) {
+  for (var j = 0; j < N; j++) {
+    if (j === i) continue;
+    if (link[i][j] === 0 && !wiz.confirmedZero[i][j]) return true;
+  }
+  return false;
+}
+function wizRowsLeft(wiz) {
+  var n = 0;
+  for (var i = 0; i < N; i++) if (wizRowNeedsProbe(wiz, i)) n++;
+  return n;
+}
+function wizKnownJerksAt(sim, i, d) {
+  var n = 0;
+  for (var j = 0; j < N; j++) {
+    if (j === i || !link[i][j]) continue;
+    var p = sim[j] + link[i][j] * d;
+    if (p < 1 || p > 7) n++;
+  }
+  return n;
+}
+function wizPickDirAt(sim, i) {
+  var best = null, bestScore = Infinity;
+  for (var di = 0; di < 2; di++) {
+    var d = di === 0 ? 1 : -1;
+    var p = sim[i] + d;
+    if (p < 1 || p > 7) continue;
+    if (wizKnownJerksAt(sim, i, d) > 0) continue;
+    var score = Math.abs(p - 4);
+    if (score < bestScore) { bestScore = score; best = d; }
+  }
+  return best;
+}
+function wizSimKnownMove(sim, i, d) {
+  var nxt = sim.slice();
+  nxt[i] += d;
+  for (var j = 0; j < N; j++) {
+    if (j === i || !link[i][j]) continue;
+    nxt[j] += link[i][j] * d;
+  }
+  return nxt;
+}
+function wizFindHelper(wiz) {
+  for (var k = 0; k < N; k++) {
+    if (wizRowNeedsProbe(wiz, k)) continue;
+    for (var di = 0; di < 2; di++) {
+      var d = di === 0 ? 1 : -1;
+      if (wiz.sim[k] + d < 1 || wiz.sim[k] + d > 7) continue;
+      if (wizKnownJerksAt(wiz.sim, k, d) > 0) continue;
+      var nxt = wizSimKnownMove(wiz.sim, k, d);
+      for (var i = 0; i < N; i++) {
+        if (!wizRowNeedsProbe(wiz, i)) continue;
+        if (wizPickDirAt(wiz.sim, i) === null && wizPickDirAt(nxt, i) !== null)
+          return { driver: k, d: d, helper: true };
+      }
+    }
+  }
+  return null;
+}
+function wizNextCmd(wiz) {
+  for (var i = 0; i < N; i++) {
+    if (!wizRowNeedsProbe(wiz, i)) continue;
+    var d = wizPickDirAt(wiz.sim, i);
+    if (d !== null) return { driver: i, d: d };
+  }
+  if (wizRowsLeft(wiz) > 0) return wizFindHelper(wiz);
+  return null;
+}
+function wizMoverOptions(oldPin, d) {
+  var opts = [];
+  for (var s = 0; s < 2; s++) {
+    var L = s === 0 ? 1 : -1;
+    var p = oldPin + L * d;
+    var jerk = p < 1 || p > 7;
+    opts.push({ link: L, pos: jerk ? oldPin : p, jerk: jerk });
+  }
+  return opts;
+}
+function wizApplyOutcome(wiz, cmd, movers) {
+  var i = cmd.driver, d = cmd.d;
+  var failed = false;
+  for (var m = 0; m < movers.length; m++) if (movers[m].jerk) failed = true;
+  for (var m2 = 0; m2 < movers.length; m2++) {
+    if (failed && !movers[m2].jerk) continue;
+    link[i][movers[m2].plate] = movers[m2].link;
+  }
+  if (!failed) {
+    var nxt = wiz.sim.slice();
+    nxt[i] += d;
+    var seen = {};
+    for (var m3 = 0; m3 < movers.length; m3++) {
+      var j = movers[m3].plate;
+      seen[j] = true;
+      nxt[j] += movers[m3].link * d;
+    }
+    for (var k = 0; k < N; k++) {
+      if (k === i || seen[k]) continue;
+      link[i][k] = 0;
+      wiz.confirmedZero[i][k] = true;
+    }
+    wiz.sim = nxt;
+  }
+  wiz.step++;
+  return failed;
+}
+/* wiz-core-end */
+function wizFlashDeps(driver, movers) {
+  for (var m = 0; m < movers.length; m++) {
+    var b = document.querySelector('.dep[data-i="' + driver + '"][data-j="' + movers[m].plate + '"]');
+    if (b) { b.classList.remove('wizflash'); void b.offsetWidth; b.classList.add('wizflash'); }
+  }
+}
+function wizApplyReport(wiz, cmd, movers) {
+  var failed = wizApplyOutcome(wiz, cmd, movers);
+  renderDeps();
+  wizFlashDeps(cmd.driver, movers);
+  return failed;
+}
+function wizRenderPinsBar(st, hi) {
+  var html = '<div class="wizpins">';
+  for (var i = 0; i < N; i++) {
+    var wall = st[i] === 1 || st[i] === 7;
+    html += '<span class="wizpin' + (wall ? ' wall' : '') + (hi === i ? ' on' : '') + '"><b>' + (i + 1) + '</b>→' + st[i] + '</span>';
+  }
+  return html + '</div>';
+}
+function wizProgress(wiz) {
+  var el = document.getElementById('linkWizProg');
+  var bar = document.getElementById('linkWizProgBar');
+  if (!el || !bar) return;
+  el.hidden = false;
+  var left = wizRowsLeft(wiz);
+  var pct = wiz.rows0 ? Math.min(100, Math.round((1 - left / wiz.rows0) * 100)) : 100;
+  bar.style.width = pct + '%';
+}
+function wizRenderIntro() {
+  var wiz = LINK_WIZ;
+  document.getElementById('linkWizTitle').textContent = 'Safe link discovery';
+  document.getElementById('linkWizSub').textContent =
+    'Usually one move per plate. Move in-game, mark what jerked, we compute the rest.';
+  document.getElementById('linkWizProg').hidden = true;
+  document.getElementById('linkWizBody').innerHTML =
+    '<p class="wizwhy">No need to undo moves: the next command accounts for new positions. Found links stay even if you press R in-game.</p>' +
+    wizRenderPinsBar(wiz.sim);
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions">' +
+    '<button class="btn primary" type="button" id="wizStart">Start</button>' +
+    '<button class="btn ghost" type="button" id="wizCancelIntro">Cancel</button></div>';
+  document.getElementById('wizStart').onclick = function () { wizRenderStep(); };
+  document.getElementById('wizCancelIntro').onclick = closeLinkWizard;
+}
+function wizBindStepActions(wiz, c, chipsEl, moversEl) {
+  function wizSyncMovers() {
+    chipsEl.querySelectorAll('.wizchip').forEach(function (lab) {
+      var j = +lab.dataset.j;
+      var on = lab.querySelector('input').checked;
+      lab.classList.toggle('on', on);
+      var panel = document.getElementById('wizMover' + j);
+      if (panel) panel.classList.toggle('show', on);
+      if (!on) moversEl.querySelectorAll('.wizpos[data-j="' + j + '"]').forEach(function (b) { b.classList.remove('on'); });
+    });
+    wizSyncLockReset();
+  }
+  chipsEl.onchange = function (e) {
+    if (!e.target.matches('input')) return;
+    wizSyncMovers();
+  };
+  moversEl.onclick = function (e) {
+    var btn = e.target.closest ? e.target.closest('.wizpos') : null;
+    if (!btn) return;
+    var j = btn.dataset.j;
+    moversEl.querySelectorAll('.wizpos[data-j="' + j + '"]').forEach(function (b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    wizSyncLockReset();
+  };
+  function wizSyncLockReset() {
+    var box = document.getElementById('wizLockReset');
+    if (!box) return;
+    var hasJerk = !!moversEl.querySelector('.wizpos.on[data-jerk="1"]');
+    box.hidden = !hasJerk;
+    if (!hasJerk) document.getElementById('wizLockResetCb').checked = false;
+  }
+  function wizFinish(movers, lockReset) {
+    var failed = wizApplyReport(wiz, c, movers);
+    if (lockReset) {
+      wiz.sim = WIZ_MEM.base.slice();
+      toast('Link saved. The lock reset: pins are back to the starting positions');
+    } else if (failed) {
+      toast('Move blocked - link saved, we will come back to this plate');
+    }
+    wizSyncPins(wiz);
+    wiz.cmd = null;
+    wizRenderStep();
+  }
+  document.getElementById('wizNone').onclick = function () { wizFinish([], false); };
+  document.getElementById('wizConfirm').onclick = function () {
+    var movers = [], bad = false, jerks = 0, slides = 0;
+    chipsEl.querySelectorAll('.wizchip input:checked').forEach(function (inp) {
+      var j = +inp.closest('.wizchip').dataset.j;
+      var sel = moversEl.querySelector('.wizpos.on[data-j="' + j + '"]');
+      if (!sel) {
+        toast('Mark what happened to plate ' + (j + 1));
+        bad = true;
+        return;
+      }
+      var jerk = sel.dataset.jerk === '1';
+      if (jerk) jerks++; else slides++;
+      movers.push({ plate: j, link: +sel.dataset.l, jerk: jerk });
+    });
+    if (bad) return;
+    if (jerks > 0 && slides > 0) {
+      toast('If something hit the wall, the move failed - nothing could slide. Check your marks');
+      return;
+    }
+    var lockReset = jerks > 0 && document.getElementById('wizLockResetCb').checked;
+    wizFinish(movers, lockReset);
+  };
+  document.getElementById('wizGameReset').onclick = function () {
+    wiz.sim = WIZ_MEM.base.slice();
+    wizSyncPins(wiz);
+    wiz.cmd = null;
+    toast('Pins are back to the starting positions, found links kept');
+    wizRenderStep();
+  };
+}
+function wizMoverPanel(wiz, j, d) {
+  var old = wiz.sim[j];
+  var opts = wizMoverOptions(old, d);
+  var btns = '';
+  for (var s = 0; s < opts.length; s++) {
+    var o = opts[s];
+    var label = o.jerk
+      ? 'hit the wall - move failed, pin stays at ' + o.pos
+      : 'slid, pin now at ' + o.pos;
+    btns += '<button type="button" class="wizpos" data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' + label + '</button>';
+  }
+  return '<div class="wizmover" id="wizMover' + j + '" data-j="' + j + '">' +
+    '<div class="wizmover-head">Plate <b>' + (j + 1) + '</b> - what happened? <span class="wizwas">was ' + old + '</span></div>' +
+    '<div class="wizposrow">' + btns + '</div></div>';
+}
+function wizRenderStep() {
+  var wiz = LINK_WIZ;
+  if (!wiz.cmd) {
+    wiz.cmd = wizNextCmd(wiz);
+    if (!wiz.cmd) { wizRenderDone(); return; }
+  }
+  var c = wiz.cmd, i = c.driver, d = c.d;
+  var chips = '', moversHtml = '';
+  for (var j = 0; j < N; j++) {
+    if (j === i) continue;
+    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox"> plate <b>' + (j + 1) + '</b></label>';
+    moversHtml += wizMoverPanel(wiz, j, d);
+  }
+  document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
+  document.getElementById('linkWizSub').textContent = c.helper
+    ? 'Helper move - pull a plate off the wall, this row is already known.'
+    : 'Step ' + (wiz.step + 1) + ' - move in-game, then mark what jerked.';
+  wizProgress(wiz);
+  document.getElementById('linkWizBody').innerHTML =
+    wizRenderPinsBar(wiz.sim, i) +
+    '<div class="wizcmd"><div class="lbl">In-game move</div><div class="plate">plate <b>' + (i + 1) + '</b></div>' +
+    '<div class="move">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
+    '<p class="wizmeta">pin ' + wiz.sim[i] + ' → ' + (wiz.sim[i] + d) + ' · no need to undo</p></div>' +
+    '<p class="wizpick">What jerked with plate <b>' + (i + 1) + '</b>?</p>' +
+    '<div class="wizchips" id="wizChips">' + chips + '</div>' +
+    '<div class="wizmovers" id="wizMovers">' + moversHtml + '</div>' +
+    '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
+    '<span>That was the last mistake: the <b>lock reset</b>. We still record the link, and pins go back to the starting positions.</span></label>';
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions">' +
+    '<button class="btn" type="button" id="wizNone">Nothing jerked</button>' +
+    '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Pressed R in-game - lock reset</button></p>';
+  wizBindStepActions(wiz, c, document.getElementById('wizChips'), document.getElementById('wizMovers'));
+}
+function wizRenderDone() {
+  var left = wizRowsLeft(LINK_WIZ);
+  document.getElementById('linkWizProg').hidden = true;
+  document.getElementById('linkWizTitle').textContent = 'Done';
+  document.getElementById('linkWizSub').textContent = left > 0
+    ? 'Some links cannot be probed without a wall hit - the rest is in the matrix.'
+    : 'Matrix updated. Double-check links, then Break the lock.';
+  document.getElementById('linkWizBody').innerHTML =
+    '<p class="wizwhy">' + (left > 0
+      ? 'Plates at the wall blocked the remaining probes. If you know those links - set them manually in the matrix.'
+      : 'If something does not match the game - fix cells manually or restart the wizard.') + '</p>' + wizRenderPinsBar(LINK_WIZ.sim);
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Close</button></div>';
+  document.getElementById('wizDone').onclick = closeLinkWizard;
+  toast('Links saved to matrix');
+}
+function openLinkWizard() {
+  if (!pinsConfigured()) return;
+  var resume = !!(WIZ_MEM.zero && WIZ_MEM.zero.length === N);
+  if (!resume) WIZ_MEM.zero = wizMk2d(false);
+  if (!WIZ_MEM.base || WIZ_MEM.base.length !== N) WIZ_MEM.base = pins.slice();
+  LINK_WIZ = {
+    sim: pins.slice(), cmd: null, step: 0,
+    confirmedZero: WIZ_MEM.zero, rows0: 0
+  };
+  LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
+  var back = document.getElementById('linkWizBack');
+  back.classList.add('open'); back.setAttribute('aria-hidden', 'false');
+  if (resume) wizRenderStep();
+  else wizRenderIntro();
+}
+function closeLinkWizard() {
+  document.getElementById('linkWizBack').classList.remove('open');
+  document.getElementById('linkWizBack').setAttribute('aria-hidden', 'true');
+  LINK_WIZ = null;
+}
+(function bindLinkWizard() {
+  var btn = document.getElementById('linkHelpBtn');
+  var back = document.getElementById('linkWizBack');
+  if (btn) btn.onclick = openLinkWizard;
+  document.getElementById('linkWizClose').onclick = closeLinkWizard;
+  if (back) back.addEventListener('click', function (e) { if (e.target === back) closeLinkWizard(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && LINK_WIZ) closeLinkWizard();
+    if (e.key === 'Escape' && document.getElementById('linkHelpAnn').classList.contains('open')) closeLinkHelpAnnounce();
+  });
+  updateLinkHelpBtn();
+})();
+
+var LINK_HELP_ANN_KEY = 'uml-linkhelp-intro-v1';
+function markLinkHelpAnnSeen() {
+  try { localStorage.setItem(LINK_HELP_ANN_KEY, '1'); } catch (e) {}
+}
+function closeLinkHelpAnnounce() {
+  var el = document.getElementById('linkHelpAnn');
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden', 'true');
+  markLinkHelpAnnSeen();
+}
+function scrollToLinkHelpBtn() {
+  closeLinkHelpAnnounce();
+  var solver = document.getElementById('solver');
+  if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(function () {
+    var hb = document.getElementById('linkHelpBtn');
+    if (!hb) return;
+    hb.classList.add('pulse');
+    setTimeout(function () { hb.classList.remove('pulse'); }, 3600);
+  }, 550);
+}
+function maybeShowLinkHelpAnnounce() {
+  try { if (localStorage.getItem(LINK_HELP_ANN_KEY)) return; } catch (e) {}
+  if (extractConfigCode()) return;
+  setTimeout(function () {
+    if (LINK_WIZ) return;
+    var el = document.getElementById('linkHelpAnn');
+    el.classList.add('open');
+    el.setAttribute('aria-hidden', 'false');
+  }, 850);
+}
+(function bindLinkHelpAnnounce() {
+  var ann = document.getElementById('linkHelpAnn');
+  document.getElementById('linkHelpAnnOk').onclick = closeLinkHelpAnnounce;
+  document.getElementById('linkHelpAnnGo').onclick = scrollToLinkHelpBtn;
+  document.getElementById('linkHelpAnnClose').onclick = closeLinkHelpAnnounce;
+  ann.addEventListener('click', function (e) { if (e.target === ann) closeLinkHelpAnnounce(); });
 })();
 
 /* ---------- решение ---------- */
@@ -1495,17 +2039,49 @@ function renderSolution(fresh) {
   };
 }
 
-/* ---------- ссылки / пресеты / сброс ---------- */
+/* ---------- share links / presets / reset ---------- */
+function updateFlipLabel() {
+  var el = document.getElementById('flipLbl');
+  if (el) el.textContent = FLIP ? '1 at bottom, in-game order' : '1 on top';
+}
 function encodeConfig() {
   var s = 'v1.' + N + '.' + pins.join('');
   var cells = '';
   for (var i = 0; i < N; i++)
     for (var j = 0; j < N; j++)
       if (i !== j) cells += link[i][j] === 1 ? 'S' : (link[i][j] === -1 ? 'O' : '-');
-  return s + '.' + cells;
+  return s + '.' + cells + '.f' + (FLIP ? '1' : '0');
+}
+function normalizeConfigCode(raw) {
+  if (!raw) return '';
+  raw = String(raw).trim();
+  var qi = raw.indexOf('lock=');
+  if (qi >= 0) {
+    raw = raw.slice(qi + 5);
+    var end = raw.length;
+    var amp = raw.indexOf('&'), hash = raw.indexOf('#');
+    if (amp >= 0) end = Math.min(end, amp);
+    if (hash >= 0) end = Math.min(end, hash);
+    raw = raw.slice(0, end);
+    try { raw = decodeURIComponent(raw.replace(/\+/g, ' ')); } catch (e) {}
+  } else if (raw.indexOf('#') >= 0) {
+    raw = raw.slice(raw.indexOf('#') + 1);
+  }
+  if (raw.charAt(0) === '#') raw = raw.slice(1);
+  try { raw = decodeURIComponent(raw.trim()); } catch (e) { raw = raw.trim(); }
+  return raw.trim();
+}
+function extractConfigCode() {
+  try {
+    var q = new URLSearchParams(location.search).get('lock');
+    if (q) return q;
+  } catch (e) {}
+  if (location.hash.length > 1) return location.hash.slice(1);
+  return '';
 }
 function decodeConfig(code) {
-  var m = /^v1\.(\d)\.(\d+)\.([SO-]+)$/.exec(code);
+  code = normalizeConfigCode(code);
+  var m = /^v1\.(\d)\.(\d+)\.([SO-]+)(?:\.f([01]))?$/i.exec(code);
   if (!m) return false;
   var n = parseInt(m[1], 10);
   if (n < 3 || n > 8 || m[2].length !== n || m[3].length !== n * (n - 1)) return false;
@@ -1516,13 +2092,36 @@ function decodeConfig(code) {
     lk.push(new Array(n).fill(0));
     for (var j = 0; j < n; j++) {
       if (i === j) continue;
-      var ch = m[3][c++];
+      var ch = m[3][c++].toUpperCase();
       lk[i][j] = ch === 'S' ? 1 : (ch === 'O' ? -1 : 0);
     }
   }
   N = n; pins = ps; link = lk;
+  pinsTouched = true;
+  wizMemReset();
+  if (m[4] !== undefined) {
+    FLIP = m[4] === '1';
+    try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
+    updateFlipLabel();
+  }
   renderCount(); renderPins(); renderDeps();
   return true;
+}
+function configShareUrl() {
+  return location.origin + location.pathname + '?lock=' + encodeURIComponent(encodeConfig());
+}
+function bootConfigFromUrl() {
+  var raw = extractConfigCode();
+  if (!raw) return false;
+  if (decodeConfig(raw)) {
+    history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig()));
+    toast('Lock loaded from link');
+    var solver = document.getElementById('solver');
+    if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return true;
+  }
+  toast('Could not read link - copy the full URL');
+  return false;
 }
 function toast(msg) {
   var t = document.getElementById('toast');
@@ -1532,13 +2131,22 @@ function toast(msg) {
 }
 
 document.getElementById('solveBtn').onclick = solveNow;
-document.getElementById('resetBtn').onclick = function () { init(6); history.replaceState(null, '', location.pathname); };
+document.getElementById('resetBtn').onclick = function () {
+  pinsTouched = false;
+  init(6);
+  history.replaceState(null, '', location.pathname);
+};
 document.getElementById('shareBtn').onclick = function () {
-  var url = location.origin + location.pathname + '#' + encodeConfig();
+  var code = encodeConfig();
+  var url = location.origin + location.pathname + '?lock=' + encodeURIComponent(code);
+  history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(code));
   (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
     .then(function () { toast('Lock link copied'); })
     .catch(function () { prompt('Copy link:', url); });
 };
+window.addEventListener('hashchange', function () {
+  if (extractConfigCode()) bootConfigFromUrl();
+});
 /* ---------- счётчик взломанных замков ---------- */
 var COUNTER_API = 'https://api.unlockmyloot.com';
 var lastCounted = 0;
@@ -1586,8 +2194,8 @@ function counterBump() {
 }
 try { counterLoad(); } catch (e) {}
 
-init(6);
-if (location.hash.length > 1) decodeConfig(decodeURIComponent(location.hash.slice(1)));
+if (!bootConfigFromUrl()) init(6);
+maybeShowLinkHelpAnnounce();
 </script>
 </body>
 </html>
