@@ -25,10 +25,22 @@ function corsHeaders(origin) {
   };
 }
 
+// Разовая коррекция пропущенных взломов (POST ломался из‑за лимита KV put).
+// 917 записано за ~15 ч до поломки (~60/ч); ~8 ч пикового трафика без записи → ~480.
+var LOST_ESTIMATE = 480;
+var RECONCILE_KEY = "reconcile_lost_v1";
+
 export class Counter {
   constructor(state, env) {
     this.state = state;
     this.env = env;
+  }
+
+  async maybeReconcile() {
+    if (await this.state.storage.get(RECONCILE_KEY)) return;
+    var cur = await this.readCount();
+    await this.state.storage.put("opened", cur + LOST_ESTIMATE);
+    await this.state.storage.put(RECONCILE_KEY, LOST_ESTIMATE);
   }
 
   async readCount() {
@@ -46,6 +58,7 @@ export class Counter {
   }
 
   async fetch(req) {
+    await this.maybeReconcile();
     if (req.method === "GET") {
       var v = await this.readCount();
       return new Response(JSON.stringify({ opened: v }), {
