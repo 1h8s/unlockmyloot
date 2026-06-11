@@ -400,22 +400,52 @@
   .wizpin.wall{border-color:var(--danger-border);color:var(--danger-text);background:var(--danger-soft);}
   .wizpick{font-size:14px;font-weight:600;margin-bottom:10px;}
   .wizchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
-  .wizchip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--bg);cursor:pointer;transition:all .2s;font-size:13.5px;user-select:none;}
-  .wizchip:active{transform:scale(.97);}
-  .wizchip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
-  .wizchip input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
+  .wizchip{
+    display:inline-flex;align-items:center;padding:9px 14px;border-radius:10px;
+    border:1px solid var(--line-2);background:var(--bg);cursor:pointer;
+    transition:border-color .18s,background .18s,color .18s,box-shadow .18s,transform .1s;
+    font-size:13.5px;user-select:none;line-height:1;
+  }
+  .wizchip:hover{border-color:var(--ink-3);}
+  .wizchip:active{transform:scale(.96);}
+  .wizchip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
+  .wizchip input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+  .wizchip .wizchip-check{
+    width:0;height:13px;opacity:0;transform:scale(.4) rotate(-12deg);flex-shrink:0;
+    transition:width .18s var(--ease),opacity .18s,transform .22s var(--ease),margin .18s;
+    margin-right:0;
+  }
+  .wizchip b{margin-left:5px;}
+  .wizchip.on{
+    border-color:var(--accent);background:var(--accent);color:var(--on-accent);
+    box-shadow:var(--pos-glow);
+  }
+  .wizchip.on .wizchip-check{width:13px;opacity:1;transform:none;margin-right:7px;}
   .wizmovers{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
   .wizmover{display:none;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);}
   .wizmover.show{display:block;}
   .wizmover-head{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--ink-2);line-height:1.4;}
   .wizmover-head b{color:var(--ink);}
   .wizmover-head .wizwas{font-weight:400;color:var(--ink-3);font-size:12px;}
-  .wizposrow{display:flex;flex-direction:column;gap:6px;}
-  .wizpos{padding:9px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);font-size:13px;text-align:left;cursor:pointer;transition:all .15s;color:var(--ink-2);}
+  .wizposrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wizpos{
+    display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+    padding:10px 12px;border-radius:10px;border:1px solid var(--line-2);
+    background:var(--surface);text-align:left;
+    cursor:pointer;transition:all .15s;color:var(--ink-2);
+  }
+  .wizpos-dir{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;letter-spacing:.04em;color:var(--ink);}
+  .wizpos-dir svg{flex-shrink:0;transition:transform .18s var(--ease);}
+  .wizpos-sub{font-size:11.5px;color:var(--ink-3);line-height:1.35;}
   .wizpos:hover{border-color:var(--ink-3);}
+  .wizpos:hover .wizpos-dir svg{transform:translateX(var(--nudge,0));}
   .wizpos:active{transform:scale(.97);}
   .wizpos:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-  .wizpos.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .wizpos.on{border-color:var(--accent);background:var(--accent-soft);}
+  .wizpos.on .wizpos-dir{color:var(--accent-ink);}
+  .wizpos.on .wizpos-sub{color:var(--accent-ink);opacity:.7;}
+  .wizpos.jerk.on{border-color:var(--danger-border);background:var(--danger-soft);}
+  .wizpos.jerk.on .wizpos-dir,.wizpos.jerk.on .wizpos-sub{color:var(--danger-text);opacity:1;}
   .wizlockreset{display:flex;align-items:flex-start;gap:10px;margin:4px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--danger-border);background:var(--danger-soft);font-size:13px;line-height:1.45;color:var(--ink-2);cursor:pointer;}
   .wizlockreset[hidden]{display:none;}
   .wizlockreset input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
@@ -1121,6 +1151,11 @@
    Ход (i, d): pin[i] += d; для j != i: pin[j] += link[i][j] * d.
    link[i][j]: +1 та же сторона, -1 противоположная, 0 нет связи.
    Ход недопустим, если любой штифт выходит за [1,7]. */
+/* solver-start
+   Two-phase solver: BFS finds the minimal move count L, then an exact DP
+   over the shortest-path corridor (distS + distG === L) picks the path
+   with the fewest plate switches. Fewer switches = fewer in-game actions
+   for the same number of moves. */
 function solveLock(start, link) {
   var n = start.length;
   var pow = [1];
@@ -1135,7 +1170,7 @@ function solveLock(start, link) {
   var startIdx = encode(start);
   if (startIdx === goal) return [];
 
-  // эффекты всех 2n ходов
+  // effects of all 2n moves
   var moves = [];
   for (var p = 0; p < n; p++) {
     for (var dd = 0; dd < 2; dd++) {
@@ -1150,40 +1185,139 @@ function solveLock(start, link) {
     }
   }
 
-  var visited = new Uint8Array(total);
-  var parent = new Int32Array(total);
-  var pmove = new Uint8Array(total);
+  var UNSEEN = 0xffff;
   var queue = new Int32Array(total);
-  var head = 0, tail = 0;
-  queue[tail++] = startIdx;
-  visited[startIdx] = 1;
   var digits = new Uint8Array(n);
 
-  while (head < tail) {
-    var cur = queue[head++];
-    var x = cur;
-    for (var j3 = 0; j3 < n; j3++) { digits[j3] = x % 7; x = (x - digits[j3]) / 7; }
-    for (var m = 0; m < moves.length; m++) {
-      var mv = moves[m], ok = true;
-      for (var j4 = 0; j4 < n; j4++) {
-        var nd = digits[j4] + mv.eff[j4];
-        if (nd < 0 || nd > 6) { ok = false; break; }
+  /* BFS from src; stopAt >= 0 - do not expand states of that layer,
+     earlyIdx - stop as soon as this state gets labeled. */
+  function bfs(srcIdx, stopAt, earlyIdx) {
+    var dist = new Uint16Array(total);
+    dist.fill(UNSEEN);
+    var head = 0, tail = 0;
+    queue[tail++] = srcIdx;
+    dist[srcIdx] = 0;
+    while (head < tail) {
+      var cur = queue[head++];
+      var dc = dist[cur];
+      if (stopAt >= 0 && dc >= stopAt) continue;
+      var x = cur;
+      for (var j3 = 0; j3 < n; j3++) { digits[j3] = x % 7; x = (x - digits[j3]) / 7; }
+      for (var m = 0; m < moves.length; m++) {
+        var mv = moves[m], ok = true;
+        for (var j4 = 0; j4 < n; j4++) {
+          var nd = digits[j4] + mv.eff[j4];
+          if (nd < 0 || nd > 6) { ok = false; break; }
+        }
+        if (!ok) continue;
+        var nxt = cur + mv.delta;
+        if (dist[nxt] !== UNSEEN) continue;
+        dist[nxt] = dc + 1;
+        if (earlyIdx >= 0 && nxt === earlyIdx) return dist;
+        queue[tail++] = nxt;
       }
-      if (!ok) continue;
-      var nxt = cur + mv.delta;
-      if (visited[nxt]) continue;
-      visited[nxt] = 1; parent[nxt] = cur; pmove[nxt] = m;
-      if (nxt === goal) {
-        var seq = [], k2 = nxt;
-        while (k2 !== startIdx) { seq.push(pmove[k2]); k2 = parent[k2]; }
-        seq.reverse();
-        return seq.map(function (mi) { return { plate: moves[mi].plate, d: moves[mi].d }; });
+    }
+    return dist;
+  }
+
+  var distS = bfs(startIdx, -1, goal);
+  var L = distS[goal];
+  if (L === UNSEEN) return null;
+  var distG = bfs(goal, L, -1);
+
+  // layers of the shortest-path corridor
+  var layers = [];
+  for (var t = 0; t <= L; t++) layers.push([]);
+  var corridor = 0;
+  for (var s2 = 0; s2 < total; s2++) {
+    var a = distS[s2], b = distG[s2];
+    if (a !== UNSEEN && b !== UNSEEN && a + b === L) { layers[a].push(s2); corridor++; }
+  }
+
+  function movesOf(seq) {
+    return seq.map(function (mi) { return { plate: moves[mi].plate, d: moves[mi].d }; });
+  }
+
+  /* fallback for pathologically wide corridors: walk forward greedily,
+     preferring the same plate as the previous move */
+  if (corridor > 200000) {
+    var seqG = [], curG = startIdx, lastG = -1;
+    for (var tg = 0; tg < L; tg++) {
+      var xg = curG;
+      for (var jg = 0; jg < n; jg++) { digits[jg] = xg % 7; xg = (xg - digits[jg]) / 7; }
+      var pick = -1, pickNxt = 0;
+      for (var mg = 0; mg < moves.length; mg++) {
+        var mvg = moves[mg], okg = true;
+        for (var jg2 = 0; jg2 < n; jg2++) {
+          var ndg = digits[jg2] + mvg.eff[jg2];
+          if (ndg < 0 || ndg > 6) { okg = false; break; }
+        }
+        if (!okg) continue;
+        var nxtg = curG + mvg.delta;
+        if (distG[nxtg] !== L - tg - 1) continue;
+        if (pick < 0 || mvg.plate === lastG) { pick = mg; pickNxt = nxtg; if (mvg.plate === lastG) break; }
       }
-      queue[tail++] = nxt;
+      seqG.push(pick);
+      lastG = moves[pick].plate;
+      curG = pickNxt;
+    }
+    return movesOf(seqG);
+  }
+
+  // exact DP: state = (positions, last moved plate)
+  var W = n + 1;
+  var best = new Map();
+  var from = new Map();
+  best.set(startIdx * W + n, 0);
+  for (var t2 = 0; t2 < L; t2++) {
+    var layer = layers[t2];
+    for (var li = 0; li < layer.length; li++) {
+      var st = layer[li];
+      var x2 = st;
+      for (var j5 = 0; j5 < n; j5++) { digits[j5] = x2 % 7; x2 = (x2 - digits[j5]) / 7; }
+      for (var m2 = 0; m2 < moves.length; m2++) {
+        var mv2 = moves[m2], ok2 = true;
+        for (var j6 = 0; j6 < n; j6++) {
+          var nd2 = digits[j6] + mv2.eff[j6];
+          if (nd2 < 0 || nd2 > 6) { ok2 = false; break; }
+        }
+        if (!ok2) continue;
+        var nxt2 = st + mv2.delta;
+        if (distS[nxt2] !== t2 + 1 || distG[nxt2] !== L - t2 - 1) continue;
+        for (var last = 0; last <= n; last++) {
+          var key = st * W + last;
+          var sw = best.get(key);
+          if (sw === undefined) continue;
+          var nsw = sw + (mv2.plate === last ? 0 : 1);
+          var nkey = nxt2 * W + mv2.plate;
+          var old = best.get(nkey);
+          if (old === undefined || nsw < old) {
+            best.set(nkey, nsw);
+            from.set(nkey, [key, m2]);
+          }
+        }
+      }
     }
   }
-  return null;
+
+  var bestLast = -1, bestSw = Infinity;
+  for (var l2 = 0; l2 < n; l2++) {
+    var v = best.get(goal * W + l2);
+    if (v !== undefined && v < bestSw) { bestSw = v; bestLast = l2; }
+  }
+  if (bestLast < 0) return null;
+  var seq = [];
+  var curKey = goal * W + bestLast;
+  var rootKey = startIdx * W + n;
+  while (curKey !== rootKey) {
+    var f = from.get(curKey);
+    seq.push(f[1]);
+    curKey = f[0];
+  }
+  seq.reverse();
+  return movesOf(seq);
 }
+/* solver-end */
 
 /* Независимая проверка: воспроизводит решение отдельной физикой.
    Возвращает {ok, states} - states[t] = позиции после t ходов. */
@@ -1515,6 +1649,9 @@ function wizSyncPins(wiz) {
   renderPins();
 }
 var WIZ_SVG_L = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 6H6v8M6 6l10 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var WIZ_SVG_CHECK = '<svg class="wizchip-check" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7.5 5.6 10.6 11.5 3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var WIZ_SVG_ARR_L = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var WIZ_SVG_ARR_R = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var WIZ_SVG_R = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M10 6h8v8M18 6 8 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 function pinsConfigured() { return pinsTouched && pins.length === N; }
@@ -1766,17 +1903,26 @@ function wizBindStepActions(wiz, c, chipsEl, moversEl) {
 function wizMoverPanel(wiz, j, d) {
   var old = wiz.sim[j];
   var opts = wizMoverOptions(old, d);
-  var btns = '';
+  var btnL = '', btnR = '';
   for (var s = 0; s < opts.length; s++) {
     var o = opts[s];
-    var label = o.jerk
-      ? 'hit the wall - move failed, pin stays at ' + o.pos
-      : 'slid, pin now at ' + o.pos;
-    btns += '<button type="button" class="wizpos" data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' + label + '</button>';
+    var pinD = o.link * d;
+    var left = pinD > 0; // pin goes right = plate moves left
+    var dir = left
+      ? WIZ_SVG_ARR_L + '<span>LEFT</span>'
+      : '<span>RIGHT</span>' + WIZ_SVG_ARR_R;
+    var sub = o.jerk
+      ? 'hit the wall: pin stayed at ' + o.pos
+      : 'pin ' + old + ' &rarr; ' + o.pos;
+    var html = '<button type="button" class="wizpos' + (o.jerk ? ' jerk' : '') + '" style="--nudge:' + (left ? '-2px' : '2px') + '"' +
+      ' data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' +
+      '<span class="wizpos-dir">' + dir + '</span>' +
+      '<span class="wizpos-sub">' + sub + '</span></button>';
+    if (left) btnL = html; else btnR = html;
   }
   return '<div class="wizmover" id="wizMover' + j + '" data-j="' + j + '">' +
-    '<div class="wizmover-head">Plate <b>' + (j + 1) + '</b> - what happened? <span class="wizwas">was ' + old + '</span></div>' +
-    '<div class="wizposrow">' + btns + '</div></div>';
+    '<div class="wizmover-head">Plate <b>' + (j + 1) + '</b>: which way did it jerk?</div>' +
+    '<div class="wizposrow">' + btnL + btnR + '</div></div>';
 }
 function wizRenderStep() {
   var wiz = LINK_WIZ;
@@ -1788,7 +1934,7 @@ function wizRenderStep() {
   var chips = '', moversHtml = '';
   for (var j = 0; j < N; j++) {
     if (j === i) continue;
-    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox"> plate <b>' + (j + 1) + '</b></label>';
+    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox">' + WIZ_SVG_CHECK + 'plate<b>' + (j + 1) + '</b></label>';
     moversHtml += wizMoverPanel(wiz, j, d);
   }
   document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
@@ -2044,13 +2190,65 @@ function updateFlipLabel() {
   var el = document.getElementById('flipLbl');
   if (el) el.textContent = FLIP ? '1 at bottom, in-game order' : '1 on top';
 }
+/* Compact lock code (v2): bit stream packed into base64url.
+   3 bits N-3, 1 bit flip, 3 bits per pin, 2 bits per link cell.
+   For 6 plates this is 14 chars instead of ~45 with old v1. */
+var CODE_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+function codeBitLen(n) { return 4 + 3 * n + 2 * n * (n - 1); }
 function encodeConfig() {
-  var s = 'v1.' + N + '.' + pins.join('');
-  var cells = '';
-  for (var i = 0; i < N; i++)
+  var bits = [];
+  function push(v, w) { for (var b = w - 1; b >= 0; b--) bits.push((v >> b) & 1); }
+  push(N - 3, 3);
+  push(FLIP ? 1 : 0, 1);
+  for (var i = 0; i < N; i++) push(pins[i] - 1, 3);
+  for (var i2 = 0; i2 < N; i2++)
     for (var j = 0; j < N; j++)
-      if (i !== j) cells += link[i][j] === 1 ? 'S' : (link[i][j] === -1 ? 'O' : '-');
-  return s + '.' + cells + '.f' + (FLIP ? '1' : '0');
+      if (i2 !== j) push(link[i2][j] === 1 ? 1 : (link[i2][j] === -1 ? 2 : 0), 2);
+  var out = '';
+  for (var k = 0; k < bits.length; k += 6) {
+    var v = 0;
+    for (var b2 = 0; b2 < 6; b2++) v = (v << 1) | (k + b2 < bits.length ? bits[k + b2] : 0);
+    out += CODE_ABC[v];
+  }
+  return out;
+}
+function decodeConfigV2(code) {
+  if (!/^[A-Za-z0-9_-]{5,24}$/.test(code)) return false;
+  var bits = [];
+  for (var c = 0; c < code.length; c++) {
+    var v = CODE_ABC.indexOf(code[c]);
+    if (v < 0) return false;
+    for (var b = 5; b >= 0; b--) bits.push((v >> b) & 1);
+  }
+  var pos = 0;
+  function read(w) { var v2 = 0; for (var b2 = 0; b2 < w; b2++) v2 = (v2 << 1) | bits[pos++]; return v2; }
+  var n = read(3) + 3;
+  if (n < 3 || n > 8 || code.length !== Math.ceil(codeBitLen(n) / 6)) return false;
+  var flip = read(1) === 1;
+  var ps = [];
+  for (var i = 0; i < n; i++) {
+    var p = read(3);
+    if (p > 6) return false;
+    ps.push(p + 1);
+  }
+  var lk = [];
+  for (var i2 = 0; i2 < n; i2++) {
+    lk.push(new Array(n).fill(0));
+    for (var j = 0; j < n; j++) {
+      if (i2 === j) continue;
+      var t = read(2);
+      if (t > 2) return false;
+      lk[i2][j] = t === 1 ? 1 : (t === 2 ? -1 : 0);
+    }
+  }
+  N = n; pins = ps; link = lk;
+  pinsTouched = true;
+  wizMemReset();
+  FLIP = flip;
+  try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
+  updateFlipLabel();
+  renderCount(); renderPins(); renderDeps();
+  return true;
 }
 function normalizeConfigCode(raw) {
   if (!raw) return '';
@@ -2082,7 +2280,7 @@ function extractConfigCode() {
 function decodeConfig(code) {
   code = normalizeConfigCode(code);
   var m = /^v1\.(\d)\.(\d+)\.([SO-]+)(?:\.f([01]))?$/i.exec(code);
-  if (!m) return false;
+  if (!m) return decodeConfigV2(code);
   var n = parseInt(m[1], 10);
   if (n < 3 || n > 8 || m[2].length !== n || m[3].length !== n * (n - 1)) return false;
   var ps = m[2].split('').map(Number);
