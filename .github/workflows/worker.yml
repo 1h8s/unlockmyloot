@@ -1,0 +1,40 @@
+name: Deploy Counter Worker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Snapshot counter
+        id: before
+        run: |
+          COUNT=$(curl -sf https://api.unlockmyloot.com/count | jq -r '.opened // 0')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Counter before deploy: $COUNT"
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Verify counter and POST
+        run: |
+          BEFORE="${{ steps.before.outputs.count }}"
+          sleep 5
+          AFTER=$(curl -sf https://api.unlockmyloot.com/count | jq -r '.opened')
+          echo "Counter after deploy: $AFTER"
+          if [ "$AFTER" -lt "$BEFORE" ]; then
+            echo "Counter dropped from $BEFORE to $AFTER"
+            exit 1
+          fi
+          BUMP=$(curl -sf -X POST https://api.unlockmyloot.com/opened | jq -r '.opened')
+          if [ "$BUMP" != "$((AFTER + 1))" ]; then
+            echo "POST failed (got $BUMP, expected $((AFTER + 1)))"
+            exit 1
+          fi
+          echo "POST works, counter now $BUMP"
