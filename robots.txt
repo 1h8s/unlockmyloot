@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://unlockmyloot.com/sitemap.xml
