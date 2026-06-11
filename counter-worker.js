@@ -25,10 +25,16 @@ function corsHeaders(origin) {
   };
 }
 
-// Разовая коррекция пропущенных взломов (POST ломался из‑за лимита KV put).
-// 917 записано за ~15 ч до поломки (~60/ч); ~8 ч пикового трафика без записи → ~480.
+// Коррекция пропущенных взломов (POST ломался из‑за лимита KV put), ~8 ч простоя.
+// v1: нижняя оценка по темпу до поломки (~60/ч) → +480.
+// v2: остаток до среднего между ~60/ч и ~360/ч → (210×8)−480 = +1200.
+var OUTAGE_HOURS = 8;
+var RATE_BEFORE = 60;
+var RATE_NOW = 360;
 var LOST_ESTIMATE = 480;
+var LOST_REMAINDER = Math.round((RATE_BEFORE + RATE_NOW) / 2 * OUTAGE_HOURS) - LOST_ESTIMATE;
 var RECONCILE_KEY = "reconcile_lost_v1";
+var RECONCILE_KEY_V2 = "reconcile_lost_v2";
 
 export class Counter {
   constructor(state, env) {
@@ -37,10 +43,16 @@ export class Counter {
   }
 
   async maybeReconcile() {
-    if (await this.state.storage.get(RECONCILE_KEY)) return;
-    var cur = await this.readCount();
-    await this.state.storage.put("opened", cur + LOST_ESTIMATE);
-    await this.state.storage.put(RECONCILE_KEY, LOST_ESTIMATE);
+    if (!(await this.state.storage.get(RECONCILE_KEY))) {
+      var cur = await this.readCount();
+      await this.state.storage.put("opened", cur + LOST_ESTIMATE);
+      await this.state.storage.put(RECONCILE_KEY, LOST_ESTIMATE);
+    }
+    if (!(await this.state.storage.get(RECONCILE_KEY_V2))) {
+      var cur2 = await this.readCount();
+      await this.state.storage.put("opened", cur2 + LOST_REMAINDER);
+      await this.state.storage.put(RECONCILE_KEY_V2, LOST_REMAINDER);
+    }
   }
 
   async readCount() {
