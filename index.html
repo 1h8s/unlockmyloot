@@ -488,6 +488,8 @@
   }
   .credit a:hover{color:var(--accent-ink);}
   .credit svg{flex:none;}
+  .mirrors a{color:var(--ink-2);text-decoration:none;font-weight:500;border-bottom:1px dashed var(--line-2);transition:color .25s,border-color .25s;}
+  .mirrors a:hover{color:var(--accent-ink);border-color:var(--accent-border);}
   .toast{
     position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);
     background:var(--ink);color:var(--on-ink);padding:12px 24px;border-radius:13px;
@@ -688,6 +690,7 @@
 
   <footer>
     <span>Фанатский инструмент для Gothic 1 Remake. Не аффилирован с Alkimia Interactive / THQ Nordic.</span>
+    <span class="mirrors">Не открывается без VPN? <a href="https://gcore.jsdelivr.net/gh/1h8s/unlockmyloot@main/index.html">Зеркало</a></span>
     <span class="credit">Сайт создан каналом
       <a href="https://www.youtube.com/@1h8s" target="_blank" rel="noopener">
         <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="15" height="11" rx="2.6" stroke="currentColor"/><path d="M6.5 3.8v4.4L10.5 6 6.5 3.8Z" fill="currentColor"/></svg>
@@ -1199,8 +1202,13 @@ function showCounter(n) {
   requestAnimationFrame(tick);
   num.dataset.v = n;
 }
+function counterJson(r) {
+  if (!r.ok) throw new Error('counter http ' + r.status);
+  return r.json();
+}
 function counterLoad() {
-  fetch(COUNTER_API + '/count').then(function (r) { return r.json(); })
+  fetch(COUNTER_API + '/count')
+    .then(counterJson)
     .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
     .catch(function () {});
 }
@@ -1208,7 +1216,8 @@ function counterBump() {
   var now = Date.now();
   if (now - lastCounted < 8000) return;
   lastCounted = now;
-  fetch(COUNTER_API + '/opened', { method: 'POST' }).then(function (r) { return r.json(); })
+  fetch(COUNTER_API + '/opened', { method: 'POST' })
+    .then(counterJson)
     .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
     .catch(function () {});
 }
