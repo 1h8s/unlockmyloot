@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UnlockMyLoot — Gothic 1 Remake Lockpick Solver | No Broken Picks</title>
-<meta name="description" content="Free Gothic 1 Remake lockpick solver: enter plates, pin positions and links — get the shortest safe move sequence. Best Gothic Remake lock picking calculator online.">
+<title>UnlockMyLoot - Gothic 1 Remake Lockpick Solver | No Broken Picks</title>
+<meta name="description" content="Free Gothic 1 Remake lockpick solver: enter plates, pin positions and links - get the shortest safe move sequence. Best Gothic Remake lock picking calculator online.">
 <meta name="keywords" content="gothic 1 remake lockpick solver, gothic remake lock picking tool, gothic remake lockpick calculator, gothic 1 remake lock solver, unlockmyloot, gothic remake chest solver">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="yandex-verification" content="57d0dc84810da636">
@@ -16,16 +16,18 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://unlockmyloot.com/en/">
 <meta property="og:site_name" content="UnlockMyLoot">
-<meta property="og:title" content="UnlockMyLoot — Gothic 1 Remake Lockpick Solver">
-<meta property="og:description" content="Shortest safe move sequence for any Gothic Remake lock. Zero wall hits — zero broken lockpicks.">
-<meta property="og:locale" content="en_US">
+<meta property="og:title" content="UnlockMyLoot - Gothic 1 Remake Lockpick Solver">
+<meta property="og:description" content="Shortest safe move sequence for any Gothic Remake lock. Zero wall hits - zero broken lockpicks.">
 <meta property="og:image" content="https://unlockmyloot.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="UnlockMyLoot — Gothic 1 Remake Lockpick Solver">
+<meta name="twitter:title" content="UnlockMyLoot - Gothic 1 Remake Lockpick Solver">
 <meta name="twitter:description" content="Shortest safe move sequence for any Gothic Remake lock. Zero broken lockpicks.">
 <meta name="twitter:image" content="https://unlockmyloot.com/og.png">
+<meta name="theme-color" content="#101214">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101214'/%3E%3Cpath d='M22 30v-7a10 10 0 0 1 20 0v7' fill='none' stroke='%2334a883' stroke-width='5' stroke-linecap='round'/%3E%3Crect x='16' y='30' width='32' height='24' rx='7' fill='%2334a883'/%3E%3Ccircle cx='32' cy='40' r='3.4' fill='%23101214'/%3E%3Cpath d='M32 43v6' stroke='%23101214' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <script>
   (function(){
     var t = null;
@@ -120,6 +122,9 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
   button,a,select,.hole,.dep{-webkit-tap-highlight-color:transparent;}
+  button:focus-visible,a:focus-visible,summary:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;
+  }
   body{
     background:var(--bg);color:var(--ink);
     font-family:'Outfit',system-ui,sans-serif;
@@ -142,6 +147,7 @@
   @keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.72);opacity:.55}}
   .topnav{display:flex;align-items:center;gap:18px;}
   .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;}
+  .topnav .lang-short{display:none;}
   .topnav a:hover{color:var(--ink);}
   .themebtn{
     width:42px;height:42px;border-radius:12px;cursor:pointer;
@@ -216,15 +222,25 @@
   .cta svg{transition:transform .3s var(--ease);}
   .cta:hover svg{transform:translateY(2px);}
 
-  /* счётчик взломанных замков */
+  /* счётчик взломанных замков + соцдоказательство */
+  .statrow{display:flex;gap:10px 30px;flex-wrap:wrap;align-items:center;margin-top:26px;}
   .lockstat{
-    display:none;margin-top:26px;
+    display:none;
     font-family:var(--mono);font-size:13.5px;color:var(--ink-3);
     align-items:center;gap:10px;letter-spacing:.02em;
   }
-  .lockstat.on{display:flex;animation:rise .8s var(--ease) backwards;}
+  .lockstat.on{display:inline-flex;animation:rise .8s var(--ease) backwards;}
   .lockstat b{color:var(--accent-ink);font-weight:600;font-size:15px;}
   .lockstat svg{flex:none;color:var(--accent);}
+  .dtfstat{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--mono);font-size:13.5px;color:var(--ink-3);
+    text-decoration:none;letter-spacing:.02em;transition:color .25s;
+  }
+  .dtfstat b{color:var(--accent-ink);font-weight:600;font-size:15px;transition:color .25s;}
+  .dtfstat svg{flex:none;color:var(--accent);}
+  .dtfstat:hover{color:var(--ink-2);}
+  .dtfstat:hover b{color:var(--accent);}
 
   /* появление каскадом */
   .rise{opacity:0;transform:translateY(16px);
@@ -240,15 +256,37 @@
     transition:background .45s var(--ease),border-color .45s var(--ease);
   }
   .pstep{padding:38px 40px;}
-  .pstep + .pstep{border-top:1px solid var(--line);}
-  .phead{display:grid;grid-template-columns:64px 1fr;gap:18px;align-items:baseline;margin-bottom:6px;}
+  .panel > * + *{border-top:1px solid var(--line);}
+  .duo > .pstep + .pstep{border-top:1px solid var(--line);}
+  .phead{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;margin-bottom:6px;}
+  .phead-flip{grid-template-columns:auto 1fr auto;}
+  .phead-flip .pdesc{grid-column:2 / -1;}
   .pnum{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
   .ptitle{font-size:21px;font-weight:600;letter-spacing:-.02em;}
   .pdesc{grid-column:2;color:var(--ink-2);font-size:15px;max-width:68ch;}
   .pbody{margin-top:22px;}
-  @media(min-width:769px){.pbody{margin-left:82px;}}
 
-  /* количество плиток */
+  /* количество плиток + схема нумерации */
+  .step01{display:grid;gap:28px;}
+  @media(min-width:861px){
+    /* gap 72 = два внутренних отступа панели: правая колонка стартует там же,
+       где заголовок 03 в блоке ниже */
+    .step01{grid-template-columns:1fr 1fr;align-items:start;gap:72px;}
+    .step01 .pbody{display:flex;justify-content:center;}
+  }
+  .phead-nonum{grid-template-columns:1fr;}
+  .phead-nonum .pdesc{grid-column:1;}
+  .orderbox{display:flex;flex-direction:column;gap:6px;align-items:stretch;}
+  .orderbox .orderviz,.orderbox .ovcap{align-self:center;}
+  .orderbox .orderviz{margin-top:16px;}
+  .ovp{fill:var(--bg);stroke:var(--line-2);stroke-width:1.5;}
+  .ovp1{stroke:var(--accent);fill:var(--accent-soft);}
+  .ovt{fill:var(--ink-3);font-family:var(--mono);font-size:11px;}
+  .ovt1{fill:var(--accent-ink);font-weight:600;font-size:12px;}
+  .ovd{fill:var(--line-2);}
+  .ovdc{fill:var(--accent);}
+  .ovcap{font-size:12px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em;}
+  .ovcap b{color:var(--accent-ink);font-weight:600;}
   .countrow{display:flex;gap:10px;flex-wrap:wrap;}
   .countrow button{
     width:52px;height:52px;border-radius:14px;cursor:pointer;
@@ -263,24 +301,20 @@
     box-shadow:var(--ink-shadow);
   }
 
-  /* дорожки штифтов */
-  .platerow{display:flex;align-items:center;gap:18px;padding:11px 0;}
-  .platerow + .platerow{border-top:1px dashed var(--line);}
-  .platename{width:92px;font-size:14.5px;color:var(--ink-2);white-space:nowrap;}
-  .platename b{color:var(--ink);font-weight:600;}
-  .track{display:flex;gap:7px;}
+  /* дорожки штифтов: те же ячейки и сетка, что у матрицы */
+  .pside{display:block;font-size:10px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;margin-top:1px;font-weight:400;}
   .hole{
-    width:38px;height:38px;border-radius:12px;cursor:pointer;border:1px solid var(--line-2);
+    width:46px;height:46px;border-radius:13px;cursor:pointer;border:1px solid var(--line-2);
     background:var(--bg);color:var(--ink-3);
     font-family:var(--mono);font-size:12.5px;
-    display:flex;align-items:center;justify-content:center;
-    transition:all .25s var(--ease);position:relative;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease);position:relative;padding:0;
   }
   .hole:hover{border-color:var(--ink-3);transform:translateY(-2px);}
   .hole:active{transform:scale(.93);}
   .hole.center{border-style:dashed;}
   .hole.center::after{
-    content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+    content:"";position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
     width:4px;height:4px;border-radius:50%;background:var(--ink-3);opacity:.5;
   }
   .hole.pin{
@@ -291,11 +325,15 @@
     background:var(--accent);border-color:var(--accent);color:var(--on-accent);
     box-shadow:var(--pin-shadow-goal);
   }
-  .edgewarn{
-    display:flex;align-items:center;gap:8px;
-    font-size:13px;color:var(--danger);padding:4px 0 8px 110px;
+  .flipbtn{
+    display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+    background:var(--bg);border:1px solid var(--line-2);color:var(--ink-2);
+    border-radius:9px;padding:6px 11px;transition:all .25s var(--ease);
   }
-  .edgewarn svg{flex:none;}
+  .flipbtn:hover{border-color:var(--ink-3);color:var(--ink);}
+  .flipbtn:active{transform:scale(.95);}
+  .flipbtn svg{flex:none;}
 
   /* матрица зависимостей */
   .depscroll{overflow-x:auto;padding-bottom:4px;}
@@ -456,6 +494,24 @@
   .minihole.p{background:var(--ink);border-color:var(--ink);}
   .minihole.pg{background:var(--accent);border-color:var(--accent);box-shadow:var(--bgpin-glow);}
 
+  /* ---------- полоса DTF ---------- */
+  .dtfband{
+    display:flex;align-items:center;gap:20px 40px;flex-wrap:wrap;
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    box-shadow:var(--card-shadow);
+    padding:22px 28px;margin:-44px 0 72px;
+    transition:background .45s var(--ease),border-color .45s var(--ease);
+  }
+  .db-lead{flex:1;min-width:260px;}
+  .db-title{font-weight:600;font-size:16.5px;letter-spacing:-.01em;}
+  .db-sub{color:var(--ink-2);font-size:13.5px;margin-top:3px;}
+  .db-stats{display:flex;gap:30px;}
+  .db-stats span{display:flex;flex-direction:column;gap:1px;
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.04em;}
+  .db-stats b{font-size:18px;color:var(--accent-ink);font-weight:600;}
+  .dtfband .btn svg{transition:transform .3s var(--ease);}
+  .dtfband .btn:hover svg{transform:translateX(3px);}
+
   /* ---------- FAQ ---------- */
   .faq{padding:0 0 80px;}
   .faq-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:56px;align-items:start;}
@@ -512,26 +568,28 @@
     .faq-grid{grid-template-columns:1fr;gap:28px;}
     .pstep{padding:26px 20px;}
     .phead{grid-template-columns:1fr;gap:4px;}
+    /* кнопка переворота - на одной строке с заголовком, справа */
+    .phead-flip{grid-template-columns:1fr auto;gap:4px 12px;align-items:center;}
+    .phead-flip .pnum{grid-column:1 / -1;}
+    .phead-flip .ptitle{grid-column:1;}
+    .phead-flip .flipbtn{grid-column:2;justify-self:end;}
+    .phead-flip .pdesc{grid-column:1 / -1;}
     .pdesc{grid-column:1;}
     .pbody{margin-left:0;}
-    .hole{width:32px;height:32px;border-radius:10px;}
-    .platename{width:74px;font-size:13px;}
-    .edgewarn{padding-left:0;}
+    .hole{width:40px;height:40px;border-radius:11px;}
     .mini{padding-left:0;}
   }
   @media(max-width:560px){
     .wrap{padding:0 16px;}
     .pstep{padding:22px 14px;}
     .ptitle{font-size:18px;}
-    /* дорожки штифтов: имя сверху, отверстия тянутся на всю ширину */
-    .platerow{flex-wrap:wrap;gap:7px;padding:12px 0;}
-    .platename{width:100%;font-size:13px;}
-    .track{width:100%;gap:5px;}
-    .hole{flex:1 1 0;width:auto;max-width:42px;height:auto;aspect-ratio:1;font-size:11.5px;}
-    /* матрица: компактные ячейки, в подписи строки только номер */
+    /* обе таблицы: одинаковые компактные ячейки, в подписи строки только номер */
     table{border-spacing:4px;}
-    .dep{min-width:34px;width:34px;height:34px;border-radius:9px;}
+    .dep{min-width:36px;width:36px;height:36px;border-radius:9px;}
+    .hole{width:36px;height:36px;border-radius:9px;font-size:11px;}
+    .flipbtn{padding:5px 9px;font-size:10.5px;}
     th.rowh .rlbl{display:none;}
+    th.rowh .pside{display:none;}
     th.rowh{padding-right:8px;}
     th.corner{font-size:9.5px;padding-right:8px;}
     /* кнопки: главная на всю ширину, остальные делят строку */
@@ -545,6 +603,45 @@
     .mini{gap:10px;}
     .minihole{width:9px;height:9px;}
     .countrow button{width:46px;height:46px;}
+    /* полоса DTF: статистика во всю ширину, кнопка вниз */
+    .dtfband{padding:18px 16px;gap:16px;}
+    .db-stats{width:100%;justify-content:space-between;gap:12px;}
+    .dtfband .btn{width:100%;justify-content:center;}
+  }
+  /* средние экраны (ноутбуки 980-1099): колонки 02/03 включаются раньше,
+     ячейки компактнее, чтобы обе таблицы поместились рядом */
+  @media(min-width:980px) and (max-width:1099px){
+    .duo{display:grid;grid-template-columns:1fr 1fr;}
+    .duo > .pstep + .pstep{border-top:none;border-left:1px solid var(--line);}
+    .duo .pstep{padding:26px 22px;}
+    .duo .pdesc{min-height:92px;}
+    .duo .pbody{margin-top:16px;}
+    .duo .depscroll{display:flex;justify-content:center;}
+    .hole,.dep{width:40px;height:40px;min-width:40px;border-radius:11px;}
+    table{border-spacing:5px;}
+  }
+  /* компактный десктоп: шаги 02 и 03 рядом, меньше воздуха по вертикали */
+  @media(min-width:1100px){
+    .hero{padding:52px 0 72px;}
+    .hero p{margin:18px 0 26px;}
+    .statrow{margin-top:20px;}
+    .panel{margin-bottom:72px;}
+    .pstep{padding:28px 36px;}
+    .pbody{margin-top:16px;}
+    .duo{display:grid;grid-template-columns:1fr 1fr;}
+    .duo > .pstep + .pstep{border-top:none;border-left:1px solid var(--line);}
+    /* описания выравниваются по высоте, чтобы тела колонок стартовали на одном уровне;
+       таблицы шагов 02 и 03 построены одинаково, поэтому строки параллельны сами собой */
+    .duo .pdesc{min-height:69px;}
+    .duo .pbody{margin-top:18px;}
+    .duo .depscroll{display:flex;justify-content:center;}
+    .faq{padding:0 0 60px;}
+    .seo{padding:0 0 56px;}
+  }
+  @media(max-width:560px){
+    .pside{display:inline;margin-left:8px;}
+    .topnav .lang-full{display:none;}
+    .topnav .lang-short{display:inline;}
   }
   /* SEO-текст */
   .seo{padding:0 0 72px;}
@@ -569,7 +666,7 @@
       "name": "UnlockMyLoot",
       "url": "https://unlockmyloot.com/en/",
       "inLanguage": "en",
-      "description": "Gothic 1 Remake lockpick solver — shortest safe solution with no broken picks"
+      "description": "Gothic 1 Remake lockpick solver - shortest safe solution with no broken picks"
     },
     {
       "@type": "WebApplication",
@@ -577,8 +674,8 @@
       "alternateName": [
         "Gothic 1 Remake Lockpick Solver",
         "Gothic Remake Lockpick Calculator",
-        "Решатель замков Gothic Remake",
-        "Калькулятор взлома замков Gothic 1 Remake"
+        "Gothic Remake Lockpick Solver",
+        "Gothic 1 Remake Lock Picking Calculator"
       ],
       "url": "https://unlockmyloot.com/en/",
       "applicationCategory": "GameApplication",
@@ -607,7 +704,7 @@
           "name": "How to pick a Gothic 1 Remake lock without breaking lockpicks?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Enter plate count, pin positions (1–7) and plate links in UnlockMyLoot — it returns the shortest safe sequence where no pin hits the wall."
+            "text": "Enter plate count, pin positions (1–7) and plate links in UnlockMyLoot - it returns the shortest safe sequence where no pin hits the wall."
           }
         },
         {
@@ -615,7 +712,7 @@
           "name": "What do left and right mean in Gothic Remake lockpicking?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "By default steps show which way to move the plate in-game. Plate and pin move in opposite directions. You can switch to pin movement display."
+            "text": "By default steps show where to move the plate in-game. Plate and pin move opposite. You can switch to pin movement display."
           }
         },
         {
@@ -623,7 +720,7 @@
           "name": "Why does the solver say no solution exists?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Usually an input error: wrong link direction, missing link, or wrong starting pin. Double-check your inputs."
+            "text": "Usually an input error: wrong link direction, missing link, or wrong start pin. Double-check your inputs."
           }
         },
         {
@@ -648,7 +745,7 @@
     <header class="topbar rise" style="--d:0">
       <div class="wordmark"><span class="dot"></span>UnlockMyLoot</div>
       <nav class="topnav">
-        <a href="/" hreflang="ru" lang="ru">Русский</a>
+        <a href="/" hreflang="ru" lang="ru"><span class="lang-full">Русский</span><span class="lang-short">RU</span></a>
         <a href="#faq">How to use</a>
         <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle theme">
           <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
@@ -660,14 +757,20 @@
     <section class="hero">
       <div class="eyebrow rise" style="--d:1">Gothic 1 Remake · lockpicking</div>
       <h1 class="rise" style="--d:2">Any lock. Zero broken picks.</h1>
-      <p class="rise" style="--d:3">Describe the lock — pin positions and plate links — get the shortest safe move sequence. Every step verified: no wall hits.</p>
+      <p class="rise" style="--d:3">Describe the lock - pin positions and plate links - get the shortest safe move sequence. Every step verified: no wall hits.</p>
       <a class="cta rise" style="--d:4" href="#solver">
         Start picking
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M2 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
-      <div class="lockstat" id="lockstat">
-        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M13.5 9V6.2a3.5 3.5 0 0 0-6.55-1.72" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="4" y="9" width="12" height="8.4" rx="2.4" stroke="currentColor" stroke-width="1.7"/><circle cx="10" cy="12.7" r="1.1" fill="currentColor"/></svg>
-        <span><b id="lockstatN">0</b> <span id="lockstatW">locks cracked so far</span></span>
+      <div class="statrow rise" style="--d:5">
+        <div class="lockstat" id="lockstat">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M13.5 9V6.2a3.5 3.5 0 0 0-6.55-1.72" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="4" y="9" width="12" height="8.4" rx="2.4" stroke="currentColor" stroke-width="1.7"/><circle cx="10" cy="12.7" r="1.1" fill="currentColor"/></svg>
+          <span><b id="lockstatN">0</b> <span id="lockstatW">locks cracked so far</span></span>
+        </div>
+        <a class="dtfstat" href="https://dtf.ru/5121406-kak-vskryt-zamki-v-gothic-1-remake" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1.3 8s2.4-4.6 6.7-4.6S14.7 8 14.7 8s-2.4 4.6-6.7 4.6S1.3 8 1.3 8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.1" stroke="currentColor" stroke-width="1.4"/></svg>
+          <span><b>78 000+</b> on DTF post</span>
+        </a>
       </div>
     </section>
   </div>
@@ -676,28 +779,64 @@
 <div class="wrap">
   <main class="panel rise" style="--d:5" id="solver">
     <div class="pstep">
-      <div class="phead">
-        <span class="pnum">01</span>
-        <span class="ptitle">How many plates in the lock</span>
-        <p class="pdesc">Simple locks — 4–5 plates, normal — 6, hard — 7–8. Numbered from the near plate (1) to the far one.</p>
+      <div class="step01">
+        <div>
+          <div class="phead">
+            <span class="pnum">01</span>
+            <span class="ptitle">How many plates in the lock</span>
+            <p class="pdesc">Simple locks - 4–5 plates, normal - 6, hard - 7–8.</p>
+          </div>
+          <div class="pbody"><div class="countrow" id="countrow"></div></div>
+        </div>
+        <div class="orderbox">
+          <div class="phead phead-nonum">
+            <span class="ptitle">How to count plates</span>
+            <p class="pdesc">Mini lock diagram, as you see it in-game.</p>
+          </div>
+          <svg class="orderviz" width="190" height="104" viewBox="0 0 190 104" fill="none" aria-hidden="true">
+            <rect x="55" y="4"  width="80"  height="15" rx="6" class="ovp"/>
+            <rect x="45" y="25" width="100" height="16" rx="7" class="ovp"/>
+            <rect x="33" y="47" width="124" height="17" rx="8" class="ovp"/>
+            <rect x="19" y="70" width="152" height="22" rx="9" class="ovp ovp1"/>
+            <text x="63" y="15.5" class="ovt">4</text>
+            <text x="141" y="15.5" class="ovt">far</text>
+            <text x="53" y="37" class="ovt">3</text>
+            <text x="41" y="59.5" class="ovt">2</text>
+            <text x="28" y="85.5" class="ovt ovt1">1</text>
+            <circle cx="59"  cy="81" r="2.4" class="ovd"/>
+            <circle cx="71"  cy="81" r="2.4" class="ovd"/>
+            <circle cx="83"  cy="81" r="2.4" class="ovd"/>
+            <circle cx="95"  cy="81" r="3"   class="ovdc"/>
+            <circle cx="107" cy="81" r="2.4" class="ovd"/>
+            <circle cx="119" cy="81" r="2.4" class="ovd"/>
+            <circle cx="131" cy="81" r="2.4" class="ovd"/>
+          </svg>
+          <div class="ovcap"><b>1</b> - nearest to you, counting into the lock</div>
+        </div>
       </div>
-      <div class="pbody"><div class="countrow" id="countrow"></div></div>
     </div>
 
+    <div class="duo">
     <div class="pstep">
-      <div class="phead">
+      <div class="phead phead-flip">
         <span class="pnum">02</span>
         <span class="ptitle">Current pin positions</span>
-        <p class="pdesc">Each plate has 7 holes, numbered left to right. Click the current pin position. Goal — position 4 (marked): pin pops up there.</p>
+        <button class="flipbtn" id="flipBtn" type="button" title="Flip row order">
+          <svg width="11" height="13" viewBox="0 0 11 13" fill="none"><path d="M3 12V1.5M3 1.5 1 4m2-2.5L5 4M8 1v10.5M8 11.5 6 9m2 2.5L10 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="flipLbl">1 on top</span>
+        </button>
+        <p class="pdesc">Each plate has 7 holes, numbered left to right. Click the current pin position. Goal - position 4 (marked): pin pops up there.</p>
       </div>
-      <div class="pbody" id="pins"></div>
+      <div class="pbody">
+        <div class="depscroll"><table id="pins"></table></div>
+      </div>
     </div>
 
     <div class="pstep">
       <div class="phead">
         <span class="pnum">03</span>
         <span class="ptitle">Links between plates</span>
-        <p class="pdesc">In-game, move each plate one step and back. Note which plates moved with it and where. Links can be one-way: plate 1 may pull plate 3 even if plate 3 does not pull plate 1.</p>
+        <p class="pdesc">Move each plate one step and back. Note which plates moved with it and where. Links can be one-way: plate 1 may pull plate 3 even if plate 3 does not pull plate 1.</p>
       </div>
       <div class="pbody">
         <div class="depscroll"><table id="deps"></table></div>
@@ -708,6 +847,7 @@
         </div>
         <div class="linksum" id="linksum"></div>
       </div>
+    </div>
     </div>
 
     <div class="pstep">
@@ -738,44 +878,60 @@
     </div>
   </main>
 
+  <section class="dtfband rise" style="--d:0">
+    <div class="db-lead">
+      <div class="db-title">How this site came to be - story on DTF</div>
+      <div class="db-sub">The chest that ate six lockpicks, a sheet of arrows, and the algorithm that ended it all</div>
+    </div>
+    <div class="db-stats">
+      <span><b>78 000+</b>views</span>
+      <span><b>450+</b>reactions</span>
+      <span><b>340+</b>comments</span>
+    </div>
+    <a class="btn" href="https://dtf.ru/5121406-kak-vskryt-zamki-v-gothic-1-remake" target="_blank" rel="noopener">
+      Read
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M8 2l4.5 4.5L8 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
   <section class="seo" id="about">
-    <h2>Gothic 1 Remake lockpick solver — free online</h2>
+    <h2>Gothic 1 Remake lockpick solver - free online</h2>
     <p><strong>UnlockMyLoot</strong> is a <strong>Gothic 1 Remake lock picking calculator</strong>. The plate-and-pin mini-game breaks lockpicks easily: plates are linked, and a move into the wall damages your tool. This <strong>lockpick solver</strong> searches all lock states and finds the <strong>shortest safe path</strong> with zero illegal moves.</p>
     <h3>Who is this for</h3>
     <ul>
       <li>Gothic Remake players who want to <strong>pick any lock on the first try</strong>;</li>
       <li>anyone stuck on a chest, door, or Old Camp tower lock;</li>
-      <li>streamers and guide authors — <strong>share a direct link</strong> to a specific lock;</li>
+      <li>streamers and guide authors - <strong>share a direct link</strong> to a specific lock;</li>
       <li>anyone searching <strong>gothic remake lockpick solver</strong>, <strong>gothic 1 remake lock solver</strong>, or lockpick calculator.</li>
     </ul>
     <h3>Why use UnlockMyLoot</h3>
-    <p>Step-by-step solution with pin previews, plate/pin direction toggle, simulation verification, URL sharing. Works in browser on PC and phone — no install, no signup. Faster than trial-and-error and safer than sketchy executables.</p>
-    <p>Russian version: <a href="/" hreflang="ru">решатель замков Gothic 1 Remake</a>.</p>
+    <p>Step-by-step solution with pin previews, plate/pin direction toggle, simulation verification, URL sharing. Works in browser on PC and phone - no install, no signup.</p>
+    <p>Russian version: <a href="/" hreflang="ru">Gothic 1 Remake lockpick solver (RU)</a>.</p>
   </section>
 
   <section class="faq" id="faq">
     <div class="faq-grid">
       <div>
         <h2 class="rise" style="--d:0">How it works</h2>
-        <p class="sub">Quick answers to what breaks everyone&apos;s lockpicks.</p>
+        <p class="sub">Quick answers to what breaks everyone's lockpicks.</p>
       </div>
       <div>
         <details open>
           <summary>What do left and right mean</summary>
           <div class="body">
-            <p>By default, step directions show where to move the <b>plate</b> — which button to press in-game. Plate and pin move opposite: press left — plate goes left, pin shifts right in its track.</p>
+            <p>By default, step directions show where to move the <b>plate</b> - which button to press in-game. Plate and pin move opposite: press left - plate goes left, pin shifts right in its track.</p>
             <p>Prefer thinking in <b>pin</b> movement? Toggle it in the solution block. The choice is saved. If in-game movement does not match, this toggle usually fixes it.</p>
-            <p>Step previews always show pin positions (1–7 left to right, goal 4). If preview mismatches the game — a link is wrong: recheck step 03.</p>
+            <p>Step previews always show pin positions (1–7 left to right, goal 4). If preview mismatches the game - a link is wrong: recheck step 03.</p>
           </div>
         </details>
         <details>
           <summary>How to safely map plate links</summary>
           <div class="body">
             <ul>
-              <li><b>Quick-save</b> before the lock — free insurance.</li>
+              <li><b>Quick-save</b> before the lock - free insurance.</li>
               <li>Move a plate one step where it has room, then back. Lock state unchanged.</li>
               <li>Watch other plates: which moved and where.</li>
-              <li>Linked plate at edge (position 1 or 7) — wall move breaks pick. Solver never suggests those, but check edges when scouting.</li>
+              <li>Linked plate at edge (position 1 or 7) - wall move breaks pick. Solver never suggests those, but check edges when scouting.</li>
             </ul>
           </div>
         </details>
@@ -783,15 +939,15 @@
           <summary>Mechanics in brief</summary>
           <div class="body">
             <ul>
-              <li>Lock opens when <b>all pins are at position 4</b> — each pops up.</li>
-              <li>Moving a plate past the edge (positions 1 and 7 — walls), including via links, <b>stresses the pick</b>. Too many — break.</li>
-              <li>Without training — 2 mistakes and progress reset on break. Trainer <b>Fingers in Old Camp</b>: 4–6 mistakes, progress kept; at master level lock simplifies after each break.</li>
+              <li>Lock opens when <b>all pins are at position 4</b> - each pops up.</li>
+              <li>Moving a plate past the edge (positions 1 and 7 - walls), including via links, <b>stresses the pick</b>. Too many - break.</li>
+              <li>Without training - 2 mistakes and progress reset on break. Trainer <b>Fingers in Old Camp</b>: 4–6 mistakes, progress kept; at master level lock simplifies after each break.</li>
               <li>Solver runs BFS over all states and finds the <b>shortest</b> wall-free path. Solution is verified by simulation before display.</li>
             </ul>
           </div>
         </details>
         <details>
-          <summary>Says no solution — what to do</summary>
+          <summary>Says no solution - what to do</summary>
           <div class="body">
             <p>No safe path exists for this input. 99% of the time it is a typo: wrong link direction, missing link, or wrong start pin. Recheck steps 02–03.</p>
             <p>Mathematically unsolvable configs exist, but in-game locks always have a solution.</p>
@@ -803,7 +959,7 @@
 
   <footer>
     <span>Fan tool for Gothic 1 Remake. Not affiliated with Alkimia Interactive / THQ Nordic.</span>
-    <span class="mirrors">Blocked without VPN? <a href="https://gcore.jsdelivr.net/gh/1h8s/unlockmyloot@main/en/index.html">Mirror</a></span>
+    <span class="mirrors">Blocked without VPN? <a href="https://gcore.jsdelivr.net/gh/1h8s/unlockmyloot@main/en/index.html">Mirror</a> · <a href="/" hreflang="ru"><span class="lang-full">Русский</span><span class="lang-short">RU</span></a></span>
     <span class="credit">Made by
       <a href="https://www.youtube.com/@1h8s" target="_blank" rel="noopener">
         <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true"><rect x=".5" y=".5" width="15" height="11" rx="2.6" stroke="currentColor"/><path d="M6.5 3.8v4.4L10.5 6 6.5 3.8Z" fill="currentColor"/></svg>
@@ -817,7 +973,7 @@
 
 <script id="solver-core">
 /* ===================== ЯДРО РЕШАТЕЛЯ =====================
-   Состояние: массив позиций штифтов (1..7), цель — все 4.
+   Состояние: массив позиций штифтов (1..7), цель - все 4.
    Ход (i, d): pin[i] += d; для j != i: pin[j] += link[i][j] * d.
    link[i][j]: +1 та же сторона, -1 противоположная, 0 нет связи.
    Ход недопустим, если любой штифт выходит за [1,7]. */
@@ -886,7 +1042,7 @@ function solveLock(start, link) {
 }
 
 /* Независимая проверка: воспроизводит решение отдельной физикой.
-   Возвращает {ok, states} — states[t] = позиции после t ходов. */
+   Возвращает {ok, states} - states[t] = позиции после t ходов. */
 function verifySolution(start, link, seq) {
   var n = start.length;
   var cur = start.slice();
@@ -917,7 +1073,6 @@ var link = [];
 var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="currentColor" opacity=".55"/></svg>';
 var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
 var SVG_OPP  = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
-var SVG_WARN = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 13 12H1L7 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 5.5V8.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="10.2" r=".8" fill="currentColor"/></svg>';
 
 /* ночной режим */
 document.getElementById('themeBtn').onclick = function () {
@@ -986,41 +1141,116 @@ function renderCount() {
   })(c);
 }
 
-function renderPins() {
-  var box = document.getElementById('pins');
-  box.innerHTML = '';
-  for (var i = 0; i < N; i++) (function (i) {
-    var row = document.createElement('div');
-    row.className = 'platerow';
-    var name = document.createElement('div');
-    name.className = 'platename';
-    name.innerHTML = 'Plate <b>' + (i + 1) + '</b>';
-    row.appendChild(name);
-    var tr = document.createElement('div');
-    tr.className = 'track';
-    for (var p = 1; p <= 7; p++) (function (p) {
-      var h = document.createElement('div');
-      h.className = 'hole' + (p === 4 ? ' center' : '');
-      if (pins[i] === p) h.className += p === 4 ? ' pin atgoal' : ' pin';
-      h.textContent = p;
-      h.onclick = function () { pins[i] = p; renderPins(); };
-      tr.appendChild(h);
-    })(p);
-    row.appendChild(tr);
-    box.appendChild(row);
-    if (pins[i] === 1 || pins[i] === 7) {
-      var w = document.createElement('div');
-      w.className = 'edgewarn';
-      w.innerHTML = SVG_WARN + 'pin at wall — moves this way break the pick';
-      box.appendChild(w);
-    }
-  })(i);
+/* порядок строк: по умолчанию как в игре - 1 снизу (N..1 сверху вниз),
+   опционально списком 1..N сверху */
+var FLIP = true;
+try { FLIP = localStorage.getItem('uml-flip') !== '0'; } catch (e) {}
+
+function plateOrder() {
+  var order = [];
+  for (var i = 0; i < N; i++) order.push(i);
+  if (FLIP) order.reverse();
+  return order;
 }
+
+function rowLabel(i) {
+  var side = i === 0 ? 'near' : (i === N - 1 ? 'far' : '');
+  return '<span class="rlbl">plate </span><b>' + (i + 1) + '</b>' +
+    (side ? '<span class="pside">' + side + '</span>' : '');
+}
+
+function renderPins() {
+  var t = document.getElementById('pins');
+  var html = '<tr><th class="corner">plate &darr;<br>position &rarr;</th>';
+  for (var p = 1; p <= 7; p++) html += '<th class="colh">' + p + '</th>';
+  html += '</tr>';
+  var order = plateOrder();
+  for (var k = 0; k < order.length; k++) {
+    var i = order[k];
+    html += '<tr data-plate="' + i + '"><th class="rowh">' + rowLabel(i) + '</th>';
+    for (var p2 = 1; p2 <= 7; p2++) {
+      var cls = 'hole' + (p2 === 4 ? ' center' : '') +
+        (pins[i] === p2 ? (p2 === 4 ? ' pin atgoal' : ' pin') : '');
+      html += '<td><button type="button" class="' + cls + '" data-i="' + i + '" data-p="' + p2 +
+        '" title="Plate ' + (i + 1) + ', position ' + p2 + '">' + p2 + '</button></td>';
+    }
+    html += '</tr>';
+  }
+  t.innerHTML = html;
+}
+
+/* FLIP-анимация перестановки строк: замеряем позиции до, рендерим,
+   возвращаем строки transform'ом на старые места и отпускаем с пружиной */
+function animateRowSwap(tableIds, rerender) {
+  var reduced = false;
+  try {
+    reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+  var before = {};
+  if (!reduced) {
+    tableIds.forEach(function (id) {
+      var rows = document.querySelectorAll('#' + id + ' tr[data-plate]');
+      for (var r = 0; r < rows.length; r++)
+        before[id + '-' + rows[r].getAttribute('data-plate')] = rows[r].getBoundingClientRect().top;
+    });
+  }
+  rerender();
+  if (reduced) return;
+  var animated = [];
+  tableIds.forEach(function (id) {
+    var rows = document.querySelectorAll('#' + id + ' tr[data-plate]');
+    for (var r = 0; r < rows.length; r++) {
+      var el = rows[r];
+      var key = id + '-' + el.getAttribute('data-plate');
+      if (!(key in before)) continue;
+      var delta = before[key] - el.getBoundingClientRect().top;
+      if (!delta) continue;
+      el.style.transition = 'none';
+      el.style.transform = 'translateY(' + delta + 'px)';
+      animated.push({ el: el, idx: r });
+    }
+  });
+  if (!animated.length) return;
+  void document.body.offsetHeight; /* фиксируем стартовые позиции */
+  animated.forEach(function (a) {
+    a.el.style.transition = 'transform .55s cubic-bezier(.34,1.56,.64,1) ' + (a.idx * 35) + 'ms';
+    a.el.style.transform = '';
+  });
+  setTimeout(function () {
+    animated.forEach(function (a) {
+      a.el.style.transition = '';
+      a.el.style.transform = '';
+    });
+  }, 900);
+}
+
+(function bindPins() {
+  document.getElementById('pins').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.hole[data-i]') : null;
+    if (!b) return;
+    pins[+b.dataset.i] = +b.dataset.p;
+    renderPins();
+  });
+  var fb = document.getElementById('flipBtn');
+  function flipLbl() {
+    document.getElementById('flipLbl').textContent = FLIP ? '1 at bottom, in-game order' : '1 on top';
+  }
+  fb.onclick = function () {
+    FLIP = !FLIP;
+    try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
+    flipLbl();
+    animateRowSwap(['pins', 'deps'], function () {
+      renderPins();
+      renderDeps();
+    });
+  };
+  flipLbl();
+})();
 
 var DEPSTATE = [
   { v: 0,  cls: '',     icon: SVG_NONE, txt: 'no movement' },
   { v: 1,  cls: 'same', icon: SVG_SAME, txt: 'same direction' },
-  { v: -1, cls: 'opp',  icon: SVG_OPP,  txt: 'opposite' }
+  { v: -1, cls: 'opp',  icon: SVG_OPP,  txt: 'in opposite' }
 ];
 function depMeta(v) {
   return DEPSTATE.find(function (s) { return s.v === v; });
@@ -1031,15 +1261,17 @@ function renderDeps() {
   var html = '<tr><th class="corner">move &darr;<br>affects &rarr;</th>';
   for (var j = 0; j < N; j++) html += '<th class="colh" id="ch' + j + '">' + (j + 1) + '</th>';
   html += '</tr>';
-  for (var i = 0; i < N; i++) {
-    html += '<tr><th class="rowh" id="rh' + i + '"><span class="rlbl">plate </span><b>' + (i + 1) + '</b></th>';
+  var order = plateOrder();
+  for (var k = 0; k < order.length; k++) {
+    var i = order[k];
+    html += '<tr data-plate="' + i + '"><th class="rowh" id="rh' + i + '">' + rowLabel(i) + '</th>';
     for (var j2 = 0; j2 < N; j2++) {
       if (i === j2) {
         html += '<td><span class="dep diag"></span></td>';
       } else {
         var st = depMeta(link[i][j2]);
         html += '<td><button type="button" class="dep ' + st.cls + '" data-i="' + i + '" data-j="' + j2 +
-          '" title="Plate ' + (i + 1) + ' moves — plate ' + (j2 + 1) + ': ' + st.txt + '">' +
+          '" title="Plate ' + (i + 1) + ' moves - plate ' + (j2 + 1) + ': ' + st.txt + '">' +
           st.icon + '</button></td>';
       }
     }
@@ -1062,7 +1294,7 @@ function renderLinkSum() {
           '<span class="x">&times;</span></button>';
       }
   box.innerHTML = html ||
-    '<span class="lempty">No links marked. If plates move independently — leave as is and hit &laquo;Pick lock&raquo;.</span>';
+    '<span class="lempty">No links marked. If plates move independently - leave as is and hit &laquo;Pick lock&raquo;.</span>';
 }
 
 (function bindDeps() {
@@ -1076,7 +1308,7 @@ function renderLinkSum() {
     link[i][j] = st.v;
     b.className = 'dep ' + st.cls;
     b.innerHTML = st.icon;
-    b.title = 'Plate ' + (i + 1) + ' moves — plate ' + (j + 1) + ': ' + st.txt;
+    b.title = 'Plate ' + (i + 1) + ' moves - plate ' + (j + 1) + ': ' + st.txt;
     renderLinkSum();
   });
   t.addEventListener('mouseover', function (e) {
@@ -1158,20 +1390,20 @@ function solveNow() {
       body.innerHTML =
         '<div class="sol-head"><span class="sol-title">Solution</span></div>' +
         '<div class="msg err"><b>No safe solution exists</b> for this config. ' +
-        'Almost certainly an input error: recheck start pins and links — especially same/opposite direction ' +
+        'Almost certainly an input error: recheck start pins and links - especially same/opposite direction ' +
         'and one-way links. See FAQ below.</div>';
       return;
     }
     if (seq.length === 0) {
       body.innerHTML =
         '<div class="sol-head"><span class="sol-title">Solution</span></div>' +
-        '<div class="msg ok">All pins already centered — lock is open. No moves needed.</div>';
+        '<div class="msg ok">All pins already centered - lock is open. No moves needed.</div>';
       return;
     }
 
     var check = verifySolution(pins.slice(), link, seq);
     if (!check.ok) {
-      body.innerHTML = '<div class="msg err">Internal verification error — please report to the site author.</div>';
+      body.innerHTML = '<div class="msg err">Internal verification error - please report to the site author.</div>';
       return;
     }
 
@@ -1212,7 +1444,7 @@ function renderSolution(fresh) {
     '<span class="sol-meta"><b>' + seq.length + '</b> moves &middot; ' + groups.length +
     ' actions &middot; ' + dt + ' ms &middot; no wall hits</span></div>' +
     '<label class="pvtoggle"><input type="checkbox" id="pvToggle"' + (PV_ON ? ' checked' : '') + '> pin positions after each step</label>' +
-    '<label class="pvtoggle"><input type="checkbox" id="invToggle"' + (PLATE_MODE ? ' checked' : '') + '> directions show plate movement (button to press); off — pin movement</label>' +
+    '<label class="pvtoggle"><input type="checkbox" id="invToggle"' + (PLATE_MODE ? ' checked' : '') + '> directions show plate movement (button to press); off - pin movement</label>' +
     '<div class="steps">';
 
   for (var g = 0; g < groups.length; g++) {
@@ -1226,7 +1458,7 @@ function renderSolution(fresh) {
       '<div class="steppv"' + (PV_ON ? '' : ' style="display:none"') + '>' + miniTracks(after) + '</div>' +
       '</div>';
   }
-  html += '</div><div class="msg ok">After the last step all pins reach center — lock opens. ' +
+  html += '</div><div class="msg ok">After the last step all pins reach center - lock opens. ' +
     'Solution verified by simulation. Click steps to mark done.</div>';
   body.innerHTML = html;
   document.getElementById('pvToggle').onchange = function () {
