@@ -88,7 +88,8 @@ export class Counter {
       });
     }
 
-    // копилка замков: код конфигурации -> счётчик вводов
+    // копилка замков: код конфигурации -> счётчик вводов.
+    // Дополнительно индекс по штифтам (pins=n.p1p2...) для подсказок связей.
     if (path === "/lock" && req.method === "POST") {
       var code = url.searchParams.get("code") || "";
       if (!/^[A-Za-z0-9_.-]{4,64}$/.test(code)) {
@@ -99,6 +100,14 @@ export class Counter {
       rec.c += 1;
       rec.l = Date.now();
       await this.state.storage.put(key, rec);
+
+      var pinsKey = url.searchParams.get("pins") || "";
+      if (/^[3-8]\.[1-7]{3,8}$/.test(pinsKey)) {
+        var pk = "pi:" + pinsKey;
+        var idx = (await this.state.storage.get(pk)) || {};
+        idx[code] = (idx[code] || 0) + 1;
+        await this.state.storage.put(pk, idx);
+      }
       return new Response(JSON.stringify({ ok: true }), {
         headers: { "Content-Type": "application/json" }
       });
@@ -110,7 +119,32 @@ export class Counter {
         out.push({ code: k.slice(3), count: rec2.c, first: rec2.f, last: rec2.l });
       });
       out.sort(function (a, b) { return b.count - a.count; });
-      return new Response(JSON.stringify({ total: out.length, locks: out.slice(0, 200) }), {
+      var lim = Math.max(1, Math.min(100, parseInt(url.searchParams.get("limit") || "100", 10) || 100));
+      return new Response(JSON.stringify({ total: out.length, locks: out.slice(0, lim) }), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    /* Подсказка связей: по штифтам отдаём вариант-лидер, только если он
+       уверенный (вводили >= 3 раз и >= 60% всех вводов этой расстановки). */
+    if (path === "/suggest" && req.method === "GET") {
+      var qp = url.searchParams.get("pins") || "";
+      if (!/^[3-8]\.[1-7]{3,8}$/.test(qp)) {
+        return new Response(JSON.stringify({ found: false }), {
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+      var idx2 = (await this.state.storage.get("pi:" + qp)) || {};
+      var bestCode = null, bestC = 0, sum = 0;
+      for (var c2 in idx2) {
+        sum += idx2[c2];
+        if (idx2[c2] > bestC) { bestC = idx2[c2]; bestCode = c2; }
+      }
+      if (!bestCode || bestC < 3 || bestC / sum <= 0.6) {
+        return new Response(JSON.stringify({ found: false }), {
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+      return new Response(JSON.stringify({ found: true, code: bestCode, count: bestC }), {
         headers: { "Content-Type": "application/json" }
       });
     }
@@ -134,7 +168,8 @@ export default {
       (url.pathname === "/count" && req.method === "GET") ||
       (url.pathname === "/opened" && req.method === "POST") ||
       (url.pathname === "/lock" && req.method === "POST") ||
-      (url.pathname === "/locks" && req.method === "GET")
+      (url.pathname === "/locks" && req.method === "GET") ||
+      (url.pathname === "/suggest" && req.method === "GET")
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");

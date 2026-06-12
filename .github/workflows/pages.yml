@@ -30,10 +30,11 @@ jobs:
 
       - name: Collect static files
         run: |
-          mkdir -p dist/en
+          mkdir -p dist/en dist/locks
           cp index.html og.png robots.txt sitemap.xml dist/
           cp favicon.ico favicon.svg apple-touch-icon.png icon-192.png icon-512.png site.webmanifest dist/
           cp en/index.html dist/en/
+          cp locks/index.html dist/locks/
 
       - uses: actions/upload-pages-artifact@v3
         with:

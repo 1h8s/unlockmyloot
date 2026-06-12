@@ -526,6 +526,17 @@
   }
   @keyframes chipin{from{opacity:0;transform:scale(.9) translateY(4px);}to{opacity:1;transform:none;}}
   .lempty{animation:chipin .35s var(--ease) backwards;}
+  .suggest{
+    display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;
+    margin-top:14px;padding:13px 17px;border-radius:13px;
+    background:var(--accent-soft);border:1px solid var(--accent-border);
+    color:var(--accent-ink);font-size:14.5px;
+    animation:chipin .35s var(--ease) backwards;
+  }
+  .suggest b{font-weight:600;}
+  .sg-act{display:flex;gap:8px;}
+  .suggest .btn{padding:8px 14px;font-size:13.5px;}
+  .suggest .btn.ghost{border-color:var(--accent-border);}
   .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
   .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
   .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
@@ -888,6 +899,7 @@
       <div class="wordmark"><span class="dot"></span>UnlockMyLoot</div>
       <nav class="topnav">
         <a href="/" hreflang="ru" lang="ru"><span class="lang-full">Русский</span><span class="lang-short">RU</span></a>
+        <a href="/locks/">Locks</a>
         <a href="#faq">How to use</a>
         <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle theme">
           <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
@@ -992,6 +1004,7 @@
           <span style="color:var(--danger)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> opposite</span>
         </div>
         <div class="linksum" id="linksum"></div>
+        <div id="suggestBox"></div>
       </div>
     </div>
     </div>
@@ -2419,15 +2432,81 @@ function counterLoad() {
     .catch(function () {});
 }
 var REPORTED_LOCKS = {};
+var SUGGESTED_CODE = null;
+function pinsKeyStr() { return N + '.' + pins.join(''); }
 function reportLockConfig() {
   try {
     var code = encodeConfig();
     if (!code || REPORTED_LOCKS[code]) return;
+    if (code === SUGGESTED_CODE) return; /* связи из подсказки - не голосуем сами за себя */
     REPORTED_LOCKS[code] = true;
-    fetch(COUNTER_API + '/lock?code=' + encodeURIComponent(code), { method: 'POST' })
+    fetch(COUNTER_API + '/lock?code=' + encodeURIComponent(code) +
+      '&pins=' + encodeURIComponent(pinsKeyStr()), { method: 'POST' })
       .catch(function () {});
   } catch (e) {}
 }
+
+/* Подсказка связей: если эту расстановку уже вскрывали, предлагаем матрицу */
+var SUGGEST_DISMISSED = false;
+var suggestTimer = 0;
+function matrixEmpty() {
+  for (var i = 0; i < N; i++)
+    for (var j = 0; j < N; j++)
+      if (link[i][j]) return false;
+  return true;
+}
+function maybeSuggestLinks() {
+  var box = document.getElementById('suggestBox');
+  if (!box) return;
+  if (SUGGEST_DISMISSED || !pinsConfigured() || !matrixEmpty()) {
+    box.innerHTML = '';
+    return;
+  }
+  clearTimeout(suggestTimer);
+  suggestTimer = setTimeout(function () {
+    if (SUGGEST_DISMISSED || !pinsConfigured() || !matrixEmpty()) return;
+    fetch(COUNTER_API + '/suggest?pins=' + encodeURIComponent(pinsKeyStr()))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.found || !matrixEmpty() || SUGGEST_DISMISSED) return;
+        renderSuggestBox(d);
+      })
+      .catch(function () {});
+  }, 600);
+}
+function renderSuggestBox(d) {
+  var box = document.getElementById('suggestBox');
+  box.innerHTML = '<div class="suggest">' +
+    '<span>This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?</span>' +
+    '<span class="sg-act">' +
+    '<button class="btn" type="button" id="sgYes">Fill in</button>' +
+    '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
+    '</span></div>';
+  box.querySelector('#sgYes').onclick = function () {
+    var savedPins = pins.slice(), savedFlip = FLIP;
+    if (decodeConfig(d.code)) {
+      pins = savedPins;
+      if (FLIP !== savedFlip) {
+        FLIP = savedFlip;
+        try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
+        updateFlipLabel();
+      }
+      SUGGESTED_CODE = d.code;
+      renderCount(); renderPins(); renderDeps();
+      box.innerHTML = '';
+      toast('Links filled in - check the matrix and hit Pick lock');
+    }
+  };
+  box.querySelector('#sgNo').onclick = function () {
+    SUGGEST_DISMISSED = true;
+    box.innerHTML = '';
+  };
+}
+/* хуки: проверяем подсказку при каждом изменении штифтов или матрицы */
+var _origRenderPins = renderPins;
+renderPins = function () { _origRenderPins(); maybeSuggestLinks(); };
+var _origRenderLinkSum = renderLinkSum;
+renderLinkSum = function () { _origRenderLinkSum(); maybeSuggestLinks(); };
 function counterBump() {
   var now = Date.now();
   if (now - lastCounted < 8000) return;

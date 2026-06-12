@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Каталог замков Gothic 1 Remake - UnlockMyLoot</title>
+<meta name="description" content="Известные замки Gothic 1 Remake с готовыми конфигурациями: дверь башни Старого Лагеря и другие. Плюс живой топ замков, которые вскрывают игроки прямо сейчас.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://unlockmyloot.com/locks/">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#101214">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://unlockmyloot.com/locks/">
+<meta property="og:site_name" content="UnlockMyLoot">
+<meta property="og:title" content="Каталог замков Gothic 1 Remake">
+<meta property="og:description" content="Известные замки с готовыми конфигурациями и живой топ из копилки сайта.">
+<meta property="og:image" content="https://unlockmyloot.com/og.png">
+<script>
+  (function(){
+    var t = null;
+    try { t = localStorage.getItem('uml-theme'); } catch(e) {}
+    document.documentElement.dataset.theme = (t === 'light' || t === 'dark') ? t : 'dark';
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8f9; --surface:#ffffff; --ink:#1c2024; --ink-2:#5b636b; --ink-3:#9aa3ab;
+    --line:#e4e7ea; --line-2:#d3d8dc;
+    --accent:#0e8a6a; --accent-ink:#0b6b53; --accent-soft:#e3f2ec; --accent-border:#bcdfd2;
+    --card-shadow:0 24px 48px -28px rgba(28,32,36,.14);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  [data-theme="dark"]{
+    --bg:#101214; --surface:#17191d; --ink:#e7eaec; --ink-2:#9ba3ab; --ink-3:#5f6770;
+    --line:#24272c; --line-2:#32373d;
+    --accent:#34a883; --accent-ink:#62c7a4; --accent-soft:#16241f; --accent-border:#2a4a3d;
+    --card-shadow:0 24px 48px -28px rgba(0,0,0,.6);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Outfit',system-ui,sans-serif;line-height:1.55;font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;}
+  .wordmark{font-weight:700;letter-spacing:-.02em;font-size:18px;display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);}
+  .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;margin-left:18px;}
+  .topnav a:hover{color:var(--ink);}
+  .pagehead{padding:30px 0 26px;}
+  h1{font-size:clamp(28px,4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1.1;}
+  .sub{color:var(--ink-2);margin-top:12px;max-width:62ch;font-size:16px;}
+  h2{font-size:20px;font-weight:600;letter-spacing:-.02em;margin:36px 0 6px;}
+  .h2sub{color:var(--ink-2);font-size:14px;margin-bottom:18px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;}
+  .lockcard{
+    display:block;background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    padding:18px 20px;text-decoration:none;transition:all .3s var(--ease);
+  }
+  .lockcard:hover{transform:translateY(-3px);box-shadow:var(--card-shadow);border-color:var(--line-2);}
+  .lc-name{font-weight:600;font-size:16px;letter-spacing:-.01em;}
+  .lc-meta{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:3px;letter-spacing:.03em;}
+  .lc-pins{margin:14px 0 4px;display:flex;flex-direction:column;gap:5px;}
+  .lc-row{display:flex;gap:4px;align-items:center;}
+  .lc-row .n{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);width:10px;}
+  .lc-hole{width:12px;height:12px;border-radius:4px;background:var(--bg);border:1px solid var(--line);}
+  .lc-hole.c{border-style:dashed;}
+  .lc-hole.p{background:var(--ink);border-color:var(--ink);}
+  .lc-hole.pg{background:var(--accent);border-color:var(--accent);}
+  .lc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+  .lc-stats{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);}
+  .lc-open{font-size:13.5px;color:var(--accent-ink);font-weight:500;display:inline-flex;align-items:center;gap:6px;}
+  .lockcard:hover .lc-open svg{transform:translateX(3px);}
+  .lc-open svg{transition:transform .3s var(--ease);}
+  .note{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:14px 18px;color:var(--ink-2);font-size:14.5px;margin-top:6px;
+  }
+  .note b{color:var(--ink);}
+  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 40px;color:var(--ink-3);font-size:13.5px;}
+  footer a{color:var(--ink-2);}
+  @media(max-width:560px){.wrap{padding:0 16px;}.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="wordmark" href="/"><span class="dot"></span>UnlockMyLoot</a>
+    <nav class="topnav">
+      <a href="/">Решатель</a>
+      <a href="/#faq">Как пользоваться</a>
+    </nav>
+  </header>
+
+  <section class="pagehead">
+    <h1>Каталог замков</h1>
+    <p class="sub">Известные замки Gothic 1 Remake с уже разведанными связями: открой карточку - и конфигурация подставится в решатель сама. Ниже - живой топ замков, которые игроки вскрывают прямо сейчас.</p>
+  </section>
+
+  <h2>Известные замки</h2>
+  <p class="h2sub">Конфигурации проверены решателем и сверены с игрой.</p>
+  <div class="grid" id="namedGrid"></div>
+
+  <h2>Свежее из копилки</h2>
+  <p class="h2sub">Анонимная статистика решателя: какие замки вводят чаще всего. Узнал свой сундук - напиши в комментариях к посту на DTF, дадим ему имя.</p>
+  <div class="grid" id="liveGrid"></div>
+  <div class="note" id="liveNote" hidden></div>
+
+  <footer>
+    <a href="/">UnlockMyLoot</a> - решатель замков Gothic 1 Remake. Каталог пополняется: имена замков сверяются с гайдами и сообществом.
+  </footer>
+</div>
+
+<script>
+/* Чистый декодер кода замка (v2): без глобалей решателя */
+var CODE_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+function codeBitLen(n) { return 4 + 3 * n + 2 * n * (n - 1); }
+function decodeLock(code) {
+  if (!/^[A-Za-z0-9_-]{5,24}$/.test(code)) return null;
+  var bits = [];
+  for (var c = 0; c < code.length; c++) {
+    var v = CODE_ABC.indexOf(code[c]);
+    if (v < 0) return null;
+    for (var b = 5; b >= 0; b--) bits.push((v >> b) & 1);
+  }
+  var pos = 0;
+  function read(w) { var v2 = 0; for (var b2 = 0; b2 < w; b2++) v2 = (v2 << 1) | bits[pos++]; return v2; }
+  var n = read(3) + 3;
+  if (n < 3 || n > 8 || code.length !== Math.ceil(codeBitLen(n) / 6)) return null;
+  read(1); // flip - для каталога не важен
+  var ps = [];
+  for (var i = 0; i < n; i++) {
+    var p = read(3);
+    if (p > 6) return null;
+    ps.push(p + 1);
+  }
+  var links = 0;
+  for (var i2 = 0; i2 < n; i2++)
+    for (var j = 0; j < n; j++) {
+      if (i2 === j) continue;
+      var t = read(2);
+      if (t > 2) return null;
+      if (t > 0) links++;
+    }
+  return { n: n, pins: ps, links: links };
+}
+
+/* Курируемые имена. Источник истины - locks-research.md в репозитории. */
+var NAMED_LOCKS = [
+  {
+    code: 'YHayiAREIAIABE',
+    name: 'Дверь башни - Старый Лагерь',
+    meta: '6 плиток · 45 ходов · 10 связей'
+  },
+  {
+    code: 'YiNAIJpEEARAAA',
+    name: 'Вторая дверь башни',
+    meta: '6 плиток · 28 ходов · плитка 6 свободна'
+  }
+];
+
+function pinsHtml(d) {
+  var html = '<div class="lc-pins">';
+  for (var i = 0; i < d.n; i++) {
+    html += '<div class="lc-row"><span class="n">' + (i + 1) + '</span>';
+    for (var p = 1; p <= 7; p++) {
+      var cls = 'lc-hole' + (p === 4 ? ' c' : '') +
+        (d.pins[i] === p ? (p === 4 ? ' pg' : ' p') : '');
+      html += '<span class="' + cls + '"></span>';
+    }
+    html += '</div>';
+  }
+  return html + '</div>';
+}
+
+var ARROW = '<svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M8 2l4.5 4.5L8 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function card(d, title, meta, stats) {
+  return '<a class="lockcard" href="/?lock=' + encodeURIComponent(d.code) + '">' +
+    '<span class="lc-name">' + title + '</span>' +
+    '<span class="lc-meta">' + meta + '</span>' +
+    pinsHtml(d.dec) +
+    '<div class="lc-foot"><span class="lc-stats">' + stats + '</span>' +
+    '<span class="lc-open">в решатель ' + ARROW + '</span></div></a>';
+}
+
+function ago(ts) {
+  var d = Math.floor((Date.now() - ts) / 86400000);
+  if (d <= 0) return 'сегодня';
+  if (d === 1) return 'вчера';
+  return d + ' дн. назад';
+}
+
+/* Известные */
+(function renderNamed() {
+  var html = '';
+  for (var i = 0; i < NAMED_LOCKS.length; i++) {
+    var L = NAMED_LOCKS[i];
+    var dec = decodeLock(L.code);
+    if (!dec) continue;
+    html += card({ code: L.code, dec: dec }, L.name, L.meta, 'проверен');
+  }
+  document.getElementById('namedGrid').innerHTML = html;
+})();
+
+/* Живой топ */
+(function renderLive() {
+  var named = {};
+  NAMED_LOCKS.forEach(function (l) { named[l.code] = l.name; });
+  fetch('https://api.unlockmyloot.com/locks?limit=60')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var html = '', shown = 0;
+      for (var i = 0; i < data.locks.length && shown < 30; i++) {
+        var rec = data.locks[i];
+        var dec = decodeLock(rec.code);
+        if (!dec) continue;
+        var title = named[rec.code] || ('Замок без имени · ' + dec.n + ' плиток');
+        var meta = dec.n + ' плиток · ' + dec.links + ' связей';
+        var times = rec.count === 1 ? 'вводили 1 раз' : 'вводили ' + rec.count + ' раз';
+        html += card({ code: rec.code, dec: dec }, title, meta, times + ' · ' + ago(rec.last));
+        shown++;
+      }
+      if (!shown) {
+        showNote('Копилка пока пустая - решённые замки начнут появляться здесь сами.');
+        return;
+      }
+      document.getElementById('liveGrid').innerHTML = html;
+    })
+    .catch(function () {
+      showNote('Не удалось дотянуться до статистики (она живёт за Cloudflare и из России иногда недоступна без VPN). <b>Известные замки выше работают всегда.</b>');
+    });
+  function showNote(msg) {
+    var el = document.getElementById('liveNote');
+    el.innerHTML = msg;
+    el.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
