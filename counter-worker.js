@@ -71,19 +71,50 @@ export class Counter {
 
   async fetch(req) {
     await this.maybeReconcile();
-    if (req.method === "GET") {
+    var url = new URL(req.url);
+    var path = url.pathname;
+
+    if (path === "/count" && req.method === "GET") {
       var v = await this.readCount();
       return new Response(JSON.stringify({ opened: v }), {
         headers: { "Content-Type": "application/json" }
       });
     }
-    if (req.method === "POST") {
+    if (path === "/opened" && req.method === "POST") {
       var cur = (await this.readCount()) + 1;
       await this.state.storage.put("opened", cur);
       return new Response(JSON.stringify({ opened: cur }), {
         headers: { "Content-Type": "application/json" }
       });
     }
+
+    // копилка замков: код конфигурации -> счётчик вводов
+    if (path === "/lock" && req.method === "POST") {
+      var code = url.searchParams.get("code") || "";
+      if (!/^[A-Za-z0-9_.-]{4,64}$/.test(code)) {
+        return new Response(JSON.stringify({ error: "bad_code" }), { status: 400 });
+      }
+      var key = "lk:" + code;
+      var rec = (await this.state.storage.get(key)) || { c: 0, f: Date.now() };
+      rec.c += 1;
+      rec.l = Date.now();
+      await this.state.storage.put(key, rec);
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    if (path === "/locks" && req.method === "GET") {
+      var map = await this.state.storage.list({ prefix: "lk:" });
+      var out = [];
+      map.forEach(function (rec2, k) {
+        out.push({ code: k.slice(3), count: rec2.c, first: rec2.f, last: rec2.l });
+      });
+      out.sort(function (a, b) { return b.count - a.count; });
+      return new Response(JSON.stringify({ total: out.length, locks: out.slice(0, 200) }), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
     return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
   }
 }
@@ -101,7 +132,9 @@ export default {
 
     if (
       (url.pathname === "/count" && req.method === "GET") ||
-      (url.pathname === "/opened" && req.method === "POST")
+      (url.pathname === "/opened" && req.method === "POST") ||
+      (url.pathname === "/lock" && req.method === "POST") ||
+      (url.pathname === "/locks" && req.method === "GET")
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");

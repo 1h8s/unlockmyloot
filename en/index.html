@@ -2132,6 +2132,7 @@ function solveNow() {
     }
 
     counterBump();
+    reportLockConfig();
 
     SOL = { seq: seq, check: check, dt: dt };
     renderSolution(true);
@@ -2410,6 +2411,16 @@ function counterLoad() {
     .then(counterJson)
     .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
     .catch(function () {});
+}
+var REPORTED_LOCKS = {};
+function reportLockConfig() {
+  try {
+    var code = encodeConfig();
+    if (!code || REPORTED_LOCKS[code]) return;
+    REPORTED_LOCKS[code] = true;
+    fetch(COUNTER_API + '/lock?code=' + encodeURIComponent(code), { method: 'POST' })
+      .catch(function () {});
+  } catch (e) {}
 }
 function counterBump() {
   var now = Date.now();
