@@ -2397,14 +2397,15 @@ function closeLinkHelpAnnounce() {
 }
 function scrollToLinkHelpBtn() {
   closeLinkHelpAnnounce();
-  var solver = document.getElementById('solver');
-  if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  var hb = document.getElementById('linkHelpBtn');
+  if (!hb) return;
+  /* скроллим к самой кнопке «Помощь» по центру экрана, а не к верху решателя -
+     иначе на мобиле кнопка (шаг 03) остаётся ниже экрана */
   setTimeout(function () {
-    var hb = document.getElementById('linkHelpBtn');
-    if (!hb) return;
+    hb.scrollIntoView({ behavior: 'smooth', block: 'center' });
     hb.classList.add('pulse');
     setTimeout(function () { hb.classList.remove('pulse'); }, 3600);
-  }, 550);
+  }, 120);
 }
 function maybeShowLinkHelpAnnounce() {
   try { if (localStorage.getItem(LINK_HELP_ANN_KEY)) return; } catch (e) {}
