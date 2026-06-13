@@ -166,6 +166,7 @@
   .topnav{display:flex;align-items:center;gap:18px;}
   .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;}
   .topnav .lang-short{display:none;}
+  .topnav .faq-short{display:none;}
   .topnav a:hover{color:var(--ink);}
   .themebtn{
     width:42px;height:42px;border-radius:12px;cursor:pointer;
@@ -811,6 +812,8 @@
     .pside{display:inline;margin-left:8px;}
     .topnav .lang-full{display:none;}
     .topnav .lang-short{display:inline;}
+    .topnav .faq-full{display:none;}
+    .topnav .faq-short{display:inline;}
   }
   /* SEO-текст */
   .seo{padding:0 0 72px;}
@@ -915,7 +918,7 @@
       <div class="wordmark"><span class="dot"></span>UnlockMyLoot</div>
       <nav class="topnav">
         <a href="/en/locks/">Locks</a>
-        <a href="#faq">How to use</a>
+        <a href="#faq"><span class="faq-full">How to use</span><span class="faq-short">FAQ</span></a>
         <a href="/" hreflang="ru" lang="ru"><span class="lang-full">Русский</span><span class="lang-short">RU</span></a>
         <button class="themebtn" id="themeBtn" type="button" aria-label="Toggle theme">
           <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
