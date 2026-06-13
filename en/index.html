@@ -1970,8 +1970,9 @@ function wizMaybeSuggest() {
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
     el.innerHTML = '<div class="wizsuggest">' +
-      '<p>This layout was already cracked <b>' + d.count + '</b> times. ' +
-      'Fill in known links and finish the rest here? ' +
+      '<p>' + (d.known
+        ? 'This is a known lock: <b>' + d.name + '</b>. Fill the verified links and finish the rest here?'
+        : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in known links and finish the rest here?') + ' ' +
       '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
       '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
@@ -2717,7 +2718,24 @@ function suggestFetch(pk) {
     .then(function (r) { return r.json(); })
     .catch(function () { return null; });
 }
+/* Curated verified locks: suggest them instantly at 100% confidence, without
+   waiting for crowd data. fp = N + '.' + pins. */
+var KNOWN_LOCKS = [
+  { fp: '6.562211', code: 'aUkAACUBAAJikA', name: 'Ruined Tower door' },
+  { fp: '5.63217', code: 'SojAgCBDQA', name: "Sketty's chest" }
+];
+function knownLockFor() {
+  var fps = {};
+  fps[pinsKeyStr()] = 1;
+  fps[pinsKeyOf(lockBasePins())] = 1;
+  for (var i = 0; i < KNOWN_LOCKS.length; i++)
+    if (fps[KNOWN_LOCKS[i].fp])
+      return { found: true, known: true, code: KNOWN_LOCKS[i].code, name: KNOWN_LOCKS[i].name };
+  return null;
+}
 function suggestLookup(cb) {
+  var known = knownLockFor();
+  if (known) { cb(known); return; }
   var keys = [];
   var bk = pinsKeyOf(lockBasePins());
   var ck = pinsKeyStr();
@@ -2793,7 +2811,9 @@ function maybeSuggestLinks() {
 function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
   box.innerHTML = '<div class="suggest">' +
-    '<span>This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?</span>' +
+    '<span>' + (d.known
+      ? 'This is a known lock: <b>' + d.name + '</b>. Fill in the verified links?'
+      : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?') + '</span>' +
     '<span class="sg-act">' +
     '<button class="btn" type="button" id="sgYes">Fill in</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +

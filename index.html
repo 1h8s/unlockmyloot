@@ -2029,9 +2029,11 @@ function wizMaybeSuggest() {
     var el = document.getElementById('wizSuggest');
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
+    var lead = d.known
+      ? 'Это известный замок: <b>' + d.name + '</b>. Подставить проверенные связи и добить остальное здесь?'
+      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи и добить остальное здесь?';
     el.innerHTML = '<div class="wizsuggest">' +
-      '<p>Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. ' +
-      'Подставить известные связи и добить остальное здесь? ' +
+      '<p>' + lead + ' ' +
       '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p>' +
       '<button class="btn primary" type="button" id="wizSgYes">Подставить связи и продолжить</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
@@ -2803,9 +2805,26 @@ function suggestFetch(pk) {
     .then(function (r) { return r.json(); })
     .catch(function () { return null; });
 }
-/* ищем подсказку по ДВУМ расстановкам: исходной (до помощника) и текущей.
-   Берём вариант с наибольшим count - так меньше шанс ложного совпадения. */
+/* Курируемые проверенные замки: для них подсказку отдаём сразу, со 100%
+   уверенностью, не дожидаясь крауд-статистики. fp = N + '.' + штифты. */
+var KNOWN_LOCKS = [
+  { fp: '6.562211', code: 'aUkAACUBAAJikA', name: 'Дверь Разрушенной башни' },
+  { fp: '5.63217', code: 'SojAgCBDQA', name: 'Сундук Скатти' }
+];
+function knownLockFor() {
+  var fps = {};
+  fps[pinsKeyStr()] = 1;
+  fps[pinsKeyOf(lockBasePins())] = 1;
+  for (var i = 0; i < KNOWN_LOCKS.length; i++)
+    if (fps[KNOWN_LOCKS[i].fp])
+      return { found: true, known: true, code: KNOWN_LOCKS[i].code, name: KNOWN_LOCKS[i].name };
+  return null;
+}
+/* сначала курируемый список (100%), затем поиск по копилке по ДВУМ расстановкам
+   (исходной и текущей) - берём вариант с наибольшим count. */
 function suggestLookup(cb) {
+  var known = knownLockFor();
+  if (known) { cb(known); return; }
   var keys = [];
   var bk = pinsKeyOf(lockBasePins());
   var ck = pinsKeyStr();
@@ -2883,8 +2902,11 @@ function maybeSuggestLinks() {
 }
 function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
+  var msg = d.known
+    ? 'Это известный замок: <b>' + d.name + '</b>. Подставить проверенные связи?'
+    : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?';
   box.innerHTML = '<div class="suggest">' +
-    '<span>Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?</span>' +
+    '<span>' + msg + '</span>' +
     '<span class="sg-act">' +
     '<button class="btn" type="button" id="sgYes">Подставить</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Сам введу</button>' +
