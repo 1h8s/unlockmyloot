@@ -2115,6 +2115,7 @@ function openLinkWizard() {
   else wizRenderIntro();
 }
 function closeLinkWizard() {
+  restoreBasePinsIfAny();
   document.getElementById('linkWizBack').classList.remove('open');
   document.getElementById('linkWizBack').setAttribute('aria-hidden', 'true');
   LINK_WIZ = null;
@@ -2213,7 +2214,8 @@ function solveNow() {
 
   setTimeout(function () {
     var t0 = performance.now();
-    var seq = solveLock(pins.slice(), link);
+    var startPins = lockBasePins().slice();
+    var seq = solveLock(startPins, link);
     var dt = Math.round(performance.now() - t0);
 
     sbtn.classList.remove('picking');
@@ -2237,7 +2239,7 @@ function solveNow() {
       return;
     }
 
-    var check = verifySolution(pins.slice(), link, seq);
+    var check = verifySolution(startPins, link, seq);
     if (!check.ok) {
       body.innerHTML = '<div class="msg err">Internal verification error - please report to the site author.</div>';
       return;
@@ -2485,7 +2487,7 @@ document.getElementById('resetBtn').onclick = function () {
   history.replaceState(null, '', location.pathname);
 };
 document.getElementById('shareBtn').onclick = function () {
-  var code = encodeConfig();
+  var code = encodeConfig(lockBasePins());
   var url = location.origin + location.pathname + '?lock=' + encodeURIComponent(code);
   history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(code));
   (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
@@ -2555,6 +2557,12 @@ function pinsKeyOf(arr) { return N + '.' + arr.join(''); }
 function pinsKeyStr() { return pinsKeyOf(pins); }
 function lockBasePins() {
   return (WIZ_MEM.base && WIZ_MEM.base.length === N) ? WIZ_MEM.base : pins;
+}
+function restoreBasePinsIfAny() {
+  if (!WIZ_MEM.base || WIZ_MEM.base.length !== N) return;
+  for (var i = 0; i < N; i++) pins[i] = WIZ_MEM.base[i];
+  pinsTouched = true;
+  renderPins();
 }
 function reportLockConfig() {
   try {
