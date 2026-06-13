@@ -2487,17 +2487,19 @@ function pluralRu(n, one, few, many) {
 function fmtNum(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
-function showCounter(n) {
+function showCounter(n, approx) {
   var box = document.getElementById('lockstat');
   var num = document.getElementById('lockstatN');
   var w = document.getElementById('lockstatW');
   box.classList.add('on');
+  box.title = approx ? 'Approximate - exact number is temporarily unavailable' : '';
+  var pre = approx ? '~' : '';
   w.textContent = pluralRu(n, 'lock cracked so far', 'locks cracked so far', 'locks cracked so far');
   var from = parseInt(num.dataset.v || '0', 10), t0 = performance.now();
   function tick(t) {
     var p = Math.min(1, (t - t0) / 900);
     p = 1 - Math.pow(1 - p, 3);
-    num.textContent = fmtNum(Math.round(from + (n - from) * p));
+    num.textContent = pre + fmtNum(Math.round(from + (n - from) * p));
     if (p < 1) requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
@@ -2507,10 +2509,27 @@ function counterJson(r) {
   if (!r.ok) throw new Error('counter http ' + r.status);
   return r.json();
 }
+/* Counter fallback: if the API is unreachable (no VPN, 429, failure) show the
+   last known number or a conservative estimate marked "~", not a blank.
+   COUNT_BASE should be bumped on deploys. */
+var COUNT_BASE = 38974, COUNT_BASE_T = Date.UTC(2026, 5, 13), COUNT_RATE_HR = 40;
+function estimatedCount() {
+  var hrs = (Date.now() - COUNT_BASE_T) / 3600000;
+  return COUNT_BASE + Math.round(Math.min(Math.max(hrs, 0), 720) * COUNT_RATE_HR);
+}
+function cachedCount() {
+  try { var o = JSON.parse(localStorage.getItem('uml-count') || 'null');
+    return o && typeof o.v === 'number' ? o.v : null; } catch (e) { return null; }
+}
+function saveCount(n) {
+  try { localStorage.setItem('uml-count', JSON.stringify({ v: n, t: Date.now() })); } catch (e) {}
+}
 function counterLoad() {
+  var c = cachedCount();
+  showCounter(c != null ? Math.max(c, estimatedCount()) : estimatedCount(), true);
   fetch(COUNTER_API + '/count')
     .then(counterJson)
-    .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
+    .then(function (d) { if (typeof d.opened === 'number') { showCounter(d.opened, false); saveCount(d.opened); } })
     .catch(function () {});
 }
 var REPORTED_LOCKS = {};
@@ -2656,7 +2675,7 @@ function counterBump() {
   lastCounted = now;
   fetch(COUNTER_API + '/opened', { method: 'POST' })
     .then(counterJson)
-    .then(function (d) { if (typeof d.opened === 'number') showCounter(d.opened); })
+    .then(function (d) { if (typeof d.opened === 'number') { showCounter(d.opened, false); saveCount(d.opened); } })
     .catch(function () {});
 }
 try { counterLoad(); } catch (e) {}
