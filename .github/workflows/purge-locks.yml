@@ -19,7 +19,7 @@ jobs:
           echo "count=$(curl -sf https://api.unlockmyloot.com/count | jq -r '.opened')" >> "$GITHUB_OUTPUT"
           echo "locks=$(curl -sf 'https://api.unlockmyloot.com/locks?limit=1' | jq -r '.total')" >> "$GITHUB_OUTPUT"
 
-      - name: Set purge secret and purge lk:/pi:
+      - name: "Set purge secret and purge lk:/pi:"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
