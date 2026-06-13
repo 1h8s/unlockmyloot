@@ -40,6 +40,7 @@ var RECONCILE_KEY_V2 = "reconcile_lost_v2";
 // из них ~66 успели записаться до полного отказа → +681.
 var LOST_WORKERS_429 = 681;
 var RECONCILE_KEY_V3 = "reconcile_lost_v3_workers429";
+var PURGE_ABORT_KEY = "purge_aborted_v1";
 
 export class Counter {
   constructor(state, env) {
@@ -63,6 +64,10 @@ export class Counter {
       await this.state.storage.put("opened", cur3 + LOST_WORKERS_429);
       await this.state.storage.put(RECONCILE_KEY_V3, LOST_WORKERS_429);
     }
+    if (!(await this.state.storage.get(PURGE_ABORT_KEY))) {
+      await this.state.storage.delete("purge:progress");
+      await this.state.storage.put(PURGE_ABORT_KEY, true);
+    }
   }
 
   async readCount() {
@@ -81,10 +86,8 @@ export class Counter {
 
   /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
   async purgeLockPool(secret) {
-    if (this.env.PURGE_SECRET) {
-      if (!secret || secret !== this.env.PURGE_SECRET) {
-        return { status: 403, body: { error: "forbidden" } };
-      }
+    if (!secret || secret !== this.env.PURGE_SECRET) {
+      return { status: 403, body: { error: "forbidden" } };
     }
     var progressKey = "purge:progress";
     var progress = await this.state.storage.get(progressKey);
