@@ -758,23 +758,7 @@
   .fixnote-body{color:var(--ink-2);font-size:13.5px;line-height:1.45;margin-top:6px;}
 
   .confetti{position:fixed;inset:0;z-index:65;pointer-events:none;width:100%;height:100%;}
-  .milestonepanel{text-align:center;max-width:min(420px,100%);}
-  .milestonepanel .wizhead{padding:34px 30px 4px;}
-  .milestonepanel .wiztag{
-    display:inline-block;margin:0 auto 16px;padding:6px 14px;border-radius:999px;
-    background:linear-gradient(135deg,var(--accent-soft),rgba(244,196,77,.30));
-    border:1px solid var(--accent-border);
-    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);
-  }
-  .milestone-num{
-    font-family:var(--mono);font-size:clamp(46px,13vw,66px);font-weight:700;
-    color:var(--accent-ink);letter-spacing:-.03em;line-height:1;margin:0 0 8px;
-  }
-  .milestonepanel .wiztitle{padding-right:0;font-size:19px;margin-bottom:10px;}
-  .milestonepanel .wizsub{font-size:15px;line-height:1.55;max-width:32ch;margin:0 auto;}
-  .milestonepanel .wizfoot{padding:8px 30px 32px;}
-  .milestonepanel .wizfoot-actions{display:flex;justify-content:center;}
-  .milestonepanel .wizfoot-actions .btn{width:auto;min-width:150px;}
+  /* milestonepanel — legacy centered 50k modal, replaced by .fixnote slide-in */
 
   @media(max-width:860px){
     .hero{padding:48px 0 80px;}
@@ -1236,27 +1220,14 @@
 <div class="toast" id="toast"></div>
 <aside class="fixnote" id="fixNote" role="status" aria-live="polite" hidden>
   <button class="fixnote-close" id="fixNoteClose" type="button" aria-label="Close">&times;</button>
-  <div class="fixnote-tag">Fix</div>
-  <p class="fixnote-title">Core solver math updated</p>
-  <p class="fixnote-body">A critical bug in move calculation has been fixed. Thank you for using UnlockMyLoot.</p>
+  <div class="fixnote-tag">Milestone</div>
+  <p class="fixnote-title" id="fixNoteTitle">50,000 locks cracked!</p>
+  <p class="fixnote-body">Thank you everyone for using UnlockMyLoot!</p>
 </aside>
 <canvas id="confettiCanvas" class="confetti" hidden aria-hidden="true"></canvas>
-<div class="wizback" id="mile50kBack" aria-hidden="true">
-  <div class="wizpanel milestonepanel" role="dialog" aria-modal="true" aria-labelledby="mile50kTitle">
-    <button class="wizclose" id="mile50kClose" type="button" aria-label="Close">&times;</button>
-    <div class="wizhead">
-      <div class="wiztag">Milestone</div>
-      <div class="milestone-num" id="mile50kNum">50,000</div>
-      <div class="wiztitle" id="mile50kTitle">locks cracked!</div>
-      <p class="wizsub">Together we opened fifty thousand locks. <b>Thank you everyone</b> for using UnlockMyLoot!</p>
-    </div>
-    <div class="wizfoot">
-      <div class="wizfoot-actions" style="justify-content:center">
-        <button class="btn primary" type="button" id="mile50kOk">Awesome!</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!--
+<div class="wizback" id="mile50kBack" aria-hidden="true"> ... legacy 50k modal ... </div>
+-->
 
 <script id="solver-core">
 /* ===================== ЯДРО РЕШАТЕЛЯ =====================
@@ -2197,34 +2168,22 @@ function closeLinkWizard() {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && LINK_WIZ) closeLinkWizard();
     if (e.key === 'Escape' && document.getElementById('linkHelpAnn').classList.contains('open')) closeLinkHelpAnnounce();
-    if (e.key === 'Escape' && document.getElementById('mile50kBack').classList.contains('open')) closeMilestone50k();
   });
   updateLinkHelpBtn();
 })();
 
 var LINK_HELP_ANN_KEY = 'uml-linkhelp-intro-v1';
-var FIX_NOTE_KEY = 'uml-corefix-v1';
-function closeFixNote() {
+var MILESTONE_50K = 50000;
+var MILESTONE_50K_KEY = 'uml-milestone-50k-v1';
+var celebrationTimer = 0;
+function closeCelebrationNote() {
+  clearTimeout(celebrationTimer);
   var el = document.getElementById('fixNote');
   if (!el) return;
   el.classList.remove('show');
   setTimeout(function () { el.hidden = true; }, 450);
-  try { localStorage.setItem(FIX_NOTE_KEY, '1'); } catch (e) {}
+  try { localStorage.setItem(MILESTONE_50K_KEY, '1'); } catch (e) {}
 }
-function maybeShowFixNote() {
-  try { if (localStorage.getItem(FIX_NOTE_KEY)) return; } catch (e) {}
-  setTimeout(function () {
-    if (LINK_WIZ) return;
-    var mile = document.getElementById('mile50kBack');
-    if (mile && mile.classList.contains('open')) return;
-    var el = document.getElementById('fixNote');
-    if (!el) return;
-    el.hidden = false;
-    requestAnimationFrame(function () { el.classList.add('show'); });
-  }, 2200);
-}
-var MILESTONE_50K = 50000;
-var MILESTONE_50K_KEY = 'uml-milestone-50k-v1';
 function launchConfetti(ms) {
   var canvas = document.getElementById('confettiCanvas');
   if (!canvas) return;
@@ -2278,37 +2237,25 @@ function launchConfetti(ms) {
   }
   requestAnimationFrame(frame);
 }
-function closeMilestone50k() {
-  var el = document.getElementById('mile50kBack');
-  if (!el) return;
-  el.classList.remove('open');
-  el.setAttribute('aria-hidden', 'true');
-  try { localStorage.setItem(MILESTONE_50K_KEY, '1'); } catch (e) {}
-}
-function openMilestone50k(n) {
+function openCelebrationNote(n) {
   try { if (localStorage.getItem(MILESTONE_50K_KEY)) return; } catch (e) {}
+  var title = document.getElementById('fixNoteTitle');
+  if (title) title.textContent = fmtNum(n) + ' locks cracked!';
   var el = document.getElementById('fixNote');
-  if (el && el.classList.contains('show')) closeFixNote();
-  var num = document.getElementById('mile50kNum');
-  if (num) num.textContent = fmtNum(n);
-  var back = document.getElementById('mile50kBack');
-  back.classList.add('open');
-  back.setAttribute('aria-hidden', 'false');
+  el.hidden = false;
+  requestAnimationFrame(function () { el.classList.add('show'); });
   launchConfetti(5200);
   try { localStorage.setItem(MILESTONE_50K_KEY, '1'); } catch (e) {}
+  celebrationTimer = setTimeout(closeCelebrationNote, 5000);
 }
 function maybeCelebrate50k(n, approx) {
   if (approx || n < MILESTONE_50K) return;
   try { if (localStorage.getItem(MILESTONE_50K_KEY)) return; } catch (e) {}
-  setTimeout(function () { openMilestone50k(n); }, 1500);
+  setTimeout(function () {
+    if (LINK_WIZ) return;
+    openCelebrationNote(n);
+  }, 1200);
 }
-(function bindMilestone50k() {
-  document.getElementById('mile50kOk').onclick = closeMilestone50k;
-  document.getElementById('mile50kClose').onclick = closeMilestone50k;
-  document.getElementById('mile50kBack').addEventListener('click', function (e) {
-    if (e.target.id === 'mile50kBack') closeMilestone50k();
-  });
-})();
 function markLinkHelpAnnSeen() {
   try { localStorage.setItem(LINK_HELP_ANN_KEY, '1'); } catch (e) {}
 }
@@ -2346,7 +2293,7 @@ function maybeShowLinkHelpAnnounce() {
   document.getElementById('linkHelpAnnGo').onclick = scrollToLinkHelpBtn;
   document.getElementById('linkHelpAnnClose').onclick = closeLinkHelpAnnounce;
   ann.addEventListener('click', function (e) { if (e.target === ann) closeLinkHelpAnnounce(); });
-  document.getElementById('fixNoteClose').onclick = closeFixNote;
+  document.getElementById('fixNoteClose').onclick = closeCelebrationNote;
 })();
 
 /* ---------- решение ---------- */
@@ -2878,7 +2825,6 @@ try { counterLoad(); } catch (e) {}
 
 if (!bootConfigFromUrl()) init(6);
 maybeShowLinkHelpAnnounce();
-maybeShowFixNote();
 </script>
 </body>
 </html>
