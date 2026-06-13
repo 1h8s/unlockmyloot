@@ -2612,13 +2612,6 @@ function matrixEmpty() {
       if (link[i][j]) return false;
   return true;
 }
-function countLinks() {
-  var n = 0;
-  for (var i = 0; i < N; i++)
-    for (var j = 0; j < N; j++)
-      if (i !== j && link[i][j]) n++;
-  return n;
-}
 function suggestFetch(pk) {
   return fetch(COUNTER_API + '/suggest?pins=' + encodeURIComponent(pk))
     .then(function (r) { return r.json(); })
