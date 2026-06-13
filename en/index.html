@@ -730,6 +730,7 @@
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
 
+  /* 50k celebration slide-in + confetti (off)
   .fixnote{
     position:fixed;right:20px;bottom:20px;z-index:55;
     width:min(340px,calc(100vw - 32px));
@@ -756,9 +757,8 @@
   }
   .fixnote-title{font-weight:600;font-size:15px;letter-spacing:-.02em;line-height:1.3;}
   .fixnote-body{color:var(--ink-2);font-size:13.5px;line-height:1.45;margin-top:6px;}
-
   .confetti{position:fixed;inset:0;z-index:65;pointer-events:none;width:100%;height:100%;}
-  /* milestonepanel — legacy centered 50k modal, replaced by .fixnote slide-in */
+  */
 
   @media(max-width:860px){
     .hero{padding:48px 0 80px;}
@@ -1218,6 +1218,7 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<!-- 50k celebration + confetti (off)
 <aside class="fixnote" id="fixNote" role="status" aria-live="polite" hidden>
   <button class="fixnote-close" id="fixNoteClose" type="button" aria-label="Close">&times;</button>
   <div class="fixnote-tag">Milestone</div>
@@ -1225,8 +1226,6 @@
   <p class="fixnote-body">Thank you everyone for using UnlockMyLoot!</p>
 </aside>
 <canvas id="confettiCanvas" class="confetti" hidden aria-hidden="true"></canvas>
-<!--
-<div class="wizback" id="mile50kBack" aria-hidden="true"> ... legacy 50k modal ... </div>
 -->
 
 <script id="solver-core">
@@ -2173,6 +2172,7 @@ function closeLinkWizard() {
 })();
 
 var LINK_HELP_ANN_KEY = 'uml-linkhelp-intro-v1';
+/* 50k celebration + confetti (off)
 var MILESTONE_50K = 50000;
 var MILESTONE_50K_KEY = 'uml-milestone-50k-v1';
 var celebrationTimer = 0;
@@ -2187,7 +2187,6 @@ function closeCelebrationNote() {
 function launchConfetti(ms) {
   var canvas = document.getElementById('confettiCanvas');
   if (!canvas) return;
-  /* respect reduced-motion: the modal still shows, just no confetti */
   try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
   var ctx = canvas.getContext('2d');
   var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -2256,6 +2255,7 @@ function maybeCelebrate50k(n, approx) {
     openCelebrationNote(n);
   }, 1200);
 }
+*/
 function markLinkHelpAnnSeen() {
   try { localStorage.setItem(LINK_HELP_ANN_KEY, '1'); } catch (e) {}
 }
@@ -2293,7 +2293,7 @@ function maybeShowLinkHelpAnnounce() {
   document.getElementById('linkHelpAnnGo').onclick = scrollToLinkHelpBtn;
   document.getElementById('linkHelpAnnClose').onclick = closeLinkHelpAnnounce;
   ann.addEventListener('click', function (e) { if (e.target === ann) closeLinkHelpAnnounce(); });
-  document.getElementById('fixNoteClose').onclick = closeCelebrationNote;
+  // document.getElementById('fixNoteClose').onclick = closeCelebrationNote;
 })();
 
 /* ---------- решение ---------- */
@@ -2650,7 +2650,7 @@ function showCounter(n, approx) {
   }
   requestAnimationFrame(tick);
   num.dataset.v = n;
-  maybeCelebrate50k(n, approx);
+  // maybeCelebrate50k(n, approx);
 }
 function counterJson(r) {
   if (!r.ok) throw new Error('counter http ' + r.status);
