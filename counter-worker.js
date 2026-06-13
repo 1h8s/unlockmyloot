@@ -79,6 +79,30 @@ export class Counter {
     return seeded;
   }
 
+  /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
+  async purgeLockPool(secret) {
+    if (!secret || secret !== this.env.PURGE_SECRET) {
+      return { status: 403, body: { error: "forbidden" } };
+    }
+    var deleted = { lk: 0, pi: 0 };
+    for (var pi = 0; pi < 2; pi++) {
+      var prefix = pi === 0 ? "lk:" : "pi:";
+      var cursor = undefined;
+      while (true) {
+        var page = await this.state.storage.list({ prefix: prefix, cursor: cursor, limit: 512 });
+        var keys = [...page.keys()];
+        for (var i = 0; i < keys.length; i++) await this.state.storage.delete(keys[i]);
+        if (prefix === "lk:") deleted.lk += keys.length; else deleted.pi += keys.length;
+        if (page.list_complete) break;
+        cursor = page.cursor;
+      }
+    }
+    return {
+      status: 200,
+      body: { ok: true, deleted: deleted, opened: await this.readCount() }
+    };
+  }
+
   async fetch(req) {
     await this.maybeReconcile();
     var url = new URL(req.url);
@@ -163,6 +187,14 @@ export class Counter {
         headers: { "Content-Type": "application/json" }
       });
     }
+    if (path === "/purge-locks" && req.method === "POST") {
+      var purgeSecret = req.headers.get("X-Purge-Secret") || url.searchParams.get("secret") || "";
+      var purge = await this.purgeLockPool(purgeSecret);
+      return new Response(JSON.stringify(purge.body), {
+        status: purge.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
   }
@@ -184,13 +216,15 @@ export default {
       (url.pathname === "/opened" && req.method === "POST") ||
       (url.pathname === "/lock" && req.method === "POST") ||
       (url.pathname === "/locks" && req.method === "GET") ||
-      (url.pathname === "/suggest" && req.method === "GET")
+      (url.pathname === "/suggest" && req.method === "GET") ||
+      (url.pathname === "/purge-locks" && req.method === "POST")
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");
         var id = env.COUNTER_DO.idFromName("global");
         var stub = env.COUNTER_DO.get(id);
-        var inner = await stub.fetch(new Request(req.url, { method: req.method }));
+        var innerReq = new Request(req.url, { method: req.method, headers: req.headers });
+        var inner = await stub.fetch(innerReq);
         var body = await inner.text();
         return new Response(body, { status: inner.status, headers: cors });
       } catch (err) {
