@@ -2184,7 +2184,6 @@ function openLinkWizard() {
   else wizRenderIntro();
 }
 function closeLinkWizard() {
-  restoreBasePinsIfAny();
   var back = document.getElementById('linkWizBack');
   back.classList.remove('open');
   back.setAttribute('aria-hidden', 'true');
@@ -2285,8 +2284,7 @@ function solveNow() {
 
   setTimeout(function () {
     var t0 = performance.now();
-    var startPins = lockBasePins().slice();
-    var seq = solveLock(startPins, link);
+    var seq = solveLock(pins.slice(), link);
     var dt = Math.round(performance.now() - t0);
 
     sbtn.classList.remove('picking');
@@ -2310,7 +2308,7 @@ function solveNow() {
       return;
     }
 
-    var check = verifySolution(startPins, link, seq);
+    var check = verifySolution(pins.slice(), link, seq);
     if (!check.ok) {
       body.innerHTML = '<div class="msg err">Внутренняя ошибка проверки решения - сообщите автору сайта.</div>';
       return;
@@ -2634,12 +2632,6 @@ function pinsKeyStr() { return pinsKeyOf(pins); }
    WIZ_MEM.base снимается при открытии мастера и обнуляется при ручной правке. */
 function lockBasePins() {
   return (WIZ_MEM.base && WIZ_MEM.base.length === N) ? WIZ_MEM.base : pins;
-}
-function restoreBasePinsIfAny() {
-  if (!WIZ_MEM.base || WIZ_MEM.base.length !== N) return;
-  for (var i = 0; i < N; i++) pins[i] = WIZ_MEM.base[i];
-  pinsTouched = true;
-  renderPins();
 }
 function reportLockConfig() {
   try {
