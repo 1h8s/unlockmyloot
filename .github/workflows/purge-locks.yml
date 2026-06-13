@@ -1,0 +1,37 @@
+name: Purge lock pool
+
+on:
+  workflow_dispatch:
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Snapshot before
+        id: before
+        run: |
+          echo "count=$(curl -sf https://api.unlockmyloot.com/count | jq -r '.opened')" >> "$GITHUB_OUTPUT"
+          echo "locks=$(curl -sf 'https://api.unlockmyloot.com/locks?limit=1' | jq -r '.total')" >> "$GITHUB_OUTPUT"
+
+      - name: Set purge secret and purge lk:/pi:
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          PURGE_SECRET=$(openssl rand -hex 24)
+          printf '%s' "$PURGE_SECRET" | npx wrangler secret put PURGE_SECRET
+          sleep 3
+          curl -sf -X POST "https://api.unlockmyloot.com/purge-locks" \
+            -H "X-Purge-Secret: $PURGE_SECRET" | tee purge-result.json
+          jq -e '.ok == true' purge-result.json
+
+      - name: Verify opened unchanged, locks empty
+        run: |
+          COUNT=$(curl -sf https://api.unlockmyloot.com/count | jq -r '.opened')
+          LOCKS=$(curl -sf 'https://api.unlockmyloot.com/locks?limit=1' | jq -r '.total')
+          echo "opened: $COUNT (was ${{ steps.before.outputs.count }})"
+          echo "locks total: $LOCKS (was ${{ steps.before.outputs.locks }})"
+          test "$COUNT" = "${{ steps.before.outputs.count }}"
+          test "$LOCKS" = "0"
