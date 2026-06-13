@@ -35,6 +35,11 @@ var LOST_ESTIMATE = 480;
 var LOST_REMAINDER = Math.round((RATE_BEFORE + RATE_NOW) / 2 * OUTAGE_HOURS) - LOST_ESTIMATE;
 var RECONCILE_KEY = "reconcile_lost_v1";
 var RECONCILE_KEY_V2 = "reconcile_lost_v2";
+// v3: Workers free-tier 429 (error 1027), ~17:08–17:34. Последний успешный
+// опрос 38 942; темп ~29/мин за час до простоя; ~26 мин простоя → ~747 взломов,
+// из них ~66 успели записаться до полного отказа → +681.
+var LOST_WORKERS_429 = 681;
+var RECONCILE_KEY_V3 = "reconcile_lost_v3_workers429";
 
 export class Counter {
   constructor(state, env) {
@@ -52,6 +57,11 @@ export class Counter {
       var cur2 = await this.readCount();
       await this.state.storage.put("opened", cur2 + LOST_REMAINDER);
       await this.state.storage.put(RECONCILE_KEY_V2, LOST_REMAINDER);
+    }
+    if (!(await this.state.storage.get(RECONCILE_KEY_V3))) {
+      var cur3 = await this.readCount();
+      await this.state.storage.put("opened", cur3 + LOST_WORKERS_429);
+      await this.state.storage.put(RECONCILE_KEY_V3, LOST_WORKERS_429);
     }
   }
 
