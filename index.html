@@ -1847,17 +1847,35 @@ function wizSimKnownMove(sim, i, d) {
   return nxt;
 }
 function wizFindHelper(wiz) {
-  for (var k = 0; k < N; k++) {
-    if (wizRowNeedsProbe(wiz, k)) continue;
-    for (var di = 0; di < 2; di++) {
-      var d = di === 0 ? 1 : -1;
-      if (wiz.sim[k] + d < 1 || wiz.sim[k] + d > 7) continue;
-      if (wizKnownJerksAt(wiz.sim, k, d) > 0) continue;
-      var nxt = wizSimKnownMove(wiz.sim, k, d);
-      for (var i = 0; i < N; i++) {
-        if (!wizRowNeedsProbe(wiz, i)) continue;
-        if (wizPickDirAt(wiz.sim, i) === null && wizPickDirAt(nxt, i) !== null)
-          return { driver: k, d: d, helper: true };
+  /* BFS по безопасным ходам уже проверенных плиток: ищем кратчайший путь до
+     состояния, где какую-то незавершённую строку снова можно безопасно пробовать
+     (увести блокирующие плитки от стены может потребоваться за несколько ходов).
+     Возвращаем ПЕРВЫЙ ход пути - wizNextCmd пересчитает и продолжит.
+     Двигаем только полностью проверенные плитки, поэтому отмычка не ломается. */
+  var probed = [];
+  for (var k = 0; k < N; k++) if (!wizRowNeedsProbe(wiz, k)) probed.push(k);
+  if (!probed.length) return null;
+  var seen = {};
+  seen[wiz.sim.join(',')] = 1;
+  var queue = [{ sim: wiz.sim, first: null }];
+  var guard = 0;
+  while (queue.length && guard++ < 6000) {
+    var cur = queue.shift();
+    for (var pi = 0; pi < probed.length; pi++) {
+      var p = probed[pi];
+      for (var di = 0; di < 2; di++) {
+        var d = di === 0 ? 1 : -1;
+        if (cur.sim[p] + d < 1 || cur.sim[p] + d > 7) continue;
+        if (wizKnownJerksAt(cur.sim, p, d) > 0) continue;
+        var nxt = wizSimKnownMove(cur.sim, p, d);
+        var key = nxt.join(',');
+        if (seen[key]) continue;
+        seen[key] = 1;
+        var first = cur.first || { driver: p, d: d, helper: true };
+        for (var i = 0; i < N; i++) {
+          if (wizRowNeedsProbe(wiz, i) && wizPickDirAt(nxt, i) !== null) return first;
+        }
+        queue.push({ sim: nxt, first: first });
       }
     }
   }
@@ -2132,19 +2150,19 @@ function wizRenderStep() {
 function wizRenderDone() {
   var left = wizRowsLeft(LINK_WIZ);
   document.getElementById('linkWizProg').hidden = true;
-  document.getElementById('linkWizTitle').textContent = 'Готово';
+  document.getElementById('linkWizTitle').textContent = left > 0 ? 'Не все связи проверены' : 'Готово';
   document.getElementById('linkWizSub').textContent = left > 0
-    ? 'Часть связей не проверить без удара в стену. Остальное уже в матрице.'
+    ? 'Часть связей не проверить, не ударившись в стену.'
     : 'Матрица обновлена. Перепроверь связи и жми «Взломать».';
   document.getElementById('linkWizBody').innerHTML =
     '<p class="wizwhy">' + (left > 0
-      ? 'Плитки у стены заблокировали оставшиеся пробы. Если знаешь эти связи, отметь их в матрице вручную.'
+      ? 'Плитки у стены заблокировали оставшиеся пробы. <b>Эти связи не записаны</b> - если решить замок сейчас, ход может удариться в стену. Отметь их в матрице вручную или сдвинь блокирующую плитку в игре и запусти мастер заново.'
       : 'Если что-то не сходится с игрой, поправь ячейки вручную или запусти мастер заново.') + '</p>' +
     wizRenderPinsBar(LINK_WIZ.sim);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Закрыть</button></div>';
   document.getElementById('wizDone').onclick = closeLinkWizard;
-  toast('Связи записаны в матрицу');
+  toast(left > 0 ? 'Часть связей не проверена - впиши вручную' : 'Связи записаны в матрицу');
 }
 function openLinkWizard() {
   if (!pinsConfigured()) return;

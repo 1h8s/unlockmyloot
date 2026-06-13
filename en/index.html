@@ -1794,17 +1794,35 @@ function wizSimKnownMove(sim, i, d) {
   return nxt;
 }
 function wizFindHelper(wiz) {
-  for (var k = 0; k < N; k++) {
-    if (wizRowNeedsProbe(wiz, k)) continue;
-    for (var di = 0; di < 2; di++) {
-      var d = di === 0 ? 1 : -1;
-      if (wiz.sim[k] + d < 1 || wiz.sim[k] + d > 7) continue;
-      if (wizKnownJerksAt(wiz.sim, k, d) > 0) continue;
-      var nxt = wizSimKnownMove(wiz.sim, k, d);
-      for (var i = 0; i < N; i++) {
-        if (!wizRowNeedsProbe(wiz, i)) continue;
-        if (wizPickDirAt(wiz.sim, i) === null && wizPickDirAt(nxt, i) !== null)
-          return { driver: k, d: d, helper: true };
+  /* BFS по безопасным ходам уже проверенных плиток: ищем кратчайший путь до
+     состояния, где какую-то незавершённую строку снова можно безопасно пробовать
+     (увести блокирующие плитки от стены может потребоваться за несколько ходов).
+     Возвращаем ПЕРВЫЙ ход пути - wizNextCmd пересчитает и продолжит.
+     Двигаем только полностью проверенные плитки, поэтому отмычка не ломается. */
+  var probed = [];
+  for (var k = 0; k < N; k++) if (!wizRowNeedsProbe(wiz, k)) probed.push(k);
+  if (!probed.length) return null;
+  var seen = {};
+  seen[wiz.sim.join(',')] = 1;
+  var queue = [{ sim: wiz.sim, first: null }];
+  var guard = 0;
+  while (queue.length && guard++ < 6000) {
+    var cur = queue.shift();
+    for (var pi = 0; pi < probed.length; pi++) {
+      var p = probed[pi];
+      for (var di = 0; di < 2; di++) {
+        var d = di === 0 ? 1 : -1;
+        if (cur.sim[p] + d < 1 || cur.sim[p] + d > 7) continue;
+        if (wizKnownJerksAt(cur.sim, p, d) > 0) continue;
+        var nxt = wizSimKnownMove(cur.sim, p, d);
+        var key = nxt.join(',');
+        if (seen[key]) continue;
+        seen[key] = 1;
+        var first = cur.first || { driver: p, d: d, helper: true };
+        for (var i = 0; i < N; i++) {
+          if (wizRowNeedsProbe(wiz, i) && wizPickDirAt(nxt, i) !== null) return first;
+        }
+        queue.push({ sim: nxt, first: first });
       }
     }
   }
@@ -2068,18 +2086,18 @@ function wizRenderStep() {
 function wizRenderDone() {
   var left = wizRowsLeft(LINK_WIZ);
   document.getElementById('linkWizProg').hidden = true;
-  document.getElementById('linkWizTitle').textContent = 'Done';
+  document.getElementById('linkWizTitle').textContent = left > 0 ? 'Some links unverified' : 'Done';
   document.getElementById('linkWizSub').textContent = left > 0
-    ? 'Some links cannot be probed without a wall hit - the rest is in the matrix.'
+    ? "Some links can't be checked without hitting a wall."
     : 'Matrix updated. Double-check links, then Break the lock.';
   document.getElementById('linkWizBody').innerHTML =
     '<p class="wizwhy">' + (left > 0
-      ? 'Plates at the wall blocked the remaining probes. If you know those links - set them manually in the matrix.'
+      ? 'Plates at the wall blocked the remaining probes. <b>Those links are not recorded</b> - solving now may drive a move into the wall. Set them manually, or move a blocking plate in-game and rerun the wizard.'
       : 'If something does not match the game - fix cells manually or restart the wizard.') + '</p>' + wizRenderPinsBar(LINK_WIZ.sim);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Close</button></div>';
   document.getElementById('wizDone').onclick = closeLinkWizard;
-  toast('Links saved to matrix');
+  toast(left > 0 ? 'Some links unverified - add them manually' : 'Links saved to matrix');
 }
 function openLinkWizard() {
   if (!pinsConfigured()) return;
