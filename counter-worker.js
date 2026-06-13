@@ -86,22 +86,56 @@ export class Counter {
         return { status: 403, body: { error: "forbidden" } };
       }
     }
-    var deleted = { lk: 0, pi: 0 };
-    for (var pi = 0; pi < 2; pi++) {
-      var prefix = pi === 0 ? "lk:" : "pi:";
-      var cursor = undefined;
-      while (true) {
-        var page = await this.state.storage.list({ prefix: prefix, cursor: cursor, limit: 512 });
-        var keys = [...page.keys()];
-        for (var i = 0; i < keys.length; i++) await this.state.storage.delete(keys[i]);
-        if (prefix === "lk:") deleted.lk += keys.length; else deleted.pi += keys.length;
-        if (page.list_complete) break;
-        cursor = page.cursor;
-      }
+    var progressKey = "purge:progress";
+    var progress = await this.state.storage.get(progressKey);
+    if (!progress) {
+      progress = { prefix: "lk:", cursor: undefined, deleted: { lk: 0, pi: 0 } };
     }
+    var page = await this.state.storage.list({
+      prefix: progress.prefix,
+      cursor: progress.cursor,
+      limit: 128
+    });
+    var keys = [...page.keys()];
+    for (var i = 0; i < keys.length; i++) await this.state.storage.delete(keys[i]);
+    if (progress.prefix === "lk:") progress.deleted.lk += keys.length;
+    else progress.deleted.pi += keys.length;
+
+    if (!page.list_complete) {
+      progress.cursor = page.cursor;
+      await this.state.storage.put(progressKey, progress);
+      return {
+        status: 202,
+        body: {
+          ok: false,
+          partial: true,
+          deleted: progress.deleted,
+          prefix: progress.prefix,
+          opened: await this.readCount()
+        }
+      };
+    }
+
+    if (progress.prefix === "lk:") {
+      progress.prefix = "pi:";
+      progress.cursor = undefined;
+      await this.state.storage.put(progressKey, progress);
+      return {
+        status: 202,
+        body: {
+          ok: false,
+          partial: true,
+          deleted: progress.deleted,
+          prefix: "pi:",
+          opened: await this.readCount()
+        }
+      };
+    }
+
+    await this.state.storage.delete(progressKey);
     return {
       status: 200,
-      body: { ok: true, deleted: deleted, opened: await this.readCount() }
+      body: { ok: true, deleted: progress.deleted, opened: await this.readCount() }
     };
   }
 
