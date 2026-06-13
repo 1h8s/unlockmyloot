@@ -33,6 +33,9 @@
     --line:#e4e7ea; --line-2:#d3d8dc;
     --accent:#0e8a6a; --accent-ink:#0b6b53; --accent-soft:#e3f2ec; --accent-border:#bcdfd2;
     --card-shadow:0 24px 48px -28px rgba(28,32,36,.14);
+    --skel-mid:#eef1f3;
+    --bgpin:#39414a; --bgpin-glow:none; --bgline:rgba(28,32,36,.10); --bgcenter:rgba(14,138,106,.35);
+    --hero-glow:transparent;
     --mono:'JetBrains Mono',ui-monospace,monospace;
     --ease:cubic-bezier(0.16,1,0.3,1);
   }
@@ -41,86 +44,276 @@
     --line:#24272c; --line-2:#32373d;
     --accent:#34a883; --accent-ink:#62c7a4; --accent-soft:#16241f; --accent-border:#2a4a3d;
     --card-shadow:0 24px 48px -28px rgba(0,0,0,.6);
+    --skel-mid:#1f2227;
+    --bgpin:#3db48d; --bgpin-glow:0 0 10px rgba(61,180,141,.6),0 0 26px rgba(61,180,141,.28);
+    --bgline:rgba(231,234,236,.07); --bgcenter:rgba(61,180,141,.4);
+    --hero-glow:radial-gradient(ellipse 60% 70% at 22% 30%,rgba(52,168,131,.11),transparent 70%);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
   body{
     background:var(--bg);color:var(--ink);
     font-family:'Outfit',system-ui,sans-serif;line-height:1.55;font-size:16px;
     -webkit-font-smoothing:antialiased;
+    transition:background .45s var(--ease),color .45s var(--ease);
   }
   a{color:inherit;}
+  button,a{-webkit-tap-highlight-color:transparent;}
   button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
-  .topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;}
+
+  /* появление каскадом */
+  .rise{opacity:0;transform:translateY(16px);
+    animation:rise .9s var(--ease) forwards;animation-delay:calc(var(--d,0)*110ms);}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  /* ---------- шапка с фоновыми штифтами, как на главной ---------- */
+  .headzone{position:relative;overflow:hidden;}
+  .headzone::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+    background:var(--hero-glow);
+  }
+  .headbg{
+    position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;
+    -webkit-mask-image:radial-gradient(ellipse 50% 60% at 26% 55%,transparent 0 42%,rgba(0,0,0,.35) 64%,#000 100%);
+    mask-image:radial-gradient(ellipse 50% 60% at 26% 55%,transparent 0 42%,rgba(0,0,0,.35) 64%,#000 100%);
+  }
+  .headbg .centerline{
+    position:absolute;top:8%;bottom:8%;left:72vw;width:1px;
+    background:linear-gradient(180deg,transparent,var(--bgcenter) 20%,var(--bgcenter) 80%,transparent);
+  }
+  .bgtrack{position:absolute;left:0;right:0;height:1px;background:var(--bgline);}
+  .bgpin{
+    position:absolute;top:50%;left:0;width:9px;height:9px;border-radius:50%;
+    background:var(--bgpin);box-shadow:var(--bgpin-glow);
+    animation:glide var(--dur) var(--ease) infinite;animation-delay:var(--del);
+    will-change:transform;
+  }
+  @keyframes glide{
+    0%{transform:translate3d(var(--x0),-50%,0);opacity:0;}
+    10%{opacity:var(--op);}
+    42%,68%{transform:translate3d(calc(72vw - 50%),-50%,0);opacity:var(--op);}
+    90%{opacity:var(--op);}
+    100%{transform:translate3d(var(--x0),-50%,0);opacity:0;}
+  }
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0;position:relative;z-index:2;}
   .wordmark{font-weight:700;letter-spacing:-.02em;font-size:18px;display:flex;align-items:center;gap:10px;text-decoration:none;}
-  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);}
-  .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;margin-left:18px;}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);
+    box-shadow:var(--bgpin-glow);animation:breathe 2.6s var(--ease) infinite;}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.72);opacity:.55}}
+  .topnav{display:flex;align-items:center;gap:18px;}
+  .topnav a{color:var(--ink-2);text-decoration:none;font-size:14.5px;transition:color .25s;}
   .topnav a:hover{color:var(--ink);}
-  .pagehead{padding:30px 0 26px;}
-  h1{font-size:clamp(28px,4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1.1;}
-  .sub{color:var(--ink-2);margin-top:12px;max-width:62ch;font-size:16px;}
-  h2{font-size:20px;font-weight:600;letter-spacing:-.02em;margin:36px 0 6px;}
-  .h2sub{color:var(--ink-2);font-size:14px;margin-bottom:18px;}
+  .themebtn{
+    width:42px;height:42px;border-radius:12px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);
+    display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease);
+  }
+  .themebtn:hover{border-color:var(--ink-3);color:var(--ink);transform:translateY(-2px);}
+  .themebtn:active{transform:scale(.93);}
+  .themebtn .ic-sun{display:none;}
+  [data-theme="dark"] .themebtn .ic-sun{display:block;}
+  [data-theme="dark"] .themebtn .ic-moon{display:none;}
+
+  .pagehead{position:relative;z-index:1;padding:46px 0 64px;max-width:640px;}
+  .eyebrow{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent-ink);margin-bottom:16px;
+  }
+  h1{font-size:clamp(32px,4.6vw,52px);font-weight:600;letter-spacing:-.035em;line-height:1.06;}
+  .sub{color:var(--ink-2);margin-top:16px;max-width:52ch;font-size:16.5px;}
+  .headcta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;}
+  .btn{
+    font-family:inherit;font-size:15px;font-weight:500;
+    display:inline-flex;align-items:center;gap:9px;
+    padding:12px 20px;border-radius:13px;cursor:pointer;text-decoration:none;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink);
+    transition:all .3s var(--ease);
+  }
+  .btn:hover{border-color:var(--ink-3);transform:translateY(-2px);}
+  .btn:active{transform:scale(.97);}
+
+  /* ---------- секции ---------- */
+  main{position:relative;z-index:1;}
+  .sect{padding:8px 0 14px;}
+  .secthead{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;margin-bottom:6px;}
+  .snum{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
+  .stitle{font-size:21px;font-weight:600;letter-spacing:-.02em;}
+  .sdesc{grid-column:2;color:var(--ink-2);font-size:15px;max-width:68ch;margin-bottom:18px;}
+
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;}
   .lockcard{
-    display:block;background:var(--surface);border:1px solid var(--line);border-radius:18px;
-    padding:18px 20px;text-decoration:none;transition:all .3s var(--ease);
+    position:relative;display:block;overflow:hidden;
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    padding:20px 22px;text-decoration:none;
+    transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease);
+    opacity:0;transform:translateY(14px);
+    animation:rise .7s var(--ease) forwards;animation-delay:calc(var(--i,0)*60ms);
   }
-  .lockcard:hover{transform:translateY(-3px);box-shadow:var(--card-shadow);border-color:var(--line-2);}
-  .lc-name{font-weight:600;font-size:16px;letter-spacing:-.01em;}
-  .lc-meta{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:3px;letter-spacing:.03em;}
-  .lc-pins{margin:14px 0 4px;display:flex;flex-direction:column;gap:5px;}
+  .lockcard:hover{transform:translateY(-4px);box-shadow:var(--card-shadow);border-color:var(--accent-border);}
+  .lockcard::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+    background:radial-gradient(420px 180px at var(--mx,50%) var(--my,0%),var(--accent-soft),transparent 70%);
+    transition:opacity .35s;
+  }
+  .lockcard:hover::after{opacity:.55;}
+  .lc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:1;}
+  .lc-name{font-weight:600;font-size:16.5px;letter-spacing:-.01em;line-height:1.3;}
+  .lc-badge{
+    flex:none;display:inline-flex;align-items:center;gap:5px;
+    font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.05em;
+    color:var(--accent-ink);background:var(--accent-soft);border:1px solid var(--accent-border);
+    border-radius:8px;padding:4px 8px;
+  }
+  .lc-meta{display:block;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:4px;letter-spacing:.03em;position:relative;z-index:1;}
+  .lc-pins{margin:16px 0 4px;display:flex;flex-direction:column;gap:5px;position:relative;z-index:1;}
   .lc-row{display:flex;gap:4px;align-items:center;}
-  .lc-row .n{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);width:10px;}
-  .lc-hole{width:12px;height:12px;border-radius:4px;background:var(--bg);border:1px solid var(--line);}
+  .lc-row .n{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);width:11px;}
+  .lc-hole{width:13px;height:13px;border-radius:4.5px;background:var(--bg);border:1px solid var(--line);transition:all .3s var(--ease);}
   .lc-hole.c{border-style:dashed;}
   .lc-hole.p{background:var(--ink);border-color:var(--ink);}
   .lc-hole.pg{background:var(--accent);border-color:var(--accent);}
-  .lc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
-  .lc-stats{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);}
+  .lockcard:hover .lc-hole.p{background:var(--accent);border-color:var(--accent);box-shadow:var(--bgpin-glow);}
+  .lc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;position:relative;z-index:1;}
+  .lc-stats{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.02em;}
   .lc-open{font-size:13.5px;color:var(--accent-ink);font-weight:500;display:inline-flex;align-items:center;gap:6px;}
-  .lockcard:hover .lc-open svg{transform:translateX(3px);}
   .lc-open svg{transition:transform .3s var(--ease);}
+  .lockcard:hover .lc-open svg{transform:translateX(4px);}
+
+  /* скелетоны на время загрузки топа */
+  .skelcard{
+    height:208px;border-radius:20px;border:1px solid var(--line);
+    background:linear-gradient(100deg,var(--surface) 40%,var(--skel-mid) 50%,var(--surface) 60%);
+    background-size:200% 100%;animation:shimmer 1.2s linear infinite;
+  }
+  @keyframes shimmer{to{background-position:-200% 0;}}
+
   .note{
     background:var(--surface);border:1px solid var(--line);border-radius:14px;
-    padding:14px 18px;color:var(--ink-2);font-size:14.5px;margin-top:6px;
+    padding:14px 18px;color:var(--ink-2);font-size:14.5px;
   }
   .note b{color:var(--ink);}
-  footer{border-top:1px solid var(--line);margin-top:56px;padding:26px 0 40px;color:var(--ink-3);font-size:13.5px;}
-  footer a{color:var(--ink-2);}
-  @media(max-width:560px){.wrap{padding:0 16px;}.grid{grid-template-columns:1fr;}}
+
+  .gap{height:34px;}
+  footer{
+    border-top:1px solid var(--line);margin-top:56px;padding:26px 0 40px;
+    color:var(--ink-3);font-size:13.5px;
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  }
+  footer a{color:var(--ink-2);text-decoration:none;}
+  footer a:hover{color:var(--accent-ink);}
+  @media(max-width:560px){
+    .wrap{padding:0 16px;}
+    .grid{grid-template-columns:1fr;}
+    .pagehead{padding:34px 0 48px;}
+    .secthead{grid-template-columns:1fr;gap:2px;}
+    .sdesc{grid-column:1;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important;}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="topbar">
-    <a class="wordmark" href="/"><span class="dot"></span>UnlockMyLoot</a>
-    <nav class="topnav">
-      <a href="/">Решатель</a>
-      <a href="/#faq">Как пользоваться</a>
-    </nav>
-  </header>
 
-  <section class="pagehead">
-    <h1>Каталог замков</h1>
-    <p class="sub">Известные замки Gothic 1 Remake с уже разведанными связями: открой карточку - и конфигурация подставится в решатель сама. Ниже - живой топ замков, которые игроки вскрывают прямо сейчас.</p>
+<div class="headzone">
+  <div class="headbg" id="headbg" aria-hidden="true"><div class="centerline"></div></div>
+  <div class="wrap">
+    <header class="topbar rise" style="--d:0">
+      <a class="wordmark" href="/"><span class="dot"></span>UnlockMyLoot</a>
+      <nav class="topnav">
+        <a href="/">Решатель</a>
+        <a href="/#faq">Как пользоваться</a>
+        <button class="themebtn" id="themeBtn" type="button" aria-label="Переключить тему">
+          <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <svg class="ic-sun" width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="3.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 1v1.8M8.5 14.2V16M16 8.5h-1.8M2.8 8.5H1M13.8 3.2l-1.3 1.3M4.5 12.5l-1.3 1.3M13.8 13.8l-1.3-1.3M4.5 4.5 3.2 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <section class="pagehead">
+      <div class="eyebrow rise" style="--d:1">Gothic 1 Remake · каталог</div>
+      <h1 class="rise" style="--d:2">Замки, которые уже разведали за тебя</h1>
+      <p class="sub rise" style="--d:3">Открой карточку - конфигурация подставится в решатель сама, останется нажать «Взломать». Ниже живая статистика: что вскрывают игроки прямо сейчас.</p>
+      <div class="headcta rise" style="--d:4">
+        <a class="btn" href="/">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M13 7H1M6 2 1 7l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          К решателю
+        </a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="wrap">
+<main>
+  <section class="sect rise" style="--d:5">
+    <div class="secthead">
+      <span class="snum">01</span>
+      <span class="stitle">Известные замки</span>
+      <p class="sdesc">Конфигурации проверены решателем и сверены с игрой. Имя на карточке - то самое место.</p>
+    </div>
+    <div class="grid" id="namedGrid"></div>
   </section>
 
-  <h2>Известные замки</h2>
-  <p class="h2sub">Конфигурации проверены решателем и сверены с игрой.</p>
-  <div class="grid" id="namedGrid"></div>
+  <div class="gap"></div>
 
-  <h2>Свежее из копилки</h2>
-  <p class="h2sub">Анонимная статистика решателя: какие замки вводят чаще всего. Узнал свой сундук - напиши в комментариях к посту на DTF, дадим ему имя.</p>
-  <div class="grid" id="liveGrid"></div>
-  <div class="note" id="liveNote" hidden></div>
+  <section class="sect rise" style="--d:6">
+    <div class="secthead">
+      <span class="snum">02</span>
+      <span class="stitle">Свежее из копилки</span>
+      <p class="sdesc">Анонимная статистика решателя: какие замки вводят чаще всего. Узнал свой сундук - напиши в комментариях к посту на DTF, дадим ему имя.</p>
+    </div>
+    <div class="grid" id="liveGrid">
+      <div class="skelcard"></div>
+      <div class="skelcard" style="animation-delay:.15s"></div>
+      <div class="skelcard" style="animation-delay:.3s"></div>
+    </div>
+    <div class="note" id="liveNote" hidden></div>
+  </section>
+</main>
 
   <footer>
-    <a href="/">UnlockMyLoot</a> - решатель замков Gothic 1 Remake. Каталог пополняется: имена замков сверяются с гайдами и сообществом.
+    <span><a href="/">UnlockMyLoot</a> - решатель замков Gothic 1 Remake.</span>
+    <span>Каталог пополняется: имена сверяются с гайдами и сообществом.</span>
   </footer>
 </div>
 
 <script>
+/* тема */
+document.getElementById('themeBtn').onclick = function () {
+  var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('uml-theme', next); } catch (e) {}
+};
+
+/* фоновые штифты в шапке */
+(function buildHeadBg() {
+  var bg = document.getElementById('headbg');
+  var rows = [
+    { top: 12, x0: '14vw', dur: 7.4, del: 0,   op: .75 },
+    { top: 30, x0: '82vw', dur: 8.8, del: 1.1, op: .5  },
+    { top: 50, x0: '26vw', dur: 6.6, del: 2.0, op: .65 },
+    { top: 70, x0: '76vw', dur: 9.2, del: .5,  op: .5  },
+    { top: 88, x0: '38vw', dur: 7.9, del: 2.7, op: .6  }
+  ];
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var tr = document.createElement('div');
+    tr.className = 'bgtrack';
+    tr.style.top = row.top + '%';
+    var pin = document.createElement('div');
+    pin.className = 'bgpin';
+    pin.style.setProperty('--x0', row.x0);
+    pin.style.setProperty('--dur', row.dur + 's');
+    pin.style.setProperty('--del', row.del + 's');
+    pin.style.setProperty('--op', row.op);
+    tr.appendChild(pin);
+    bg.appendChild(tr);
+  }
+})();
+
 /* Чистый декодер кода замка (v2): без глобалей решателя */
 var CODE_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 function codeBitLen(n) { return 4 + 3 * n + 2 * n * (n - 1); }
@@ -136,7 +329,7 @@ function decodeLock(code) {
   function read(w) { var v2 = 0; for (var b2 = 0; b2 < w; b2++) v2 = (v2 << 1) | bits[pos++]; return v2; }
   var n = read(3) + 3;
   if (n < 3 || n > 8 || code.length !== Math.ceil(codeBitLen(n) / 6)) return null;
-  read(1); // flip - для каталога не важен
+  read(1); /* flip - для каталога не важен */
   var ps = [];
   for (var i = 0; i < n; i++) {
     var p = read(3);
@@ -168,6 +361,9 @@ var NAMED_LOCKS = [
   }
 ];
 
+var SVG_CHECK = '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5 4 8l4.5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var ARROW = '<svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M8 2l4.5 4.5L8 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 function pinsHtml(d) {
   var html = '<div class="lc-pins">';
   for (var i = 0; i < d.n; i++) {
@@ -182,13 +378,12 @@ function pinsHtml(d) {
   return html + '</div>';
 }
 
-var ARROW = '<svg width="12" height="12" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M8 2l4.5 4.5L8 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-function card(d, title, meta, stats) {
-  return '<a class="lockcard" href="/?lock=' + encodeURIComponent(d.code) + '">' +
-    '<span class="lc-name">' + title + '</span>' +
+function card(idx, code, dec, title, meta, stats, badge) {
+  return '<a class="lockcard" style="--i:' + idx + '" href="/?lock=' + encodeURIComponent(code) + '">' +
+    '<div class="lc-top"><span class="lc-name">' + title + '</span>' +
+    (badge ? '<span class="lc-badge">' + SVG_CHECK + 'проверен</span>' : '') + '</div>' +
     '<span class="lc-meta">' + meta + '</span>' +
-    pinsHtml(d.dec) +
+    pinsHtml(dec) +
     '<div class="lc-foot"><span class="lc-stats">' + stats + '</span>' +
     '<span class="lc-open">в решатель ' + ARROW + '</span></div></a>';
 }
@@ -200,6 +395,15 @@ function ago(ts) {
   return d + ' дн. назад';
 }
 
+/* подсветка-прожектор за курсором */
+document.addEventListener('mousemove', function (e) {
+  var card2 = e.target.closest ? e.target.closest('.lockcard') : null;
+  if (!card2) return;
+  var r = card2.getBoundingClientRect();
+  card2.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+  card2.style.setProperty('--my', (e.clientY - r.top) + 'px');
+});
+
 /* Известные */
 (function renderNamed() {
   var html = '';
@@ -207,7 +411,7 @@ function ago(ts) {
     var L = NAMED_LOCKS[i];
     var dec = decodeLock(L.code);
     if (!dec) continue;
-    html += card({ code: L.code, dec: dec }, L.name, L.meta, 'проверен');
+    html += card(i, L.code, dec, L.name, L.meta, 'конфигурация сверена с игрой', true);
   }
   document.getElementById('namedGrid').innerHTML = html;
 })();
@@ -227,7 +431,7 @@ function ago(ts) {
         var title = named[rec.code] || ('Замок без имени · ' + dec.n + ' плиток');
         var meta = dec.n + ' плиток · ' + dec.links + ' связей';
         var times = rec.count === 1 ? 'вводили 1 раз' : 'вводили ' + rec.count + ' раз';
-        html += card({ code: rec.code, dec: dec }, title, meta, times + ' · ' + ago(rec.last));
+        html += card(shown, rec.code, dec, title, meta, times + ' · ' + ago(rec.last), !!named[rec.code]);
         shown++;
       }
       if (!shown) {
@@ -240,6 +444,7 @@ function ago(ts) {
       showNote('Не удалось дотянуться до статистики (она живёт за Cloudflare и из России иногда недоступна без VPN). <b>Известные замки выше работают всегда.</b>');
     });
   function showNote(msg) {
+    document.getElementById('liveGrid').innerHTML = '';
     var el = document.getElementById('liveNote');
     el.innerHTML = msg;
     el.hidden = false;

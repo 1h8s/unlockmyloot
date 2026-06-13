@@ -95,11 +95,16 @@ export class Counter {
       if (!/^[A-Za-z0-9_.-]{4,64}$/.test(code)) {
         return new Response(JSON.stringify({ error: "bad_code" }), { status: 400 });
       }
-      var key = "lk:" + code;
-      var rec = (await this.state.storage.get(key)) || { c: 0, f: Date.now() };
-      rec.c += 1;
-      rec.l = Date.now();
-      await this.state.storage.put(key, rec);
+      // idxonly=1: только индекс по штифтам, без тэлли в каталоге (вторая
+      // расстановка того же замка - чтобы не считать один взлом дважды).
+      var idxOnly = url.searchParams.get("idxonly") === "1";
+      if (!idxOnly) {
+        var key = "lk:" + code;
+        var rec = (await this.state.storage.get(key)) || { c: 0, f: Date.now() };
+        rec.c += 1;
+        rec.l = Date.now();
+        await this.state.storage.put(key, rec);
+      }
 
       var pinsKey = url.searchParams.get("pins") || "";
       if (/^[3-8]\.[1-7]{3,8}$/.test(pinsKey)) {

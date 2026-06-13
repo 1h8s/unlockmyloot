@@ -537,6 +537,15 @@
   .sg-act{display:flex;gap:8px;}
   .suggest .btn{padding:8px 14px;font-size:13.5px;}
   .suggest .btn.ghost{border-color:var(--accent-border);}
+  .wizsuggest{
+    margin-bottom:14px;padding:13px 17px;border-radius:13px;
+    background:var(--accent-soft);border:1px solid var(--accent-border);
+    color:var(--accent-ink);font-size:14.5px;
+    animation:chipin .35s var(--ease) backwards;
+  }
+  .wizsuggest p{margin:0 0 10px;}
+  .wizsuggest b{font-weight:600;}
+  .wizsuggest .btn{width:100%;}
   .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
   .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
   .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
@@ -1631,6 +1640,7 @@ function renderLinkSum() {
     var idx = DEPSTATE.findIndex(function (s) { return s.v === link[i][j]; });
     var st = DEPSTATE[(idx + 1) % 3];
     link[i][j] = st.v;
+    syncLinkManualZero(i, j, st.v);
     b.className = 'dep ' + st.cls;
     b.innerHTML = st.icon;
     b.title = 'Plate ' + (i + 1) + ' moves - plate ' + (j + 1) + ': ' + st.txt;
@@ -1656,6 +1666,8 @@ function renderLinkSum() {
     var c = e.target.closest ? e.target.closest('.lchip') : null;
     if (!c) return;
     link[+c.dataset.i][+c.dataset.j] = 0;
+    wizEnsureZero();
+    WIZ_MEM.zero[+c.dataset.i][+c.dataset.j] = false;
     renderDeps();
   });
 })();
@@ -1667,6 +1679,27 @@ var WIZ_MEM = { zero: null, base: null };
 function wizMemReset() {
   WIZ_MEM.zero = null;
   WIZ_MEM.base = null;
+}
+function wizEnsureZero() {
+  if (!WIZ_MEM.zero || WIZ_MEM.zero.length !== N) WIZ_MEM.zero = wizMk2d(false);
+}
+function linkCellKnown(i, j) {
+  if (link[i][j] !== 0) return true;
+  return !!(WIZ_MEM.zero && WIZ_MEM.zero[i][j]);
+}
+function matrixUnknownCount() {
+  var n = 0;
+  for (var i = 0; i < N; i++)
+    for (var j = 0; j < N; j++)
+      if (i !== j && !linkCellKnown(i, j)) n++;
+  return n;
+}
+function matrixNeedsSuggest() {
+  return pinsConfigured() && matrixUnknownCount() > 0;
+}
+function syncLinkManualZero(i, j, v) {
+  wizEnsureZero();
+  WIZ_MEM.zero[i][j] = (v === 0);
 }
 function wizSyncPins(wiz) {
   for (var i = 0; i < N; i++) pins[i] = wiz.sim[i];
@@ -1842,6 +1875,7 @@ function wizRenderIntro() {
     'Usually one move per plate. Move in-game, mark what jerked, we compute the rest.';
   document.getElementById('linkWizProg').hidden = true;
   document.getElementById('linkWizBody').innerHTML =
+    '<div id="wizSuggest"></div>' +
     '<p class="wizwhy">No need to undo moves: the next command accounts for new positions. Found links stay even if you press R in-game.</p>' +
     wizRenderPinsBar(wiz.sim);
   document.getElementById('linkWizFoot').innerHTML =
@@ -1850,6 +1884,35 @@ function wizRenderIntro() {
     '<button class="btn ghost" type="button" id="wizCancelIntro">Cancel</button></div>';
   document.getElementById('wizStart').onclick = function () { wizRenderStep(); };
   document.getElementById('wizCancelIntro').onclick = closeLinkWizard;
+  wizMaybeSuggest();
+}
+function wizMaybeSuggest() {
+  var slot = document.getElementById('wizSuggest');
+  if (!slot || !matrixNeedsSuggest()) return;
+  suggestLookup(function (d) {
+    if (!d || !d.found || !LINK_WIZ) return;
+    var el = document.getElementById('wizSuggest');
+    if (!el || !matrixNeedsSuggest()) return;
+    var unk = matrixUnknownCount();
+    el.innerHTML = '<div class="wizsuggest">' +
+      '<p>This layout was already cracked <b>' + d.count + '</b> times. ' +
+      'Fill in known links and finish the rest here? ' +
+      '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
+      '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
+    document.getElementById('wizSgYes').onclick = function () {
+      var n = applySuggestedLinks(d.code);
+      if (n < 0) return;
+      LINK_WIZ.sim = pins.slice();
+      LINK_WIZ.confirmedZero = WIZ_MEM.zero;
+      LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
+      toast('Filled ' + n + ' links - ' + matrixUnknownCount() + ' still unknown');
+      if (matrixUnknownCount() === 0) {
+        wizRenderDone();
+        return;
+      }
+      wizRenderStep();
+    };
+  });
 }
 function wizBindStepActions(wiz, c, chipsEl, moversEl) {
   function wizSyncMovers() {
@@ -2225,12 +2288,13 @@ function updateFlipLabel() {
    For 6 plates this is 14 chars instead of ~45 with old v1. */
 var CODE_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 function codeBitLen(n) { return 4 + 3 * n + 2 * n * (n - 1); }
-function encodeConfig() {
+function encodeConfig(pinsOverride) {
+  var ps = (pinsOverride && pinsOverride.length === N) ? pinsOverride : pins;
   var bits = [];
   function push(v, w) { for (var b = w - 1; b >= 0; b--) bits.push((v >> b) & 1); }
   push(N - 3, 3);
   push(FLIP ? 1 : 0, 1);
-  for (var i = 0; i < N; i++) push(pins[i] - 1, 3);
+  for (var i = 0; i < N; i++) push(ps[i] - 1, 3);
   for (var i2 = 0; i2 < N; i2++)
     for (var j = 0; j < N; j++)
       if (i2 !== j) push(link[i2][j] === 1 ? 1 : (link[i2][j] === -1 ? 2 : 0), 2);
@@ -2336,13 +2400,13 @@ function decodeConfig(code) {
   return true;
 }
 function configShareUrl() {
-  return location.origin + location.pathname + '?lock=' + encodeURIComponent(encodeConfig());
+  return location.origin + location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins()));
 }
 function bootConfigFromUrl() {
   var raw = extractConfigCode();
   if (!raw) return false;
   if (decodeConfig(raw)) {
-    history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig()));
+    history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins())));
     toast('Lock loaded from link');
     var solver = document.getElementById('solver');
     if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2433,20 +2497,30 @@ function counterLoad() {
 }
 var REPORTED_LOCKS = {};
 var SUGGESTED_CODE = null;
-function pinsKeyStr() { return N + '.' + pins.join(''); }
+function pinsKeyOf(arr) { return N + '.' + arr.join(''); }
+function pinsKeyStr() { return pinsKeyOf(pins); }
+function lockBasePins() {
+  return (WIZ_MEM.base && WIZ_MEM.base.length === N) ? WIZ_MEM.base : pins;
+}
 function reportLockConfig() {
   try {
-    var code = encodeConfig();
+    var base = lockBasePins();
+    var code = encodeConfig(base);
     if (!code || REPORTED_LOCKS[code]) return;
-    if (code === SUGGESTED_CODE) return; /* связи из подсказки - не голосуем сами за себя */
+    if (code === SUGGESTED_CODE) return;
     REPORTED_LOCKS[code] = true;
+    var baseKey = pinsKeyOf(base);
+    var curKey = pinsKeyStr();
     fetch(COUNTER_API + '/lock?code=' + encodeURIComponent(code) +
-      '&pins=' + encodeURIComponent(pinsKeyStr()), { method: 'POST' })
-      .catch(function () {});
+      '&pins=' + encodeURIComponent(baseKey), { method: 'POST' }).catch(function () {});
+    if (curKey !== baseKey) {
+      fetch(COUNTER_API + '/lock?code=' + encodeURIComponent(code) +
+        '&pins=' + encodeURIComponent(curKey) + '&idxonly=1', { method: 'POST' }).catch(function () {});
+    }
   } catch (e) {}
 }
 
-/* Подсказка связей: если эту расстановку уже вскрывали, предлагаем матрицу */
+/* Link suggestions from the crowd-sourced lock pool */
 var SUGGEST_DISMISSED = false;
 var suggestTimer = 0;
 function matrixEmpty() {
@@ -2455,23 +2529,79 @@ function matrixEmpty() {
       if (link[i][j]) return false;
   return true;
 }
+function suggestFetch(pk) {
+  return fetch(COUNTER_API + '/suggest?pins=' + encodeURIComponent(pk))
+    .then(function (r) { return r.json(); })
+    .catch(function () { return null; });
+}
+function suggestLookup(cb) {
+  var keys = [];
+  var bk = pinsKeyOf(lockBasePins());
+  var ck = pinsKeyStr();
+  keys.push(bk);
+  if (ck !== bk) keys.push(ck);
+  var best = null;
+  (function step(i) {
+    if (i >= keys.length) { cb(best); return; }
+    suggestFetch(keys[i]).then(function (d) {
+      if (d && d.found && (!best || d.count > best.count)) best = d;
+      step(i + 1);
+    });
+  })(0);
+}
+function applySuggestedLinks(code) {
+  var savedPins = pins.slice(), savedLink = link.map(function (r) { return r.slice(); }),
+      savedFlip = FLIP, savedN = N, savedBase = WIZ_MEM.base,
+      savedZero = WIZ_MEM.zero ? WIZ_MEM.zero.map(function (r) { return r.slice(); }) : null,
+      savedTouched = pinsTouched;
+  if (!decodeConfig(code)) return -1;
+  if (N !== savedN) {
+    N = savedN; pins = savedPins; link = savedLink; pinsTouched = savedTouched;
+    WIZ_MEM.base = savedBase; WIZ_MEM.zero = savedZero; FLIP = savedFlip;
+    renderCount(); renderPins(); renderDeps();
+    return -1;
+  }
+  var decodedLink = link.map(function (r) { return r.slice(); });
+  wizEnsureZero();
+  var applied = 0;
+  for (var i = 0; i < N; i++) {
+    for (var j = 0; j < N; j++) {
+      if (i === j) continue;
+      var known = savedLink[i][j] !== 0 ||
+        (savedZero && savedZero[i][j]);
+      if (known) continue;
+      var v = decodedLink[i][j];
+      savedLink[i][j] = v;
+      WIZ_MEM.zero[i][j] = (v === 0);
+      applied++;
+    }
+  }
+  link = savedLink;
+  pins = savedPins; pinsTouched = savedTouched;
+  WIZ_MEM.base = savedBase;
+  if (FLIP !== savedFlip) {
+    FLIP = savedFlip;
+    try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
+    updateFlipLabel();
+  }
+  SUGGESTED_CODE = code;
+  renderCount(); renderPins(); renderDeps();
+  return applied;
+}
 function maybeSuggestLinks() {
   var box = document.getElementById('suggestBox');
   if (!box) return;
-  if (SUGGEST_DISMISSED || !pinsConfigured() || !matrixEmpty()) {
+  if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) {
     box.innerHTML = '';
     return;
   }
   clearTimeout(suggestTimer);
   suggestTimer = setTimeout(function () {
-    if (SUGGEST_DISMISSED || !pinsConfigured() || !matrixEmpty()) return;
-    fetch(COUNTER_API + '/suggest?pins=' + encodeURIComponent(pinsKeyStr()))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d || !d.found || !matrixEmpty() || SUGGEST_DISMISSED) return;
-        renderSuggestBox(d);
-      })
-      .catch(function () {});
+    if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) return;
+    suggestLookup(function (d) {
+      if (!d || !d.found || !matrixNeedsSuggest() || SUGGEST_DISMISSED) return;
+      renderSuggestBox(d);
+    });
   }, 600);
 }
 function renderSuggestBox(d) {
@@ -2483,16 +2613,8 @@ function renderSuggestBox(d) {
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
     '</span></div>';
   box.querySelector('#sgYes').onclick = function () {
-    var savedPins = pins.slice(), savedFlip = FLIP;
-    if (decodeConfig(d.code)) {
-      pins = savedPins;
-      if (FLIP !== savedFlip) {
-        FLIP = savedFlip;
-        try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
-        updateFlipLabel();
-      }
-      SUGGESTED_CODE = d.code;
-      renderCount(); renderPins(); renderDeps();
+    var n = applySuggestedLinks(d.code);
+    if (n >= 0) {
       box.innerHTML = '';
       toast('Links filled in - check the matrix and hit Pick lock');
     }
