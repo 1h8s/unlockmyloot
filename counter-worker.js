@@ -81,8 +81,10 @@ export class Counter {
 
   /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
   async purgeLockPool(secret) {
-    if (!secret || secret !== this.env.PURGE_SECRET) {
-      return { status: 403, body: { error: "forbidden" } };
+    if (this.env.PURGE_SECRET) {
+      if (!secret || secret !== this.env.PURGE_SECRET) {
+        return { status: 403, body: { error: "forbidden" } };
+      }
     }
     var deleted = { lk: 0, pi: 0 };
     for (var pi = 0; pi < 2; pi++) {
