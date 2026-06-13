@@ -2567,14 +2567,14 @@ function showCounter(n, approx) {
   var num = document.getElementById('lockstatN');
   var w = document.getElementById('lockstatW');
   box.classList.add('on');
-  box.title = approx ? 'Примерно - точное число сейчас недоступно' : '';
-  var pre = approx ? '~' : '';
+  box.title = approx ? 'Не меньше этого числа - точное сейчас недоступно' : '';
+  var suf = approx ? '+' : '';
   w.textContent = pluralRu(n, 'замок уже взломан', 'замка уже взломано', 'замков уже взломано');
   var from = parseInt(num.dataset.v || '0', 10), t0 = performance.now();
   function tick(t) {
     var p = Math.min(1, (t - t0) / 900);
     p = 1 - Math.pow(1 - p, 3);
-    num.textContent = pre + fmtNum(Math.round(from + (n - from) * p));
+    num.textContent = fmtNum(Math.round(from + (n - from) * p)) + suf;
     if (p < 1) requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
@@ -2585,13 +2585,9 @@ function counterJson(r) {
   return r.json();
 }
 /* Резерв счётчика: если API недоступен (нет VPN, 429, сбой) - показываем
-   последнее известное число или консервативную оценку с пометкой "~",
-   а не пустоту. COUNT_BASE стоит обновлять при деплоях. */
-var COUNT_BASE = 38974, COUNT_BASE_T = Date.UTC(2026, 5, 13), COUNT_RATE_HR = 40;
-function estimatedCount() {
-  var hrs = (Date.now() - COUNT_BASE_T) / 3600000;
-  return COUNT_BASE + Math.round(Math.min(Math.max(hrs, 0), 720) * COUNT_RATE_HR);
-}
+   "N+" вместо пустоты. Счётчик только растёт, поэтому последнее известное
+   число (или базовое COUNT_BASE) - честная нижняя граница. Подбивать при деплоях. */
+var COUNT_BASE = 38974;
 function cachedCount() {
   try { var o = JSON.parse(localStorage.getItem('uml-count') || 'null');
     return o && typeof o.v === 'number' ? o.v : null; } catch (e) { return null; }
@@ -2599,9 +2595,12 @@ function cachedCount() {
 function saveCount(n) {
   try { localStorage.setItem('uml-count', JSON.stringify({ v: n, t: Date.now() })); } catch (e) {}
 }
-function counterLoad() {
+function offlineCount() {
   var c = cachedCount();
-  showCounter(c != null ? Math.max(c, estimatedCount()) : estimatedCount(), true);
+  return Math.max(c != null ? c : 0, COUNT_BASE);
+}
+function counterLoad() {
+  showCounter(offlineCount(), true);
   fetch(COUNTER_API + '/count')
     .then(counterJson)
     .then(function (d) { if (typeof d.opened === 'number') { showCounter(d.opened, false); saveCount(d.opened); } })
