@@ -580,18 +580,6 @@
   /* каскадное проявление подставленных связей (фидбэк смены состояния, гасится reduced-motion) */
   @keyframes fillpop{from{opacity:0;transform:scale(.78);}to{opacity:1;transform:none;}}
   .dep.sgfill,.lchip.sgfill{animation:fillpop .4s var(--ease) backwards;animation-delay:calc(var(--sgi,0)*45ms);}
-  /* праздничная плашка рубежа 50 000 */
-  .celebrate{
-    position:fixed;left:50%;top:16%;transform:translate(-50%,-14px);z-index:10000;pointer-events:none;
-    background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent-border);
-    border-radius:18px;padding:16px 26px;text-align:center;font-size:18px;font-weight:600;
-    box-shadow:0 22px 60px -22px rgba(0,0,0,.5);opacity:0;animation:celebrate-in .55s var(--ease) forwards;
-  }
-  .celebrate b{font-size:26px;letter-spacing:-.02em;}
-  .celebrate small{display:block;font-weight:500;font-size:13px;opacity:.82;margin-top:4px;}
-  .celebrate.out{animation:celebrate-out .6s var(--ease) forwards;}
-  @keyframes celebrate-in{to{opacity:1;transform:translate(-50%,0);}}
-  @keyframes celebrate-out{to{opacity:0;transform:translate(-50%,-14px);}}
   .lempty{animation:chipin .35s var(--ease) backwards;}
   .suggest{
     display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;
@@ -2309,16 +2297,20 @@ var MILESTONE_50K_KEY = 'uml-milestone-50k-v1';
 function launchConfetti(ms) {
   var canvas = document.getElementById('confettiCanvas');
   if (!canvas) return;
+  /* без анимации для тех, кто отключил движение - модалка покажется, конфетти нет */
+  try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
   var ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W = window.innerWidth, H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   canvas.hidden = false;
   var colors = ['#34a883', '#2a6b52', '#f0c040', '#e8a838', '#6ab0ff', '#e85d6a', '#c4f0dc'];
   var pieces = [];
   for (var i = 0; i < 180; i++) {
     pieces.push({
-      x: Math.random() * canvas.width,
-      y: -30 - Math.random() * canvas.height * 0.6,
+      x: Math.random() * W,
+      y: -30 - Math.random() * H * 0.6,
       vy: 2.5 + Math.random() * 5,
       vx: (Math.random() - 0.5) * 2,
       a: Math.random() * Math.PI * 2,
@@ -2331,13 +2323,16 @@ function launchConfetti(ms) {
   var t0 = performance.now();
   function frame(t) {
     var elapsed = t - t0;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var fade = elapsed > ms - 900 ? Math.max(0, (ms - elapsed) / 900) : 1;
+    ctx.clearRect(0, 0, W, H);
     for (var j = 0; j < pieces.length; j++) {
       var p = pieces[j];
+      p.vy += 0.04;
       p.y += p.vy;
       p.x += p.vx + Math.sin(elapsed * 0.003 + j * 0.7) * 1.4;
       p.a += p.va;
       ctx.save();
+      ctx.globalAlpha = fade;
       ctx.translate(p.x, p.y);
       ctx.rotate(p.a);
       ctx.fillStyle = p.c;
@@ -2347,7 +2342,7 @@ function launchConfetti(ms) {
     if (elapsed < ms) requestAnimationFrame(frame);
     else {
       canvas.hidden = true;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, W, H);
     }
   }
   requestAnimationFrame(frame);
