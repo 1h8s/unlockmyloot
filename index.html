@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UnlockMyLoot - решатель замков Gothic 1 Remake | взлом без поломки отмычки</title>
-<meta name="description" content="Бесплатный онлайн-решатель замков Gothic 1 Remake: введи плитки, штифты и связи - получи кратчайшую безопасную последовательность ходов. Lockpick solver без сломанных отмычек.">
+<meta name="description" content="Бесплатный решатель замков Gothic 1 Remake: введи штифты и связи - получи кратчайшую безопасную последовательность ходов без сломанных отмычек.">
 <meta name="keywords" content="gothic 1 remake решатель замков, gothic remake взлом замков, решатель замков готика ремейк, lockpick solver gothic remake, взлом замков без отмычки, калькулятор замков gothic, unlockmyloot">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="yandex-verification" content="57d0dc84810da636">
@@ -1937,7 +1937,7 @@ function wizRenderIntro() {
   document.getElementById('linkWizProg').hidden = true;
   document.getElementById('linkWizBody').innerHTML =
     '<div id="wizSuggest"></div>' +
-    '<p class="wizwhy">Откатывать ходы не нужно: следующая команда учитывает новые позиции. Найденные связи остаются, даже если в игре нажмёшь R.</p>' +
+    '<p class="wizwhy">Откатывать ходы не нужно: следующая команда учитывает новые позиции. Найденные связи остаются, даже если случайно сбросишь замок.</p>' +
     wizRenderPinsBar(wiz.sim);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
@@ -2111,7 +2111,7 @@ function wizRenderStep() {
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizNone">Никто не дёрнулся</button>' +
     '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
-    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Нажал R в игре: замок сбросился</button></p>';
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Случайно сбросил замок</button></p>';
   wizBindStepActions(wiz, c, document.getElementById('wizChips'), document.getElementById('wizMovers'));
 }
 function wizRenderDone() {

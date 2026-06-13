@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UnlockMyLoot - Gothic 1 Remake Lockpick Solver | No Broken Picks</title>
-<meta name="description" content="Free Gothic 1 Remake lockpick solver: enter plates, pin positions and links - get the shortest safe move sequence. Best Gothic Remake lock picking calculator online.">
+<meta name="description" content="Free Gothic 1 Remake lockpick solver: enter plates, pins and links - get the shortest safe move sequence with zero broken picks.">
 <meta name="keywords" content="gothic 1 remake lockpick solver, gothic remake lock picking tool, gothic remake lockpick calculator, gothic 1 remake lock solver, unlockmyloot, gothic remake chest solver">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="yandex-verification" content="57d0dc84810da636">
@@ -1879,7 +1879,7 @@ function wizRenderIntro() {
   document.getElementById('linkWizProg').hidden = true;
   document.getElementById('linkWizBody').innerHTML =
     '<div id="wizSuggest"></div>' +
-    '<p class="wizwhy">No need to undo moves: the next command accounts for new positions. Found links stay even if you press R in-game.</p>' +
+    '<p class="wizwhy">No need to undo moves: the next command accounts for new positions. Found links stay even if you accidentally reset the lock.</p>' +
     wizRenderPinsBar(wiz.sim);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
@@ -2047,7 +2047,7 @@ function wizRenderStep() {
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizNone">Nothing jerked</button>' +
     '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
-    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Pressed R in-game - lock reset</button></p>';
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Accidentally reset the lock</button></p>';
   wizBindStepActions(wiz, c, document.getElementById('wizChips'), document.getElementById('wizMovers'));
 }
 function wizRenderDone() {
