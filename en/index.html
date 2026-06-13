@@ -529,6 +529,9 @@
   /* мягкое появление подсказки связей: дольше chipin, всплытие снизу + лёгкий зум,
      тот же ease, что у .rise; для reduced-motion гасится глобальным правилом ниже */
   @keyframes suggestin{from{opacity:0;transform:translateY(10px) scale(.985);}to{opacity:1;transform:none;}}
+  /* каскадное проявление подставленных связей (фидбэк смены состояния, гасится reduced-motion) */
+  @keyframes fillpop{from{opacity:0;transform:scale(.78);}to{opacity:1;transform:none;}}
+  .dep.sgfill,.lchip.sgfill{animation:fillpop .4s var(--ease) backwards;animation-delay:calc(var(--sgi,0)*45ms);}
   .lempty{animation:chipin .35s var(--ease) backwards;}
   .suggest{
     display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;
@@ -1594,7 +1597,9 @@ function depMeta(v) {
   return DEPSTATE.find(function (s) { return s.v === v; });
 }
 
+var FILL_CELLS = null; /* карта "i,j"->true: связи, которые только что подставили (для каскадной анимации) */
 function renderDeps() {
+  var df = 0;
   var t = document.getElementById('deps');
   var html = '<tr><th class="corner">move &darr;<br>affects &rarr;</th>';
   for (var j = 0; j < N; j++) html += '<th class="colh" id="ch' + j + '">' + (j + 1) + '</th>';
@@ -1608,7 +1613,10 @@ function renderDeps() {
         html += '<td><span class="dep diag"></span></td>';
       } else {
         var st = depMeta(link[i][j2]);
-        html += '<td><button type="button" class="dep ' + st.cls + '" data-i="' + i + '" data-j="' + j2 +
+        var fa = (FILL_CELLS && FILL_CELLS[i + ',' + j2]);
+        html += '<td><button type="button" class="dep ' + st.cls + (fa ? ' sgfill' : '') + '"' +
+          (fa ? ' style="--sgi:' + Math.min(df++, 10) + '"' : '') +
+          ' data-i="' + i + '" data-j="' + j2 +
           '" title="Plate ' + (i + 1) + ' moves - plate ' + (j2 + 1) + ': ' + st.txt + '">' +
           st.icon + '</button></td>';
       }
@@ -1621,12 +1629,15 @@ function renderDeps() {
 
 function renderLinkSum() {
   var box = document.getElementById('linksum');
-  var html = '';
+  var html = '', sf = 0;
   for (var i = 0; i < N; i++)
     for (var j = 0; j < N; j++)
       if (i !== j && link[i][j]) {
         var st = depMeta(link[i][j]);
-        html += '<button type="button" class="lchip ' + st.cls + '" data-i="' + i + '" data-j="' + j +
+        var fa = (FILL_CELLS && FILL_CELLS[i + ',' + j]);
+        html += '<button type="button" class="lchip ' + st.cls + (fa ? ' sgfill' : '') + '"' +
+          (fa ? ' style="--sgi:' + Math.min(sf++, 10) + '"' : '') +
+          ' data-i="' + i + '" data-j="' + j +
           '" title="Link: plate ' + (i + 1) + ' pulls plate ' + (j + 1) + ' ' + st.txt +
           '. Click to remove.">' + (i + 1) + '&rarr;' + (j + 1) + ' ' + st.icon +
           '<span class="x">&times;</span></button>';
@@ -2567,7 +2578,7 @@ function applySuggestedLinks(code) {
   }
   var decodedLink = link.map(function (r) { return r.slice(); });
   wizEnsureZero();
-  var applied = 0;
+  var applied = 0, filled = {};
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       if (i === j) continue;
@@ -2577,6 +2588,7 @@ function applySuggestedLinks(code) {
       var v = decodedLink[i][j];
       savedLink[i][j] = v;
       WIZ_MEM.zero[i][j] = (v === 0);
+      if (v !== 0) filled[i + ',' + j] = true;
       applied++;
     }
   }
@@ -2589,7 +2601,9 @@ function applySuggestedLinks(code) {
     updateFlipLabel();
   }
   SUGGESTED_CODE = code;
+  FILL_CELLS = filled;
   renderCount(); renderPins(); renderDeps();
+  FILL_CELLS = null;
   return applied;
 }
 function maybeSuggestLinks() {
