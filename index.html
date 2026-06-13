@@ -2643,7 +2643,9 @@ function configShareUrl() {
   return location.origin + location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins()));
 }
 function bootConfigFromUrl() {
-  var raw = extractConfigCode();
+  var raw = '', fromQuery = false;
+  try { var q = new URLSearchParams(location.search).get('lock'); if (q) { raw = q; fromQuery = true; } } catch (e) {}
+  if (!raw && location.hash.length > 1) raw = location.hash.slice(1);
   if (!raw) return false;
   if (decodeConfig(raw)) {
     history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins())));
@@ -2652,7 +2654,8 @@ function bootConfigFromUrl() {
     if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return true;
   }
-  toast('Не удалось прочитать ссылку - скопируйте её целиком');
+  /* ошибку показываем только для явной ссылки ?lock=, а не для якорей вроде #faq / #solver */
+  if (fromQuery) toast('Не удалось прочитать ссылку - скопируйте её целиком');
   return false;
 }
 function toast(msg) {

@@ -2564,7 +2564,9 @@ function configShareUrl() {
   return location.origin + location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins()));
 }
 function bootConfigFromUrl() {
-  var raw = extractConfigCode();
+  var raw = '', fromQuery = false;
+  try { var q = new URLSearchParams(location.search).get('lock'); if (q) { raw = q; fromQuery = true; } } catch (e) {}
+  if (!raw && location.hash.length > 1) raw = location.hash.slice(1);
   if (!raw) return false;
   if (decodeConfig(raw)) {
     history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins())));
@@ -2573,7 +2575,8 @@ function bootConfigFromUrl() {
     if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return true;
   }
-  toast('Could not read link - copy the full URL');
+  /* show the error only for an explicit ?lock= link, not anchors like #faq / #solver */
+  if (fromQuery) toast('Could not read link - copy the full URL');
   return false;
 }
 function toast(msg) {
