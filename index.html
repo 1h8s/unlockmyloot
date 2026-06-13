@@ -572,13 +572,16 @@
     animation:chipin .35s var(--ease) backwards;
   }
   @keyframes chipin{from{opacity:0;transform:scale(.9) translateY(4px);}to{opacity:1;transform:none;}}
+  /* мягкое появление подсказки связей: дольше chipin, всплытие снизу + лёгкий зум,
+     тот же ease, что у .rise; для reduced-motion гасится глобальным правилом ниже */
+  @keyframes suggestin{from{opacity:0;transform:translateY(10px) scale(.985);}to{opacity:1;transform:none;}}
   .lempty{animation:chipin .35s var(--ease) backwards;}
   .suggest{
     display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;
     margin-top:14px;padding:13px 17px;border-radius:13px;
     background:var(--accent-soft);border:1px solid var(--accent-border);
     color:var(--accent-ink);font-size:14.5px;
-    animation:chipin .35s var(--ease) backwards;
+    animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
   .suggest b{font-weight:600;}
   .sg-act{display:flex;gap:8px;}
@@ -588,7 +591,7 @@
     margin:0 0 14px;padding:13px 16px;border-radius:13px;
     background:var(--accent-soft);border:1px solid var(--accent-border);
     color:var(--accent-ink);font-size:14px;line-height:1.5;
-    animation:chipin .35s var(--ease) backwards;
+    animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
   .wizsuggest p{margin:0 0 10px;}
   .wizsuggest b{font-weight:600;}
