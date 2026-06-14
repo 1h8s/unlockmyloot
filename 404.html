@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - страница не найдена | UnlockMyLoot</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#101214">
+<script>
+  (function(){ var t=null; try{t=localStorage.getItem('uml-theme');}catch(e){}
+    document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:'dark'; })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8f9; --surface:#ffffff; --ink:#1c2024; --ink-2:#5b636b; --ink-3:#9aa3ab;
+    --line:#e4e7ea; --line-2:#d3d8dc;
+    --accent:#0e8a6a; --accent-ink:#0b6b53; --accent-soft:#e3f2ec; --accent-border:#bcdfd2;
+    --on-accent:#ffffff;
+    --hero-glow:transparent;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --ease:cubic-bezier(0.16,1,0.3,1);
+  }
+  [data-theme="dark"]{
+    --bg:#101214; --surface:#17191d; --ink:#e7eaec; --ink-2:#9ba3ab; --ink-3:#5f6770;
+    --line:#24272c; --line-2:#32373d;
+    --accent:#34a883; --accent-ink:#62c7a4; --accent-soft:#16241f; --accent-border:#2a4a3d;
+    --on-accent:#0c130f;
+    --hero-glow:radial-gradient(ellipse 60% 55% at 50% 38%,rgba(52,168,131,.13),transparent 70%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Outfit',system-ui,sans-serif;line-height:1.55;font-size:16px;
+    -webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100%;
+    transition:background .45s var(--ease),color .45s var(--ease);overflow-x:hidden;
+  }
+  a{color:inherit;}
+  button,a{-webkit-tap-highlight-color:transparent;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px;}
+  .bgglow{position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--hero-glow);}
+  .wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+  .top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;}
+  .wordmark{font-weight:700;letter-spacing:-.02em;font-size:18px;display:inline-flex;align-items:center;gap:10px;text-decoration:none;}
+  .wordmark .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 10px rgba(52,168,131,.55);animation:breathe 2.6s var(--ease) infinite;}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.72);opacity:.55}}
+  .themebtn{width:42px;height:42px;border-radius:12px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);
+    display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease);}
+  .themebtn:hover{border-color:var(--ink-3);color:var(--ink);transform:translateY(-2px);}
+  .themebtn .ic-sun{display:none;}
+  [data-theme="dark"] .themebtn .ic-sun{display:block;}
+  [data-theme="dark"] .themebtn .ic-moon{display:none;}
+
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:10px 24px 70px;position:relative;z-index:1;}
+  .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent-ink);margin:6px 0 14px;}
+  h1{font-size:clamp(30px,5.2vw,48px);font-weight:600;letter-spacing:-.035em;line-height:1.05;}
+  .sub{color:var(--ink-2);margin-top:16px;max-width:46ch;font-size:16.5px;}
+  .cta{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .btn{font-family:inherit;font-size:15px;font-weight:500;display:inline-flex;align-items:center;gap:9px;
+    padding:13px 22px;border-radius:13px;cursor:pointer;text-decoration:none;white-space:nowrap;
+    background:var(--surface);border:1px solid var(--line-2);color:var(--ink);transition:all .3s var(--ease);}
+  .btn:hover{border-color:var(--ink-3);transform:translateY(-2px);}
+  .btn:active{transform:scale(.97);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600;}
+  .btn.primary:hover{filter:brightness(1.05);box-shadow:0 12px 26px -12px rgba(52,168,131,.6);}
+
+  /* ---------- замок (вид сверху): двигаются панели, штифты в центре ---------- */
+  .scene{perspective:900px;perspective-origin:50% 42%;width:100%;max-width:560px;height:330px;
+    display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
+  .lock{position:relative;width:360px;height:300px;transform-style:preserve-3d;transform:rotateX(54deg) rotateZ(-1deg);}
+  .midline{position:absolute;left:50%;top:-12px;width:2px;height:324px;transform:translateX(-50%);
+    background:linear-gradient(180deg,transparent,rgba(52,168,131,.3) 14%,rgba(52,168,131,.3) 86%,transparent);z-index:1;}
+  .plate{position:absolute;left:30px;width:300px;height:38px;top:calc(var(--i)*50px);border-radius:20px;
+    background:linear-gradient(180deg,#2a2f37,#15181d);border:1px solid #2e343c;
+    box-shadow:0 14px 22px -10px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06);
+    transition:transform .6s var(--ease);transform:translateX(var(--shift,0px));}
+  .plate::after{content:"";position:absolute;inset:5px 8px;border-radius:14px;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 40%);pointer-events:none;}
+  .track{position:absolute;left:20px;right:20px;top:50%;height:7px;transform:translateY(-50%);
+    border-radius:5px;background:rgba(0,0,0,.4);box-shadow:inset 0 1px 2px rgba(0,0,0,.8);}
+  .hole{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);
+    background:#0b0d10;box-shadow:inset 0 1px 2px rgba(0,0,0,.9);}
+  .pin{position:absolute;left:180px;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);z-index:4;
+    background:radial-gradient(circle at 34% 30%,#aeb4bc,#6b7178 60%,#454a51);
+    box-shadow:0 1px 2px rgba(0,0,0,.55);transition:background .4s ease,box-shadow .4s ease;}
+  .pin.lit{background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
+    box-shadow:0 0 9px rgba(52,168,131,.9),0 0 22px rgba(52,168,131,.45);}
+
+  @media(max-width:560px){
+    .wrap{padding:0 16px;}
+    .scene{transform:scale(.74);height:270px;}
+    .cta .btn{flex:1;justify-content:center;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important;}
+  }
+</style>
+</head>
+<body>
+<div class="bgglow" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="top">
+    <a class="wordmark" href="/"><span class="dot"></span>UnlockMyLoot</a>
+    <button class="themebtn" id="themeBtn" type="button" aria-label="Переключить тему">
+      <svg class="ic-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.2A6.3 6.3 0 0 1 6.8 2.5a6.3 6.3 0 1 0 7.7 7.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <svg class="ic-sun" width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="3.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.5 1v1.8M8.5 14.2V16M16 8.5h-1.8M2.8 8.5H1M13.8 3.2l-1.3 1.3M4.5 12.5l-1.3 1.3M13.8 13.8l-1.3-1.3M4.5 4.5 3.2 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+</div>
+
+<main>
+  <div class="scene"><div id="lock" class="lock"><div class="midline"></div></div></div>
+  <div class="eyebrow" id="eyebrow">Ошибка 404</div>
+  <h1 id="title">Замок не поддался</h1>
+  <p class="sub" id="sub">Такой страницы нет. Но настоящие замки Gothic 1 Remake — на месте.</p>
+  <div class="cta">
+    <a class="btn primary" id="ctaMain" href="/">К решателю</a>
+    <a class="btn" id="ctaCatalog" href="/locks/">Каталог замков</a>
+  </div>
+</main>
+
+<script>
+  /* тема */
+  document.getElementById('themeBtn').onclick = function(){
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try{ localStorage.setItem('uml-theme', next); }catch(e){}
+  };
+
+  /* язык по пути: /en/... -> английская версия */
+  (function(){
+    var en = /^\/en(\/|$)/.test(location.pathname);
+    if(!en) return;
+    document.documentElement.lang = 'en';
+    document.title = '404 - page not found | UnlockMyLoot';
+    document.getElementById('eyebrow').textContent = 'Error 404';
+    document.getElementById('title').textContent = "This lock won't budge";
+    document.getElementById('sub').textContent = "This page doesn't exist. But the real Gothic 1 Remake locks are still here.";
+    var m = document.getElementById('ctaMain'); m.textContent = 'To the solver'; m.href = '/en/';
+    var c = document.getElementById('ctaCatalog'); c.textContent = 'Lock catalog'; c.href = '/en/locks/';
+    document.getElementById('themeBtn').setAttribute('aria-label','Toggle theme');
+  })();
+
+  /* замок: панели двигаются дискретно по лункам, штифты прибиты к центру и загораются на позиции 4 */
+  (function(){
+    var lock = document.getElementById('lock'); if(!lock) return;
+    var N=6, PW=300, MARG=22, ROWH=50, PH=38, LOCKW=360, CENTER=3;
+    var step=(PW-2*MARG)/6, HOLES=[];
+    for(var h=0;h<7;h++) HOLES.push(MARG+step*h);
+    var plates=[], pins=[];
+    for(var i=0;i<N;i++){
+      var pl=document.createElement('div'); pl.className='plate'; pl.style.setProperty('--i',i);
+      var tr=document.createElement('div'); tr.className='track'; pl.appendChild(tr);
+      for(var k=0;k<7;k++){ var hd=document.createElement('div'); hd.className='hole'; hd.style.left=HOLES[k]+'px'; pl.appendChild(hd); }
+      lock.appendChild(pl); plates.push(pl);
+    }
+    for(var j=0;j<N;j++){ var pin=document.createElement('div'); pin.className='pin';
+      pin.style.top=(j*ROWH+PH/2)+'px'; pin.style.left=(LOCKW/2)+'px'; lock.appendChild(pin); pins.push(pin); }
+    function shiftFor(hole){ return step*(CENTER-hole); }
+    var STARTH=[0,6,1,5,2,4];
+    var reduce=false; try{ reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    if(reduce){ plates.forEach(function(pl){pl.style.setProperty('--shift','0px');}); pins.forEach(function(p){p.classList.add('lit');}); return; }
+    function scatter(){ plates.forEach(function(pl,k){
+      pl.style.setProperty('--shift', shiftFor(STARTH[k%STARTH.length])+'px'); pins[k].classList.remove('lit'); }); }
+    function solveStaggered(){ plates.forEach(function(pl,k){ setTimeout(function(){
+      pl.style.setProperty('--shift','0px'); pins[k].classList.add('lit'); }, k*180); }); }
+    function cycle(){ scatter(); setTimeout(solveStaggered,1000); setTimeout(cycle,5400); }
+    scatter(); setTimeout(solveStaggered,1000); setTimeout(cycle,5400);
+  })();
+</script>
+</body>
+</html>
