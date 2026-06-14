@@ -2030,7 +2030,7 @@ function wizMaybeSuggest() {
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
     var lead = d.known
-      ? 'Это известный замок: <b>' + d.name + '</b>. Подставить проверенные связи и добить остальное здесь?'
+      ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>. Подставить проверенные связи и добить остальное здесь?'
       : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи и добить остальное здесь?';
     el.innerHTML = '<div class="wizsuggest">' +
       '<p>' + lead + ' ' +
@@ -2806,10 +2806,18 @@ function suggestFetch(pk) {
     .catch(function () { return null; });
 }
 /* Курируемые проверенные замки: для них подсказку отдаём сразу, со 100%
-   уверенностью, не дожидаясь крауд-статистики. fp = N + '.' + штифты. */
+   уверенностью, не дожидаясь крауд-статистики. fp = N + '.' + штифты.
+   Синхронизировать с NAMED_LOCKS в locks/index.html. */
 var KNOWN_LOCKS = [
   { fp: '6.562211', code: 'aUkAACUBAAJikA', name: 'Дверь Разрушенной башни' },
-  { fp: '5.63217', code: 'SojAgCBDQA', name: 'Сундук Скатти' }
+  { fp: '5.63217', code: 'SojAgCBDQA', name: 'Сундук Скатти' },
+  { fp: '4.7761', code: 'LagFFgA', name: 'Сундук Кор Галома' },
+  { fp: '5.37265', code: 'RY2VUBQAiA', name: 'Склад Рисового лорда (3-й этаж)' },
+  { fp: '5.61217', code: 'SgjQQDUgCI', name: 'Сундук в ногах Гомеза' },
+  { fp: '6.517764', code: 'aDasBgBgCAACCA', name: 'Ящик у огненного ящера' },
+  { fp: '5.43725', code: 'RrGUCRKQIQ', name: 'Сундук в подвале таверны' },
+  { fp: '6.244627', code: 'Yt05ARCBAAARCA', name: 'Сундук склада таверны' },
+  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Склад таверны - дверь' }
 ];
 function knownLockFor() {
   var fps = {};
@@ -2903,7 +2911,7 @@ function maybeSuggestLinks() {
 function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
   var msg = d.known
-    ? 'Это известный замок: <b>' + d.name + '</b>. Подставить проверенные связи?'
+    ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>. Подставить проверенные связи?'
     : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?';
   box.innerHTML = '<div class="suggest">' +
     '<span>' + msg + '</span>' +

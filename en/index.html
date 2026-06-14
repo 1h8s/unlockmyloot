@@ -1971,7 +1971,7 @@ function wizMaybeSuggest() {
     var unk = matrixUnknownCount();
     el.innerHTML = '<div class="wizsuggest">' +
       '<p>' + (d.known
-        ? 'This is a known lock: <b>' + d.name + '</b>. Fill the verified links and finish the rest here?'
+        ? 'This combination was entered before: <b>' + d.name + '</b>. Fill the verified links and finish the rest here?'
         : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in known links and finish the rest here?') + ' ' +
       '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
       '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
@@ -2718,11 +2718,18 @@ function suggestFetch(pk) {
     .then(function (r) { return r.json(); })
     .catch(function () { return null; });
 }
-/* Curated verified locks: suggest them instantly at 100% confidence, without
-   waiting for crowd data. fp = N + '.' + pins. */
+/* Curated verified locks: suggest instantly at 100% confidence without crowd
+   stats. fp = N + '.' + pins. Keep in sync with NAMED_LOCKS in en/locks/index.html. */
 var KNOWN_LOCKS = [
   { fp: '6.562211', code: 'aUkAACUBAAJikA', name: 'Ruined Tower door' },
-  { fp: '5.63217', code: 'SojAgCBDQA', name: "Sketty's chest" }
+  { fp: '5.63217', code: 'SojAgCBDQA', name: "Sketty's chest" },
+  { fp: '4.7761', code: 'LagFFgA', name: "Cor Galom's chest" },
+  { fp: '5.37265', code: 'RY2VUBQAiA', name: "Rice Lord's storeroom (3rd floor)" },
+  { fp: '5.61217', code: 'SgjQQDUgCI', name: "Gomez bedside chest" },
+  { fp: '6.517764', code: 'aDasBgBgCAACCA', name: 'Fire lizard cave box' },
+  { fp: '5.43725', code: 'RrGUCRKQIQ', name: "Silas tavern basement chest" },
+  { fp: '6.244627', code: 'Yt05ARCBAAARCA', name: 'Tavern storeroom chest' },
+  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Tavern storeroom door' }
 ];
 function knownLockFor() {
   var fps = {};
@@ -2812,7 +2819,7 @@ function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
   box.innerHTML = '<div class="suggest">' +
     '<span>' + (d.known
-      ? 'This is a known lock: <b>' + d.name + '</b>. Fill in the verified links?'
+      ? 'This combination was entered before: <b>' + d.name + '</b>. Fill in the verified links?'
       : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?') + '</span>' +
     '<span class="sg-act">' +
     '<button class="btn" type="button" id="sgYes">Fill in</button>' +
