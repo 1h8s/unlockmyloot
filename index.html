@@ -61,6 +61,10 @@
     --accent-ink:#0b6b53;
     --accent-soft:#e3f2ec;
     --accent-border:#bcdfd2;
+    --dir-left:#2563c9;
+    --dir-right:#0b6b53;
+    --dir-left-soft:#e7eefb;
+    --dir-left-border:#c2d6f5;
     --danger:#b3564a;
     --danger-soft:#f6e9e6;
     --danger-border:#e6cdc8;
@@ -102,6 +106,10 @@
     --accent-ink:#62c7a4;
     --accent-soft:#16241f;
     --accent-border:#2a4a3d;
+    --dir-left:#6ea8ff;
+    --dir-right:#62c7a4;
+    --dir-left-soft:#16223a;
+    --dir-left-border:#30496f;
     --danger:#cf7f6e;
     --danger-soft:#2c1d19;
     --danger-border:#4a2c24;
@@ -419,8 +427,10 @@
     display:flex;align-items:center;justify-content:center;gap:12px;
   }
   .wizcmd .move svg{flex:none;color:var(--accent);}
-  .wizcmd .move.dir-l{color:#e0564f;}
-  .wizcmd .move.dir-l svg{color:#e0564f;}
+  .wizcmd .move.dir-l{color:var(--dir-left);}
+  .wizcmd .move.dir-l svg{color:var(--dir-left);}
+  /* ход влево -> обводка + лёгкий фон + текст блоков мастера становятся синими */
+  #linkWizBody.dir-left{--accent-soft:var(--dir-left-soft);--accent-border:var(--dir-left-border);--accent-ink:var(--dir-left);}
   .wizwhy{
     font-size:13.5px;color:var(--ink-2);padding:12px 14px;border-radius:12px;
     background:var(--bg);border:1px solid var(--line);margin-bottom:16px;line-height:1.45;
@@ -483,6 +493,14 @@
   .wizpos.on{border-color:var(--accent);background:var(--accent-soft);}
   .wizpos.on .wizpos-dir{color:var(--accent-ink);}
   .wizpos.on .wizpos-sub{color:var(--accent-ink);opacity:.7;}
+  /* выбранный вариант красим по СВОЕМУ направлению: влево синий, вправо зелёный
+     (зелёный через --pos-*, чтобы не зависеть от подсветки основного хода) */
+  .wizpos.dir-r.on{border-color:var(--pos);background:var(--pos-soft);}
+  .wizpos.dir-r.on .wizpos-dir{color:var(--pos-ink);}
+  .wizpos.dir-r.on .wizpos-sub{color:var(--pos-ink);opacity:.7;}
+  .wizpos.dir-l.on{border-color:var(--dir-left);background:var(--dir-left-soft);}
+  .wizpos.dir-l.on .wizpos-dir{color:var(--dir-left);}
+  .wizpos.dir-l.on .wizpos-sub{color:var(--dir-left);opacity:.7;}
   .wizpos.jerk.on{border-color:var(--danger-border);background:var(--danger-soft);}
   .wizpos.jerk.on .wizpos-dir,.wizpos.jerk.on .wizpos-sub{color:var(--danger-text);opacity:1;}
   .wizlockreset{
@@ -760,8 +778,8 @@
     letter-spacing:-.01em;color:var(--ink);}
   .vp-move b{color:var(--ink);}
   .vp-move .vp-dir{font-weight:700;white-space:nowrap;}
-  .vp-move .vp-dir.r{color:var(--accent-ink);}
-  .vp-move .vp-dir.l{color:#e0564f;}
+  .vp-move .vp-dir.r{color:var(--dir-right);}
+  .vp-move .vp-dir.l{color:var(--dir-left);}
   .vp-ctrl{display:flex;gap:10px;justify-content:center;margin-top:18px;}
   .vp-ctrl .btn{min-width:140px;justify-content:center;}
   .vp-ctrl .btn:disabled{opacity:.45;cursor:not-allowed;}
@@ -2125,6 +2143,7 @@ function wizRenderIntro() {
     '<div id="wizSuggest"></div>' +
     '<p class="wizwhy">Откатывать ходы не нужно: следующая команда учитывает новые позиции. Найденные связи остаются, даже если случайно сбросишь замок.</p>' +
     wizRenderPinsBar(wiz.sim);
+  document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn primary" type="button" id="wizStart">Начать</button>' +
@@ -2257,7 +2276,7 @@ function wizMoverPanel(wiz, j, d) {
     var sub = o.jerk
       ? 'упёрлась в стену: штифт остался на ' + o.pos
       : 'штифт ' + old + ' &rarr; ' + o.pos;
-    var html = '<button type="button" class="wizpos' + (o.jerk ? ' jerk' : '') + '" style="--nudge:' + (left ? '-2px' : '2px') + '"' +
+    var html = '<button type="button" class="wizpos' + (left ? ' dir-l' : ' dir-r') + (o.jerk ? ' jerk' : '') + '" style="--nudge:' + (left ? '-2px' : '2px') + '"' +
       ' data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' +
       '<span class="wizpos-dir">' + dir + '</span>' +
       '<span class="wizpos-sub">' + sub + '</span></button>';
@@ -2299,6 +2318,7 @@ function wizRenderStep() {
     '<div class="wizmovers" id="wizMovers">' + moversHtml + '</div>' +
     '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
     '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label>';
+  document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizNone">Никто не дёрнулся</button>' +
@@ -2318,6 +2338,7 @@ function wizRenderDone() {
       ? 'Плитки у стены заблокировали оставшиеся пробы. <b>Эти связи не записаны</b> - если решить замок сейчас, ход может удариться в стену. Отметь их в матрице вручную или сдвинь блокирующую плитку в игре и запусти мастер заново.'
       : 'Если что-то не сходится с игрой, поправь ячейки вручную или запусти мастер заново.') + '</p>' +
     wizRenderPinsBar(LINK_WIZ.sim);
+  document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Закрыть</button></div>';
   document.getElementById('wizDone').onclick = closeLinkWizard;
