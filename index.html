@@ -419,6 +419,8 @@
     display:flex;align-items:center;justify-content:center;gap:12px;
   }
   .wizcmd .move svg{flex:none;color:var(--accent);}
+  .wizcmd .move.dir-l{color:#e0564f;}
+  .wizcmd .move.dir-l svg{color:#e0564f;}
   .wizwhy{
     font-size:13.5px;color:var(--ink-2);padding:12px 14px;border-radius:12px;
     background:var(--bg);border:1px solid var(--line);margin-bottom:16px;line-height:1.45;
@@ -2246,7 +2248,7 @@ function wizRenderStep() {
     wizRenderPinsBar(wiz.sim, i) +
     '<div class="wizcmd"><div class="lbl">Сдвинь в игре</div>' +
     '<div class="plate">плитка <b>' + (i + 1) + '</b></div>' +
-    '<div class="move">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
+    '<div class="move ' + (d > 0 ? 'dir-l' : 'dir-r') + '">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
     '<p class="wizmeta">штифт ' + wiz.sim[i] + ' → ' + (wiz.sim[i] + d) + ' · откатывать не нужно</p></div>' +
     '<p class="wizpick">Кто дёрнулся вместе с плиткой <b>' + (i + 1) + '</b>?</p>' +
     '<div class="wizchips" id="wizChips">' + chips + '</div>' +

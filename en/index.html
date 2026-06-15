@@ -404,6 +404,8 @@
   .wizcmd .plate{font-size:13px;color:var(--ink-2);margin-bottom:4px;}
   .wizcmd .move{font-size:clamp(28px,7vw,36px);font-weight:700;letter-spacing:-.03em;color:var(--accent-ink);display:flex;align-items:center;justify-content:center;gap:12px;}
   .wizcmd .move svg{flex:none;color:var(--accent);}
+  .wizcmd .move.dir-l{color:#e0564f;}
+  .wizcmd .move.dir-l svg{color:#e0564f;}
   .wizwhy{font-size:13.5px;color:var(--ink-2);padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);margin-bottom:16px;line-height:1.45;}
   .wizpins{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font-family:var(--mono);font-size:12px;}
   .wizpin{padding:6px 10px;border-radius:9px;background:var(--bg);border:1px solid var(--line-2);color:var(--ink-2);}
@@ -2181,7 +2183,7 @@ function wizRenderStep() {
   document.getElementById('linkWizBody').innerHTML =
     wizRenderPinsBar(wiz.sim, i) +
     '<div class="wizcmd"><div class="lbl">In-game move</div><div class="plate">plate <b>' + (i + 1) + '</b></div>' +
-    '<div class="move">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
+    '<div class="move ' + (d > 0 ? 'dir-l' : 'dir-r') + '">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
     '<p class="wizmeta">pin ' + wiz.sim[i] + ' → ' + (wiz.sim[i] + d) + ' · no need to undo</p></div>' +
     '<p class="wizpick">What jerked with plate <b>' + (i + 1) + '</b>?</p>' +
     '<div class="wizchips" id="wizChips">' + chips + '</div>' +
