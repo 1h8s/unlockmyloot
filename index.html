@@ -3238,6 +3238,7 @@ function collapseNudge(card, done) {
   setTimeout(done, 470);
 }
 function maybeShowHelpNudge() {
+  return; /* приглашение к помощнику временно отключено (см. историю: таргетинг/память отказа/копирайт) */
   if (HELP_NUDGE_DISMISSED || LINK_WIZ || helpAnnounceOpen() || !pinsEnteredEnough() || !matrixEmpty()) {
     clearHelpNudge();
     return;

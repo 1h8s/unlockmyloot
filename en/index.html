@@ -3147,6 +3147,7 @@ function collapseNudge(card, done) {
   setTimeout(done, 470);
 }
 function maybeShowHelpNudge() {
+  return; /* wizard nudge temporarily disabled (see history: targeting / remember dismissal / copy) */
   if (HELP_NUDGE_DISMISSED || LINK_WIZ || helpAnnounceOpen() || !pinsEnteredEnough() || !matrixEmpty()) {
     clearHelpNudge();
     return;
