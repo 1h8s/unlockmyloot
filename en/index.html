@@ -556,6 +556,33 @@
   .wizsuggest p{margin:0 0 10px;}
   .wizsuggest b{font-weight:600;}
   .wizsuggest .btn{width:100%;}
+  /* nudge toward the wizard when no autosuggest matched */
+  .helpnudge{position:relative;display:flex;gap:14px;align-items:flex-start;
+    margin-top:14px;padding:16px 18px;border-radius:16px;
+    background:var(--accent-soft);border:1px solid var(--accent-border);
+    will-change:opacity,transform,max-height;overflow:hidden;
+    transition:opacity .32s var(--ease),transform .38s var(--ease),max-height .4s var(--ease),margin .4s var(--ease),padding .4s var(--ease);}
+  .helpnudge.hn-hide{opacity:0;transform:translateY(-8px) scale(.98);pointer-events:none;
+    max-height:0;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;}
+  .hn-ic{flex:none;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    background:var(--accent);color:var(--on-accent);box-shadow:0 8px 18px -8px var(--accent);}
+  .hn-ic svg{animation:hnSpark 2.4s var(--ease) infinite;}
+  @keyframes hnSpark{0%,100%{transform:scale(1) rotate(0);opacity:1;}50%{transform:scale(1.14) rotate(10deg);opacity:.85;}}
+  .hn-title{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink);}
+  .hn-sub{font-size:13.5px;color:var(--ink-2);margin-top:5px;line-height:1.5;}
+  .hn-act{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:13px;}
+  .hn-act .btn.primary{padding:11px 22px;font-size:15px;}
+  .hn-skip{background:none;border:none;cursor:pointer;font-family:inherit;font-size:13px;
+    color:var(--ink-3);padding:6px 4px;text-align:center;transition:color .2s;}
+  .hn-skip:hover{color:var(--ink-2);}
+  @media(max-width:560px){
+    .helpnudge{flex-direction:column;gap:11px;padding:16px;}
+    .hn-act{align-items:stretch;}
+    .hn-act .btn.primary{width:100%;justify-content:center;}
+  }
+  @media(prefers-reduced-motion:reduce){.helpnudge{animation:none;transition:none;}.hn-ic svg{animation:none;}}
+  #suggestTop:empty{display:none;}
+  #suggestTop .helpnudge{margin-top:0;margin-bottom:14px;}
   .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
   .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
   .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
@@ -1120,6 +1147,7 @@
         <p class="pdesc">Move each plate one step and back. Note which plates moved with it and where. Links can be one-way: plate 1 may pull plate 3 even if plate 3 does not pull plate 1.</p>
       </div>
       <div class="pbody">
+        <div id="suggestTop"></div>
         <div class="depscroll"><table id="deps"></table></div>
         <div class="legend">
           <span><svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="#7d858d"/></svg> no movement</span>
@@ -1505,6 +1533,7 @@ var N = 6;
 var pins = [];
 var link = [];
 var pinsTouched = false;
+var PINS_EDITED = {}; /* pin indices the user actually edited (for the wizard nudge) */
 
 var SVG_NONE = '<svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="currentColor" opacity=".55"/></svg>';
 var SVG_SAME = '<svg width="17" height="13" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
@@ -1561,6 +1590,7 @@ document.getElementById('themeBtn').onclick = function () {
 
 function init(n) {
   N = n;
+  PINS_EDITED = {};
   pins = new Array(N).fill(4);
   link = [];
   for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
@@ -1687,6 +1717,7 @@ function animateRowSwap(tableIds, rerender) {
     var b = e.target.closest ? e.target.closest('.hole[data-i]') : null;
     if (!b) return;
     pinsTouched = true;
+    PINS_EDITED[+b.dataset.i] = true;
     pins[+b.dataset.i] = +b.dataset.p;
     WIZ_MEM.base = null; /* manual pin edit: re-snapshot base state on next wizard open */
     renderPins();
@@ -1844,6 +1875,14 @@ var WIZ_SVG_ARR_R = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"
 var WIZ_SVG_R = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M10 6h8v8M18 6 8 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 function pinsConfigured() { return pinsTouched && pins.length === N; }
+/* nudge only after the user changed at least 2 DIFFERENT pins (one is too early).
+   Not tied to how many pins stay at 4 - combos vary, not all rows are filled. */
+function pinsEnteredEnough() {
+  if (!pinsConfigured()) return false;
+  var n = 0;
+  for (var k in PINS_EDITED) if (PINS_EDITED[k]) n++;
+  return n >= 2;
+}
 function updateLinkHelpBtn() {
   var b = document.getElementById('linkHelpBtn');
   if (!b) return;
@@ -2887,6 +2926,7 @@ function reportLockConfig() {
 
 /* Link suggestions from the crowd-sourced lock pool */
 var SUGGEST_DISMISSED = false;
+var HELP_NUDGE_DISMISSED = false;
 var suggestTimer = 0;
 function matrixEmpty() {
   for (var i = 0; i < N; i++)
@@ -3013,14 +3053,16 @@ function maybeSuggestLinks() {
   if (!box) return;
   if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) {
     box.innerHTML = '';
+    var stEl = document.getElementById('suggestTop'); if (stEl) stEl.innerHTML = '';
     return;
   }
   clearTimeout(suggestTimer);
   suggestTimer = setTimeout(function () {
     if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) return;
     suggestLookup(function (d) {
-      if (!d || !d.found || !matrixNeedsSuggest() || SUGGEST_DISMISSED) return;
-      renderSuggestBox(d);
+      if (!matrixNeedsSuggest() || SUGGEST_DISMISSED) return;
+      if (d && d.found) { renderSuggestBox(d); return; }
+      maybeShowHelpNudge();
     });
   }, 600);
 }
@@ -3054,6 +3096,86 @@ function renderSuggestBox(d) {
     box.innerHTML = '';
   };
 }
+/* nudge toward the wizard: shown when pins are set, matrix is empty and there is
+   no autosuggest in the pool - so the player does not enter links blind. */
+function helpAnnounceOpen() {
+  var a = document.getElementById('linkHelpAnn');
+  return !!(a && a.classList.contains('open'));
+}
+function clearHelpNudge() {
+  ['suggestBox', 'suggestTop'].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (b && b.querySelector('.helpnudge')) b.innerHTML = '';
+  });
+}
+/* expand/collapse driven by INLINE styles only (no class) - otherwise the inline
+   max-height overrides the class and height does not animate -> matrix jumps. */
+var nudgeTimer = 0;
+function nudgeReduced() {
+  try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
+}
+function expandNudge(card) {
+  if (!card) return;
+  clearTimeout(nudgeTimer);
+  if (nudgeReduced()) return;
+  var full = card.offsetHeight;
+  card.style.overflow = 'hidden';
+  card.style.maxHeight = '0px'; card.style.opacity = '0';
+  card.style.transform = 'translateY(-8px) scale(.98)';
+  card.style.marginTop = '0'; card.style.marginBottom = '0';
+  card.style.paddingTop = '0'; card.style.paddingBottom = '0';
+  void card.offsetHeight;
+  requestAnimationFrame(function () {
+    card.style.maxHeight = full + 'px'; card.style.opacity = '';
+    card.style.transform = ''; card.style.marginTop = ''; card.style.marginBottom = '';
+    card.style.paddingTop = ''; card.style.paddingBottom = '';
+  });
+  nudgeTimer = setTimeout(function () { card.style.maxHeight = ''; }, 470);
+}
+function collapseNudge(card, done) {
+  clearTimeout(nudgeTimer);
+  if (!card || nudgeReduced()) { done(); return; }
+  card.style.overflow = 'hidden';
+  card.style.maxHeight = card.scrollHeight + 'px';
+  void card.offsetHeight;
+  requestAnimationFrame(function () {
+    card.style.maxHeight = '0px'; card.style.opacity = '0';
+    card.style.transform = 'translateY(-8px) scale(.98)';
+    card.style.marginTop = '0'; card.style.marginBottom = '0';
+    card.style.paddingTop = '0'; card.style.paddingBottom = '0';
+  });
+  setTimeout(done, 470);
+}
+function maybeShowHelpNudge() {
+  if (HELP_NUDGE_DISMISSED || LINK_WIZ || helpAnnounceOpen() || !pinsEnteredEnough() || !matrixEmpty()) {
+    clearHelpNudge();
+    return;
+  }
+  /* nudge always ABOVE the matrix (#suggestTop) - desktop and mobile */
+  var box = document.getElementById('suggestTop');
+  var other = document.getElementById('suggestBox');
+  if (other && other.querySelector('.helpnudge')) other.innerHTML = '';
+  if (!box || box.querySelector('.helpnudge')) return;
+  box.innerHTML =
+    '<div class="helpnudge">' +
+      '<div class="hn-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v3M12 18v3M4.5 4.5l2 2M17.5 17.5l2 2M3 12h3M18 12h3M19.5 4.5l-2 2M6.5 17.5l-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>' +
+      '<div class="hn-body">' +
+        '<div class="hn-title">This layout is not in the database yet</div>' +
+        '<div class="hn-sub">That is normal - most locks are unique. Do not guess the links: the wizard finds them step by step - nudge a plate, mark what moved with it. No wall hits, and it is easier.</div>' +
+        '<div class="hn-act">' +
+          '<button class="btn primary" type="button" id="hnGo">Open the wizard</button>' +
+          '<button class="hn-skip" type="button" id="hnNo">I will enter them</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  box.querySelector('#hnGo').onclick = function () { clearHelpNudge(); openLinkWizard(); };
+  box.querySelector('#hnNo').onclick = function () {
+    HELP_NUDGE_DISMISSED = true;
+    collapseNudge(box.querySelector('.helpnudge'), clearHelpNudge);
+  };
+  expandNudge(box.querySelector('.helpnudge'));
+}
+try { window.matchMedia('(max-width: 560px)').addEventListener('change', maybeShowHelpNudge); } catch (e) {}
 /* хуки: проверяем подсказку при каждом изменении штифтов или матрицы */
 var _origRenderPins = renderPins;
 renderPins = function () { _origRenderPins(); maybeSuggestLinks(); };
