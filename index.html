@@ -683,10 +683,16 @@
 
   /* ---------- визуальный пошаговый режим (3D z-блок) ---------- */
   .vp{margin-top:8px;}
+  .vp.show{animation:vpIn .5s var(--ease) both;}
+  @keyframes vpIn{from{opacity:0;transform:translateY(14px) scale(.97);}to{opacity:1;transform:none;}}
   .vp-scene{perspective:1000px;perspective-origin:50% 33%;height:320px;overflow:hidden;
     display:flex;align-items:center;justify-content:center;}
   .vp-lock{position:relative;width:150px;height:52px;transform-style:preserve-3d;
-    transform:translate(var(--vtx,-42px),var(--vty,80px)) rotateX(-50deg) rotateY(-26deg);}
+    transform:translate(var(--vtx,-42px),var(--vty,80px)) scale(var(--vp-scale,1)) rotateX(-50deg) rotateY(-26deg);}
+  @media(min-width:760px){
+    .vp-scene{height:450px;}
+    .vp-lock{--vp-scale:1.3;}
+  }
   .vp-layer{position:absolute;left:50%;top:50%;width:150px;height:52px;margin:-26px 0 0 -75px;
     transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -46px)) rotateX(96deg);
     transition:transform .45s var(--ease);}
@@ -720,17 +726,20 @@
   .vp-muted{color:var(--ink-3);font-family:var(--mono);font-size:11.5px;}
   .vp-bar{height:5px;border-radius:4px;background:var(--line);overflow:hidden;}
   .vp-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .4s var(--ease);}
-  .vp-move{margin:16px auto 0;width:fit-content;padding:11px 20px;border-radius:13px;
-    background:var(--accent-soft);border:1px solid var(--accent-border);font-size:20px;font-weight:600;
+  .vp-move{margin:16px auto 0;width:fit-content;padding:11px 22px;border-radius:13px;
+    background:var(--surface);border:1px solid var(--line-2);font-size:21px;font-weight:600;
     letter-spacing:-.01em;color:var(--ink);}
-  .vp-move b{color:var(--accent-ink);}
-  .vp-move .vp-ar{color:var(--accent);font-weight:700;font-size:22px;margin:0 3px;}
+  .vp-move b{color:var(--ink);}
+  .vp-move .vp-dir{font-weight:700;white-space:nowrap;}
+  .vp-move .vp-dir.r{color:var(--accent-ink);}
+  .vp-move .vp-dir.l{color:#e0564f;}
   .vp-ctrl{display:flex;gap:10px;justify-content:center;margin-top:18px;}
   .vp-ctrl .btn{min-width:140px;justify-content:center;}
   .vp-ctrl .btn:disabled{opacity:.45;cursor:not-allowed;}
   .vp-ctrl .btn:disabled:hover{transform:none;border-color:var(--line-2);}
   @media(prefers-reduced-motion:reduce){
     .vp-plate,.vp-pin,.vp-layer,.vp-bar i{transition-duration:.001s!important;}
+    .vp.show{animation:none!important;}
     .vp-plate.active{animation:none!important;box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
   }
 
@@ -2604,7 +2613,14 @@ function setSolMode(mode) {
   var bs = document.querySelectorAll('.solmode-b');
   for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-mode') === SOL_MODE);
   if (list) list.style.display = SOL_MODE === 'play' ? 'none' : '';
-  if (play) { play.style.display = SOL_MODE === 'play' ? '' : 'none'; if (SOL_MODE === 'play') playerRender(); }
+  if (play) {
+    play.style.display = SOL_MODE === 'play' ? '' : 'none';
+    if (SOL_MODE === 'play') {
+      playerRender();
+      var vp = play.querySelector('.vp');
+      if (vp) { vp.classList.remove('show'); void vp.offsetWidth; vp.classList.add('show'); }
+    }
+  }
 }
 
 function buildPlayer() {
@@ -2647,9 +2663,9 @@ function buildPlayer() {
 
 function vpMoveText(gr) {
   var shown = PLATE_MODE ? -gr.d : gr.d;
-  var dir = shown === -1 ? 'влево' : 'вправо';
-  var arrow = shown === -1 ? '&larr;' : '&rarr;';
-  return 'Плитка <b>' + (gr.plate + 1) + '</b> <span class="vp-ar">' + arrow + '</span> ' + dir +
+  var left = shown === -1;
+  return 'Плитка <b>' + (gr.plate + 1) + '</b> <span class="vp-dir ' + (left ? 'l' : 'r') + '">' +
+    (left ? '&larr; влево' : 'вправо &rarr;') + '</span>' +
     (gr.count > 1 ? ' <b>&times;' + gr.count + '</b>' : '');
 }
 
