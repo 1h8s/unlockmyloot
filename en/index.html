@@ -624,6 +624,69 @@
     font-size:13.5px;color:var(--ink-2);cursor:pointer;user-select:none;width:fit-content;}
   .pvtoggle input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;}
 
+  /* ---------- solution mode switch ---------- */
+  .solmode{display:inline-flex;gap:4px;padding:4px;border-radius:13px;
+    background:var(--bg);border:1px solid var(--line-2);margin:14px 0 6px;}
+  .solmode-b{font-family:inherit;font-size:14px;font-weight:600;padding:8px 18px;border-radius:10px;
+    cursor:pointer;background:transparent;border:none;color:var(--ink-2);transition:all .25s var(--ease);
+    display:inline-flex;align-items:center;gap:7px;}
+  .solmode-b:hover{color:var(--ink);}
+  .solmode-b.on{background:var(--accent);color:var(--on-accent);box-shadow:0 4px 12px -7px rgba(0,0,0,.5);}
+  .solmode-b svg{flex:none;}
+
+  /* ---------- visual step-by-step (3D z-block) ---------- */
+  .vp{margin-top:8px;}
+  .vp-scene{perspective:1000px;perspective-origin:50% 33%;height:320px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;}
+  .vp-lock{position:relative;width:150px;height:52px;transform-style:preserve-3d;
+    transform:translate(var(--vtx,-42px),var(--vty,80px)) rotateX(-50deg) rotateY(-26deg);}
+  .vp-layer{position:absolute;left:50%;top:50%;width:150px;height:52px;margin:-26px 0 0 -75px;
+    transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -46px)) rotateX(96deg);
+    transition:transform .45s var(--ease);}
+  .vp-plate{position:absolute;inset:0;border-radius:12px;
+    background:linear-gradient(155deg,#333944,#14171c);border:1px solid #30363f;
+    box-shadow:0 9px 16px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.07);
+    transition:transform .55s var(--ease),border-color .25s,box-shadow .25s;transform:translateX(var(--shift,0px));}
+  .vp-plate::after{content:"";position:absolute;inset:4px 6px;border-radius:8px;
+    background:linear-gradient(155deg,rgba(255,255,255,.06),transparent 45%);pointer-events:none;}
+  .vp-plate.active{border-color:var(--accent);background:linear-gradient(155deg,#2f4940,#16241f);
+    animation:vpPulse 1.5s var(--ease) infinite;}
+  @keyframes vpPulse{
+    0%,100%{box-shadow:0 0 0 2px rgba(52,168,131,.8),0 0 14px 1px rgba(52,168,131,.45),0 9px 16px -8px rgba(0,0,0,.7);}
+    50%{box-shadow:0 0 0 2px rgba(52,168,131,1),0 0 24px 4px rgba(52,168,131,.75),0 9px 16px -8px rgba(0,0,0,.7);}}
+  .vp-plate.active .vp-num{color:#86ebc2;font-weight:600;}
+  .vp-track{position:absolute;left:13px;right:13px;top:50%;height:7px;transform:translateY(-50%);border-radius:5px;
+    background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.9);}
+  .vp-hole{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);
+    background:#0a0c0f;box-shadow:inset 0 1px 2px rgba(0,0,0,.9);}
+  .vp-pin{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;z-index:6;
+    transform:translate(-50%,-50%) translateZ(1.5px);
+    background:radial-gradient(circle at 34% 30%,#aeb4bc,#6b7178 60%,#454a51);box-shadow:0 1px 2px rgba(0,0,0,.55);
+    transition:background .35s,box-shadow .35s;}
+  .vp-pin.lit{background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
+    box-shadow:0 0 9px rgba(52,168,131,.95),0 0 20px rgba(52,168,131,.5);}
+  .vp-num{position:absolute;left:-18px;top:50%;transform:translateY(-50%);font-family:var(--mono);
+    font-size:10px;color:#6b7178;transition:color .25s;}
+  .vp-info{max-width:380px;margin:0 auto;text-align:center;}
+  .vp-row{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;margin-bottom:8px;}
+  .vp-row #vpStep{color:var(--ink);font-weight:600;}
+  .vp-muted{color:var(--ink-3);font-family:var(--mono);font-size:11.5px;}
+  .vp-bar{height:5px;border-radius:4px;background:var(--line);overflow:hidden;}
+  .vp-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .4s var(--ease);}
+  .vp-move{margin:16px auto 0;width:fit-content;padding:11px 20px;border-radius:13px;
+    background:var(--accent-soft);border:1px solid var(--accent-border);font-size:20px;font-weight:600;
+    letter-spacing:-.01em;color:var(--ink);}
+  .vp-move b{color:var(--accent-ink);}
+  .vp-move .vp-ar{color:var(--accent);font-weight:700;font-size:22px;margin:0 3px;}
+  .vp-ctrl{display:flex;gap:10px;justify-content:center;margin-top:18px;}
+  .vp-ctrl .btn{min-width:140px;justify-content:center;}
+  .vp-ctrl .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .vp-ctrl .btn:disabled:hover{transform:none;border-color:var(--line-2);}
+  @media(prefers-reduced-motion:reduce){
+    .vp-plate,.vp-pin,.vp-layer,.vp-bar i{transition-duration:.001s!important;}
+    .vp-plate.active{animation:none!important;box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
+  }
+
   .steps{margin-top:10px;}
   .step{
     display:flex;flex-direction:column;gap:10px;
@@ -2389,6 +2452,12 @@ var PLATE_MODE = true;
 var PV_ON = true;
 try { PLATE_MODE = localStorage.getItem('uml-dirmode') !== 'pin'; } catch (e) {}
 
+/* visual step-by-step mode */
+var SOL_MODE = 'list';
+try { if (localStorage.getItem('uml-solmode') === 'play') SOL_MODE = 'play'; } catch (e) {}
+var vpIdx = 0, vpLayers = [], vpPlates = [], vpPins = [], vpGroups = [], vpStates = [];
+var VP_PW = 150, VP_MARG = 14, VP_CENTER = 4, VP_STEP = (VP_PW - 2 * VP_MARG) / 6;
+
 function dirChipHtml(d) {
   var shown = PLATE_MODE ? -d : d;
   return shown === -1
@@ -2410,6 +2479,12 @@ function renderSolution(fresh) {
     '<div class="sol-head"><span class="sol-title">Solution</span>' +
     '<span class="sol-meta"><b>' + seq.length + '</b> moves &middot; ' + groups.length +
     ' actions &middot; ' + dt + ' ms &middot; no wall hits</span></div>' +
+    '<div class="solmode" role="tablist">' +
+      '<button class="solmode-b' + (SOL_MODE === 'play' ? '' : ' on') + '" data-mode="list" type="button">List</button>' +
+      '<button class="solmode-b' + (SOL_MODE === 'play' ? ' on' : '') + '" data-mode="play" type="button">' +
+        '<svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M2 1.3v8.4l7-4.2z"/></svg>Step-by-step</button>' +
+    '</div>' +
+    '<div id="solList"' + (SOL_MODE === 'play' ? ' style="display:none"' : '') + '>' +
     '<label class="pvtoggle"><input type="checkbox" id="pvToggle"' + (PV_ON ? ' checked' : '') + '> pin positions after each step</label>' +
     '<label class="pvtoggle"><input type="checkbox" id="invToggle"' + (PLATE_MODE ? ' checked' : '') + '> directions show plate movement (button to press); off - pin movement</label>' +
     '<div class="steps">';
@@ -2426,7 +2501,8 @@ function renderSolution(fresh) {
       '</div>';
   }
   html += '</div><div class="msg ok">After the last step all pins reach center - lock opens. ' +
-    'Solution verified by simulation. Click steps to mark done.</div>';
+    'Solution verified by simulation. Click steps to mark done.</div></div>' +
+    '<div id="solPlayer"' + (SOL_MODE === 'play' ? '' : ' style="display:none"') + '></div>';
   body.innerHTML = html;
   document.getElementById('pvToggle').onchange = function () {
     PV_ON = this.checked;
@@ -2438,6 +2514,87 @@ function renderSolution(fresh) {
     try { localStorage.setItem('uml-dirmode', PLATE_MODE ? 'plate' : 'pin'); } catch (e) {}
     renderSolution(false);
   };
+  var mbs = body.querySelectorAll('.solmode-b');
+  for (var mi = 0; mi < mbs.length; mi++) mbs[mi].onclick = function () { setSolMode(this.getAttribute('data-mode')); };
+  if (fresh) vpIdx = 0;
+  buildPlayer();
+  setSolMode(SOL_MODE);
+}
+
+/* ---------- visual step-by-step mode ---------- */
+function setSolMode(mode) {
+  SOL_MODE = (mode === 'play') ? 'play' : 'list';
+  try { localStorage.setItem('uml-solmode', SOL_MODE); } catch (e) {}
+  var list = document.getElementById('solList'), play = document.getElementById('solPlayer');
+  var bs = document.querySelectorAll('.solmode-b');
+  for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-mode') === SOL_MODE);
+  if (list) list.style.display = SOL_MODE === 'play' ? 'none' : '';
+  if (play) { play.style.display = SOL_MODE === 'play' ? '' : 'none'; if (SOL_MODE === 'play') playerRender(); }
+}
+
+function buildPlayer() {
+  var play = document.getElementById('solPlayer');
+  if (!play || !SOL) return;
+  play.innerHTML =
+    '<div class="vp">' +
+      '<div class="vp-scene"><div class="vp-lock" id="vpLock"></div></div>' +
+      '<div class="vp-info">' +
+        '<div class="vp-row"><span id="vpStep"></span><span id="vpMoves" class="vp-muted"></span></div>' +
+        '<div class="vp-bar"><i id="vpFill"></i></div>' +
+        '<div id="vpMove" class="vp-move"></div>' +
+      '</div>' +
+      '<div class="vp-ctrl">' +
+        '<button id="vpPrev" class="btn" type="button">&larr; Back</button>' +
+        '<button id="vpNext" class="btn primary" type="button">Next &rarr;</button>' +
+      '</div>' +
+    '</div>';
+  var lockEl = document.getElementById('vpLock');
+  lockEl.style.setProperty('--vty', ((N - 1) * 15 + 6) + 'px');
+  lockEl.style.setProperty('--vtx', (-(N - 1) * 6 - 6) + 'px');
+  vpLayers = []; vpPlates = []; vpPins = [];
+  for (var i = 0; i < N; i++) {
+    var ly = document.createElement('div'); ly.className = 'vp-layer'; ly.style.setProperty('--s', i);
+    var pl = document.createElement('div'); pl.className = 'vp-plate';
+    var num = document.createElement('span'); num.className = 'vp-num'; num.textContent = (i + 1); pl.appendChild(num);
+    var tr = document.createElement('div'); tr.className = 'vp-track'; pl.appendChild(tr);
+    for (var k = 0; k < 7; k++) { var hd = document.createElement('div'); hd.className = 'vp-hole'; hd.style.left = (VP_MARG + VP_STEP * k) + 'px'; pl.appendChild(hd); }
+    var pin = document.createElement('div'); pin.className = 'vp-pin';
+    ly.appendChild(pl); ly.appendChild(pin); lockEl.appendChild(ly);
+    vpLayers.push(ly); vpPlates.push(pl); vpPins.push(pin);
+  }
+  vpGroups = groupSteps(SOL.seq);
+  vpStates = [SOL.check.states[0]];
+  for (var g = 0; g < vpGroups.length; g++) vpStates.push(SOL.check.states[vpGroups[g].endIdx + 1]);
+  if (vpIdx > vpGroups.length) vpIdx = vpGroups.length;
+  document.getElementById('vpPrev').onclick = function () { if (vpIdx > 0) { vpIdx--; playerRender(); } };
+  document.getElementById('vpNext').onclick = function () { if (vpIdx < vpGroups.length) { vpIdx++; playerRender(); } };
+}
+
+function vpMoveText(gr) {
+  var shown = PLATE_MODE ? -gr.d : gr.d;
+  var dir = shown === -1 ? 'left' : 'right';
+  var arrow = shown === -1 ? '&larr;' : '&rarr;';
+  return 'Plate <b>' + (gr.plate + 1) + '</b> <span class="vp-ar">' + arrow + '</span> ' + dir +
+    (gr.count > 1 ? ' <b>&times;' + gr.count + '</b>' : '');
+}
+
+function playerRender() {
+  if (!SOL || !vpStates.length) return;
+  var st = vpStates[vpIdx];
+  for (var p = 0; p < vpPlates.length; p++) {
+    vpPlates[p].style.setProperty('--shift', ((VP_CENTER - st[p]) * VP_STEP) + 'px');
+    vpPlates[p].classList.remove('active');
+    vpPins[p].classList.toggle('lit', st[p] === 4);
+  }
+  var done = vpIdx >= vpGroups.length;
+  if (!done) vpPlates[vpGroups[vpIdx].plate].classList.add('active');
+  document.getElementById('vpStep').textContent = done ? 'Done - lock opens' : ('Action ' + (vpIdx + 1) + ' of ' + vpGroups.length);
+  var mv = 0; for (var k = 0; k < vpIdx; k++) mv += vpGroups[k].count;
+  document.getElementById('vpMoves').textContent = 'move ' + mv + ' of ' + SOL.seq.length;
+  document.getElementById('vpFill').style.width = (vpGroups.length ? (vpIdx / vpGroups.length * 100) : 100) + '%';
+  document.getElementById('vpMove').innerHTML = done ? 'All pins centered' : vpMoveText(vpGroups[vpIdx]);
+  document.getElementById('vpPrev').disabled = vpIdx === 0;
+  document.getElementById('vpNext').disabled = done;
 }
 
 /* ---------- share links / presets / reset ---------- */
