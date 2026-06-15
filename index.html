@@ -2103,9 +2103,13 @@ function wizMaybeSuggest() {
     var el = document.getElementById('wizSuggest');
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
-    var lead = d.known
-      ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>. Подставить проверенные связи и добить остальное здесь?'
-      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи и добить остальное здесь?';
+    var lc = LOCK_COUNTS[d.code];
+    var lcStr = (typeof lc === 'number') ? ' Открыт <b>' + lc + '</b> раз.' : '';
+    var lead = d.name
+      ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>.' + lcStr + ' Подставить проверенные связи и добить остальное здесь?'
+      : d.popular
+        ? 'Популярный замок.' + (lcStr || ' Его уже не раз вскрывали.') + ' Подставить проверенные связи и добить остальное здесь?'
+        : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи и добить остальное здесь?';
     el.innerHTML = '<div class="wizsuggest">' +
       '<p>' + lead + ' ' +
       '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p>' +
@@ -2992,8 +2996,28 @@ var KNOWN_LOCKS = [
   { fp: '6.517764', code: 'aDasBgBgCAACCA', name: 'Ящик у огненного ящера' },
   { fp: '5.43725', code: 'RrGUCRKQIQ', name: 'Сундук в подвале таверны' },
   { fp: '6.244627', code: 'Yt05ARCBAAARCA', name: 'Сундук склада таверны' },
-  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Склад таверны - дверь' }
+  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Склад таверны - дверь' },
+  { fp: '6.517113', code: 'aDAIAEhAAAQaAA', name: 'Сундук в домике напротив Джана' }
 ];
+/* Популярные у игроков расстановки без названия: связи-лидеры по копилке.
+   Подсказываем сразу, как KNOWN_LOCKS, но в плашке показываем счётчик, а не имя. */
+var POPULAR_LOCKS = [
+  { fp: '6.127765', code: 'YHayiAREIAIABE' },
+  { fp: '6.536727', code: 'aK44QgASERgACA' },
+  { fp: '6.732626', code: 'bI02igAAIBgEAg' },
+  { fp: '6.317432', code: 'ZDNGAAECkAAAIA' },
+  { fp: '5.71225', code: 'TAmALEwMAE' },
+  { fp: '6.226647', code: 'Ym14CAIACQKQgg' }
+];
+var LOCK_COUNTS = {};
+function loadLockCounts() {
+  fetch(COUNTER_API + '/locks?limit=100')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.locks) for (var i = 0; i < d.locks.length; i++) LOCK_COUNTS[d.locks[i].code] = d.locks[i].count;
+    })
+    .catch(function () {});
+}
 function knownLockFor() {
   var fps = {};
   fps[pinsKeyStr()] = 1;
@@ -3001,6 +3025,9 @@ function knownLockFor() {
   for (var i = 0; i < KNOWN_LOCKS.length; i++)
     if (fps[KNOWN_LOCKS[i].fp])
       return { found: true, known: true, code: KNOWN_LOCKS[i].code, name: KNOWN_LOCKS[i].name };
+  for (var k = 0; k < POPULAR_LOCKS.length; k++)
+    if (fps[POPULAR_LOCKS[k].fp])
+      return { found: true, known: true, code: POPULAR_LOCKS[k].code, popular: true };
   return null;
 }
 /* сначала курируемый список (100%), затем поиск по копилке по ДВУМ расстановкам
@@ -3085,9 +3112,16 @@ function maybeSuggestLinks() {
 }
 function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
-  var msg = d.known
-    ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>. Подставить проверенные связи?'
-    : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?';
+  var cnt = LOCK_COUNTS[d.code];
+  var cntStr = (typeof cnt === 'number') ? ' Открыт <b>' + cnt + '</b> раз.' : '';
+  var msg;
+  if (d.name) {
+    msg = 'Эту комбинацию уже вводили: <b>' + d.name + '</b>.' + cntStr + ' Подставить проверенные связи?';
+  } else if (d.popular) {
+    msg = 'Популярный замок.' + (cntStr || ' Его уже не раз вскрывали.') + ' Подставить проверенные связи?';
+  } else {
+    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?';
+  }
   box.innerHTML = '<div class="suggest">' +
     '<span>' + msg + '</span>' +
     '<span class="sg-act">' +
@@ -3120,6 +3154,7 @@ function counterBump() {
     .catch(function () {});
 }
 try { counterLoad(); } catch (e) {}
+try { loadLockCounts(); } catch (e) {}
 
 if (!bootConfigFromUrl()) init(6);
 maybeShowLinkHelpAnnounce();

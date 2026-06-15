@@ -2044,9 +2044,15 @@ function wizMaybeSuggest() {
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
     el.innerHTML = '<div class="wizsuggest">' +
-      '<p>' + (d.known
-        ? 'This combination was entered before: <b>' + d.name + '</b>. Fill the verified links and finish the rest here?'
-        : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in known links and finish the rest here?') + ' ' +
+      '<p>' + (function () {
+        var lc = LOCK_COUNTS[d.code];
+        var lcStr = (typeof lc === 'number') ? ' Opened <b>' + lc + '</b> times.' : '';
+        return d.name
+          ? 'This combination was entered before: <b>' + d.name + '</b>.' + lcStr + ' Fill the verified links and finish the rest here?'
+          : d.popular
+            ? 'Popular lock.' + (lcStr || ' It has been cracked many times.') + ' Fill the verified links and finish the rest here?'
+            : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in known links and finish the rest here?';
+      })() + ' ' +
       '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
       '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
@@ -2904,8 +2910,28 @@ var KNOWN_LOCKS = [
   { fp: '6.517764', code: 'aDasBgBgCAACCA', name: 'Fire lizard cave box' },
   { fp: '5.43725', code: 'RrGUCRKQIQ', name: "Silas tavern basement chest" },
   { fp: '6.244627', code: 'Yt05ARCBAAARCA', name: 'Tavern storeroom chest' },
-  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Tavern storeroom door' }
+  { fp: '6.556277', code: 'aSnYABCIZIICCA', name: 'Tavern storeroom door' },
+  { fp: '6.517113', code: 'aDAIAEhAAAQaAA', name: 'Hut chest opposite Jan (New Camp)' }
 ];
+/* Popular nameless layouts: leader links from the crowd pool. Suggested instantly
+   like KNOWN_LOCKS, but the plate shows an open-count instead of a name. */
+var POPULAR_LOCKS = [
+  { fp: '6.127765', code: 'YHayiAREIAIABE' },
+  { fp: '6.536727', code: 'aK44QgASERgACA' },
+  { fp: '6.732626', code: 'bI02igAAIBgEAg' },
+  { fp: '6.317432', code: 'ZDNGAAECkAAAIA' },
+  { fp: '5.71225', code: 'TAmALEwMAE' },
+  { fp: '6.226647', code: 'Ym14CAIACQKQgg' }
+];
+var LOCK_COUNTS = {};
+function loadLockCounts() {
+  fetch(COUNTER_API + '/locks?limit=100')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d && d.locks) for (var i = 0; i < d.locks.length; i++) LOCK_COUNTS[d.locks[i].code] = d.locks[i].count;
+    })
+    .catch(function () {});
+}
 function knownLockFor() {
   var fps = {};
   fps[pinsKeyStr()] = 1;
@@ -2913,6 +2939,9 @@ function knownLockFor() {
   for (var i = 0; i < KNOWN_LOCKS.length; i++)
     if (fps[KNOWN_LOCKS[i].fp])
       return { found: true, known: true, code: KNOWN_LOCKS[i].code, name: KNOWN_LOCKS[i].name };
+  for (var k = 0; k < POPULAR_LOCKS.length; k++)
+    if (fps[POPULAR_LOCKS[k].fp])
+      return { found: true, known: true, code: POPULAR_LOCKS[k].code, popular: true };
   return null;
 }
 function suggestLookup(cb) {
@@ -2992,10 +3021,18 @@ function maybeSuggestLinks() {
 }
 function renderSuggestBox(d) {
   var box = document.getElementById('suggestBox');
+  var cnt = LOCK_COUNTS[d.code];
+  var cntStr = (typeof cnt === 'number') ? ' Opened <b>' + cnt + '</b> times.' : '';
+  var msg;
+  if (d.name) {
+    msg = 'This combination was entered before: <b>' + d.name + '</b>.' + cntStr + ' Fill in the verified links?';
+  } else if (d.popular) {
+    msg = 'Popular lock.' + (cntStr || ' It has been cracked many times.') + ' Fill in the verified links?';
+  } else {
+    msg = 'This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?';
+  }
   box.innerHTML = '<div class="suggest">' +
-    '<span>' + (d.known
-      ? 'This combination was entered before: <b>' + d.name + '</b>. Fill in the verified links?'
-      : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?') + '</span>' +
+    '<span>' + msg + '</span>' +
     '<span class="sg-act">' +
     '<button class="btn" type="button" id="sgYes">Fill in</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
@@ -3027,6 +3064,7 @@ function counterBump() {
     .catch(function () {});
 }
 try { counterLoad(); } catch (e) {}
+try { loadLockCounts(); } catch (e) {}
 
 if (!bootConfigFromUrl()) init(6);
 maybeShowLinkHelpAnnounce();
