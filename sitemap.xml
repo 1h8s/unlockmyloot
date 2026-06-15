@@ -50,18 +50,18 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://unlockmyloot.com/locks/sketty-chest/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/sketty-chest/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/sketty-chest/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/sketty-chest/"/>
+    <loc>https://unlockmyloot.com/locks/scatty-chest/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/scatty-chest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/scatty-chest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/scatty-chest/"/>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://unlockmyloot.com/en/locks/sketty-chest/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/sketty-chest/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/sketty-chest/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/sketty-chest/"/>
+    <loc>https://unlockmyloot.com/en/locks/scatty-chest/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/scatty-chest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/scatty-chest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/scatty-chest/"/>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

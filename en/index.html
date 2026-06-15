@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gothic 1 Remake Lockpick Solver & Lock Catalog | UnlockMyLoot</title>
-<meta name="description" content="Solve any Gothic 1 Remake lock: enter plates, pins and links to get the shortest safe move sequence - no wall hits. Plus a catalog of verified locks: Sketty's chest, Gomez's chest, Diego's chest and more.">
+<meta name="description" content="Solve any Gothic 1 Remake lock: enter plates, pins and links to get the shortest safe move sequence - no wall hits. Plus a catalog of verified locks: Scatty's chest, Gomez's chest, Diego's chest and more.">
 <meta name="keywords" content="gothic 1 remake lockpick solver, gothic remake lock picking tool, gothic remake lockpick calculator, gothic 1 remake lock solver, unlockmyloot, gothic remake chest solver">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="yandex-verification" content="57d0dc84810da636">
@@ -2883,7 +2883,7 @@ function showCounter(n, approx) {
   box.title = approx ? 'At least this many - exact number temporarily unavailable' : '';
   var suf = approx ? '+' : '';
   w.textContent = pluralRu(n, 'lock cracked so far', 'locks cracked so far', 'locks cracked so far');
-  var from = parseInt(num.dataset.v || '0', 10), t0 = performance.now();
+  var from = parseInt(num.dataset.v || String(num.textContent).replace(/\D/g, '') || '0', 10), t0 = performance.now();
   function tick(t) {
     var p = Math.min(1, (t - t0) / 900);
     p = 1 - Math.pow(1 - p, 3);
@@ -2964,7 +2964,7 @@ function suggestFetch(pk) {
    stats. fp = N + '.' + pins. Keep in sync with NAMED_LOCKS in en/locks/index.html. */
 var KNOWN_LOCKS = [
   { fp: '6.562211', code: 'aUkAACUBAAJikA', name: 'Ruined Tower door' },
-  { fp: '5.63217', code: 'SojAgCBDQA', name: "Sketty's chest" },
+  { fp: '5.63217', code: 'SojAgCBDQA', name: "Scatty's chest" },
   { fp: '4.7761', code: 'LagFFgA', name: "Cor Galom's chest" },
   { fp: '5.37265', code: 'RY2VUBQAiA', name: "Rice Lord's storeroom (3rd floor)" },
   { fp: '5.61217', code: 'SgjQQDUgCI', name: "Gomez bedside chest" },

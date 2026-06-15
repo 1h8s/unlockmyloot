@@ -2961,7 +2961,7 @@ function showCounter(n, approx) {
   box.title = approx ? 'Не меньше этого числа - точное сейчас недоступно' : '';
   var suf = approx ? '+' : '';
   w.textContent = pluralRu(n, 'замок уже взломан', 'замка уже взломано', 'замков уже взломано');
-  var from = parseInt(num.dataset.v || '0', 10), t0 = performance.now();
+  var from = parseInt(num.dataset.v || String(num.textContent).replace(/\D/g, '') || '0', 10), t0 = performance.now();
   function tick(t) {
     var p = Math.min(1, (t - t0) / 900);
     p = 1 - Math.pow(1 - p, 3);
