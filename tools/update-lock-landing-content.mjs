@@ -39,18 +39,18 @@ const LOCKS = {
     },
   },
   'cor-galom-chest': {
-    code: 'LagFFgA',
+    code: 'a2YMQAAIiECEAA',
     ru: {
-      lead: 'Самый короткий замок каталога  -  всего 15 ходов. Сундук Кор Галома в лаборатории Болотного лагеря: внутри рецепт для квеста Декстера.',
-      where: 'Лаборатория Кор Галома в Болотном лагере. Сундук стоит в комнате сектантов  -  один из первых «коротких» замков, который проще открыть с решателем, чем методом тыка.',
+      lead: 'Сундук Кор Галома в лаборатории Болотного лагеря: внутри рецепт для квеста Декстера. Раньше в каталоге стоял ошибочный код на 4 плитки; актуальная конфигурация - 6 плиток, 60 ходов.',
+      where: 'Лаборатория Кор Галома в Болотном лагере. Сундук стоит в комнате сектантов - без решателя вручную долго крутить штифты.',
       inside: 'Рецепт сектантов, нужный для квеста Декстера. Без него сюжет Болотного лагеря не сдвинется.',
-      faq: `<details><summary>Нужен ли квест Декстера?</summary><p>Да  -  рецепт внутри нужен для квеста Декстера. Сам замок короткий: 15 ходов, 4 плитки, 5 связей.</p></details><details><summary>Где лаборатория?</summary><p>В Болотном лагере, в здании Кор Галома. Это не сундук Старого или Нового лагеря.</p></details><details><summary>Сколько ходов?</summary><p>15 ходов  -  рекорд каталога по краткости.</p></details>`,
+      faq: `<details><summary>Почему в каталоге был другой код?</summary><p>Старый код <code>LagFFgA</code> (4 плитки, 15 ходов) оказался неверным для этого сундука. Актуальная конфигурация - <code>a2YMQAAIiECEAA</code>, 60 ходов.</p></details><details><summary>Нужен ли квест Декстера?</summary><p>Да - рецепт внутри нужен для квеста Декстера. Замок на 6 плиток и 7 связей.</p></details><details><summary>Сколько ходов?</summary><p>Кратчайший безопасный путь - 60 ходов (6 плиток, 7 связей).</p></details>`,
     },
     en: {
-      lead: 'The shortest lock in the catalog  -  just 15 moves. Cor Galom\'s chest in the Swamp Camp laboratory holds the recipe for Dexter\'s quest.',
-      where: 'Cor Galom\'s laboratory in the Swamp Camp. The chest sits in the sectarians\' room  -  one of the first "short" locks that\'s easier with a solver than trial and error.',
+      lead: 'Cor Galom\'s chest in the Swamp Camp laboratory holds the recipe for Dexter\'s quest. The catalog previously listed a wrong 4-plate code; the verified config is 6 plates, 60 moves.',
+      where: 'Cor Galom\'s laboratory in the Swamp Camp. The chest sits in the sectarians\' room - tedious to solve by hand without the solver.',
       inside: 'The sectarians\' recipe required for Dexter\'s quest. Without it the Swamp Camp storyline won\'t advance.',
-      faq: `<details><summary>Do I need Dexter's quest?</summary><p>Yes  -  the recipe inside is for Dexter's quest. The lock itself is short: 15 moves, 4 plates, 5 links.</p></details><details><summary>Where is the laboratory?</summary><p>In the Swamp Camp, in Cor Galom's building. Not an Old or New Camp chest.</p></details><details><summary>How many moves?</summary><p>15 moves  -  the catalog's shortest record.</p></details>`,
+      faq: `<details><summary>Why was a different code in the catalog?</summary><p>The old code <code>LagFFgA</code> (4 plates, 15 moves) turned out wrong for this chest. The correct config is <code>a2YMQAAIiECEAA</code>, 60 moves.</p></details><details><summary>Do I need Dexter's quest?</summary><p>Yes - the recipe inside is for Dexter's quest. The lock has 6 plates and 7 links.</p></details><details><summary>How many moves?</summary><p>The shortest safe path is 60 moves (6 plates, 7 links).</p></details>`,
     },
   },
   'rice-lord-storeroom': {
