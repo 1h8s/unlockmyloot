@@ -27,7 +27,8 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Solver","item":"https://unlockmyloot.com/en/"},{"@type":"ListItem","position":2,"name":"Catalog","item":"https://unlockmyloot.com/en/locks/"},{"@type":"ListItem","position":3,"name":"Ruined Tower door","item":"https://unlockmyloot.com/en/locks/ruined-tower-door/"}]},{"@type":"Article","headline":"How to open the Ruined Tower door in Gothic 1 Remake","description":"The door is at the base of the Ruined Tower near the Old Camp. Behind it lies a crypt with a body and a chest holding solid early-game gear. Stats: 6 plates, 57 moves, 10 links. Open it without breaking lockpicks.","inLanguage":"en","url":"https://unlockmyloot.com/en/locks/ruined-tower-door/","isPartOf":{"@type":"WebSite","name":"UnlockMyLoot","url":"https://unlockmyloot.com/"},"about":"Gothic 1 Remake"}]}</script>
 </head>
 <body>
-<div class="wrap">
+<div class="pagebg" id="pagebg" aria-hidden="true"></div>
+<div class="wrap page">
   <header class="top">
     <a class="wordmark" href="/en/"><span class="dot"></span>UnlockMyLoot</a>
     <nav class="nav"><a href="/en/locks/">Catalog</a><a href="/en/">Solver</a></nav>
@@ -38,19 +39,20 @@
     <p class="lead">The door at the base of the Ruined Tower is one of the longest early-game locks: 57 moves across 6 plates. Old guides often listed the wrong code without pin positions; this page has the full verified configuration from in-game checks.</p>
     <a class="cta" href="/en/?lock=aUkAACUBAAJikA">Open this lock in the solver &rarr;</a>
     <h2>Where it is</h2>
-    <p>Follow the trail past the Old Camp to the tower base. Behind the door is a crypt with a corpse and chest  -  solid early gear that players search for as "Ruined Tower door Gothic Remake".</p>
+    <p>Follow the trail past the Old Camp to the tower base. Behind the door is a crypt with a corpse and chest - solid early gear that players search for as "Ruined Tower door Gothic Remake".</p>
     <h2>What's inside</h2>
-    <p>A crypt with a corpse and chest  -  early-game equipment. Plate 5 has four outgoing links; this is the lock where the solver's BFS helper bug was first caught.</p>
+    <p>A crypt with a corpse and chest - early-game equipment. Plate 5 has four outgoing links; this is the lock where the solver's BFS helper bug was first caught.</p>
     <h2>Lock stats</h2>
     <div class="params"><span>6 plates</span><span>57 moves</span><span>10 links</span></div>
     <div class="lc-pins"><div class="lc-row"><span class="n">1</span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole p"></span><span class="lc-hole"></span><span class="lc-hole"></span></div><div class="lc-row"><span class="n">2</span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole"></span><span class="lc-hole p"></span><span class="lc-hole"></span></div><div class="lc-row"><span class="n">3</span><span class="lc-hole"></span><span class="lc-hole p"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span></div><div class="lc-row"><span class="n">4</span><span class="lc-hole"></span><span class="lc-hole p"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span></div><div class="lc-row"><span class="n">5</span><span class="lc-hole p"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span></div><div class="lc-row"><span class="n">6</span><span class="lc-hole p"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole c"></span><span class="lc-hole"></span><span class="lc-hole"></span><span class="lc-hole"></span></div></div>
     <p class="pinnote">Starting pin positions (1-7 left to right, goal is the centre, 4). Green = already centred.</p>
     
     <h2>FAQ</h2>
-    <div class="faq"><details><summary>Why do old guides show a different code?</summary><p>The popular code <code>YHayiAREIAIABE</code> (45 moves, different pins) turned out wrong for this door. The correct config is <code>aUkAACUBAAJikA</code>, 57 moves.</p></details><details><summary>How many moves?</summary><p>The shortest safe path is 57 moves (6 plates, 10 links). The solver shows them step by step.</p></details><details><summary>What if my pin positions differ?</summary><p>You have a different lock instance. Enter your pins in the solver  -  it will find a path for your layout.</p></details></div>
+    <div class="faq"><details><summary>Why do old guides show a different code?</summary><p>The popular code <code>YHayiAREIAIABE</code> (45 moves, different pins) turned out wrong for this door. The correct config is <code>aUkAACUBAAJikA</code>, 57 moves.</p></details><details><summary>How many moves?</summary><p>The shortest safe path is 57 moves (6 plates, 10 links). The solver shows them step by step.</p></details><details><summary>What if my pin positions differ?</summary><p>You have a different lock instance. Enter your pins in the solver - it will find a path for your layout.</p></details></div>
     <p class="footacts"><a href="/en/?lock=aUkAACUBAAJikA">Open in solver &rarr;</a><span>·</span><a href="/en/locks/">All catalog locks</a></p>
   </main>
   <footer class="foot">UnlockMyLoot - Gothic 1 Remake lockpick solver and lock catalog.</footer>
 </div>
+<script src="/locks/lock-page.js" defer></script>
 </body>
 </html>
