@@ -82,6 +82,22 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://unlockmyloot.com/locks/cor-galom-bedroom-chest/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/cor-galom-bedroom-chest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/cor-galom-bedroom-chest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/cor-galom-bedroom-chest/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://unlockmyloot.com/en/locks/cor-galom-bedroom-chest/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/cor-galom-bedroom-chest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/cor-galom-bedroom-chest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://unlockmyloot.com/locks/cor-galom-bedroom-chest/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://unlockmyloot.com/locks/rice-lord-storeroom/</loc>
     <xhtml:link rel="alternate" hreflang="ru" href="https://unlockmyloot.com/locks/rice-lord-storeroom/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://unlockmyloot.com/en/locks/rice-lord-storeroom/"/>

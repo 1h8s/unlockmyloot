@@ -39,18 +39,33 @@ const LOCKS = {
     },
   },
   'cor-galom-chest': {
-    code: 'a2YMQAAIiECEAA',
+    code: 'LagFFgA',
     ru: {
-      lead: 'Сундук Кор Галома в лаборатории Болотного лагеря: внутри рецепт для квеста Декстера. Раньше в каталоге стоял ошибочный код на 4 плитки; актуальная конфигурация - 6 плиток, 60 ходов.',
-      where: 'Лаборатория Кор Галома в Болотном лагере. Сундук стоит в комнате сектантов - без решателя вручную долго крутить штифты.',
+      lead: 'Самый короткий замок каталога - всего 15 ходов. Сундук с рецептом для квеста Декстера стоит между лабораторными столами в лаборатории Кор Галома.',
+      where: 'Между лабораторными столами на первом этаже лаборатории Кор Галома в Болотном лагере. Это сундук с рецептом - не путать со сундуком в спальне на втором этаже.',
       inside: 'Рецепт сектантов, нужный для квеста Декстера. Без него сюжет Болотного лагеря не сдвинется.',
-      faq: `<details><summary>Почему в каталоге был другой код?</summary><p>Старый код <code>LagFFgA</code> (4 плитки, 15 ходов) оказался неверным для этого сундука. Актуальная конфигурация - <code>a2YMQAAIiECEAA</code>, 60 ходов.</p></details><details><summary>Нужен ли квест Декстера?</summary><p>Да - рецепт внутри нужен для квеста Декстера. Замок на 6 плиток и 7 связей.</p></details><details><summary>Сколько ходов?</summary><p>Кратчайший безопасный путь - 60 ходов (6 плиток, 7 связей).</p></details>`,
+      faq: `<details><summary>Нужен ли квест Декстера?</summary><p>Да - рецепт внутри нужен для квеста Декстера. Сам замок короткий: 15 ходов, 4 плитки, 5 связей.</p></details><details><summary>Это не сундук в спальне на втором этаже?</summary><p>Нет. Рецепт лежит в сундуке между столами на первом этаже (<code>LagFFgA</code>). В спальне на втором этаже - другой замок с кольцом очищения и лутом.</p></details><details><summary>Сколько ходов?</summary><p>15 ходов - рекорд каталога по краткости.</p></details>`,
     },
     en: {
-      lead: 'Cor Galom\'s chest in the Swamp Camp laboratory holds the recipe for Dexter\'s quest. The catalog previously listed a wrong 4-plate code; the verified config is 6 plates, 60 moves.',
-      where: 'Cor Galom\'s laboratory in the Swamp Camp. The chest sits in the sectarians\' room - tedious to solve by hand without the solver.',
+      lead: 'The shortest lock in the catalog - just 15 moves. The recipe chest between laboratory tables in Cor Galom\'s lab holds the item for Dexter\'s quest.',
+      where: 'Between the laboratory tables on the ground floor of Cor Galom\'s lab in the Swamp Camp. This is the recipe chest - not the bedroom chest on the second floor.',
       inside: 'The sectarians\' recipe required for Dexter\'s quest. Without it the Swamp Camp storyline won\'t advance.',
-      faq: `<details><summary>Why was a different code in the catalog?</summary><p>The old code <code>LagFFgA</code> (4 plates, 15 moves) turned out wrong for this chest. The correct config is <code>a2YMQAAIiECEAA</code>, 60 moves.</p></details><details><summary>Do I need Dexter's quest?</summary><p>Yes - the recipe inside is for Dexter's quest. The lock has 6 plates and 7 links.</p></details><details><summary>How many moves?</summary><p>The shortest safe path is 60 moves (6 plates, 7 links).</p></details>`,
+      faq: `<details><summary>Do I need Dexter's quest?</summary><p>Yes - the recipe inside is for Dexter's quest. The lock itself is short: 15 moves, 4 plates, 5 links.</p></details><details><summary>Is this the second-floor bedroom chest?</summary><p>No. The recipe is in the chest between tables on the ground floor (<code>LagFFgA</code>). The bedroom upstairs has a different lock with a purification ring and other loot.</p></details><details><summary>How many moves?</summary><p>15 moves - the catalog's shortest record.</p></details>`,
+    },
+  },
+  'cor-galom-bedroom-chest': {
+    code: 'a2YMQAAIiECEAA',
+    ru: {
+      lead: 'Сундук в спальне на втором этаже лаборатории Кор Галома - там, где он спит. 60 ходов, 6 плиток; внутри кольцо очищения и алхимический лут. Не путать со сундуком с рецептом между столами внизу.',
+      where: 'Второй этаж лаборатории Кор Галома в Болотном лагере - спальня, где спит Кор Галом. Рецепт для квеста Декстера лежит в другом сундуке между лабораторными столами на первом этаже.',
+      inside: 'Кольцо очищения (защита от огня +5, от ветра +3, от льда +3, от энергии +3), свиток пиромантии, 3 серы, 3 тёмных цветка, 2 флакона и изваяние.',
+      faq: `<details><summary>Это сундук с рецептом для Декстера?</summary><p>Нет. Рецепт - в сундуке между лабораторными столами на первом этаже (<code>LagFFgA</code>, 15 ходов). Этот сундук в спальне - отдельный замок с кольцом и алхимией.</p></details><details><summary>Что даёт кольцо очищения?</summary><p>Защита от огня +5, от ветра +3, от льда +3, от энергии +3.</p></details><details><summary>Сколько ходов?</summary><p>60 ходов (6 плиток, 7 связей). Решатель показывает путь по шагам.</p></details>`,
+    },
+    en: {
+      lead: 'The chest in Cor Galom\'s bedroom on the second floor of his laboratory - where he sleeps. 60 moves across 6 plates; inside are a purification ring and alchemy loot. Not the recipe chest between the tables downstairs.',
+      where: 'Second floor of Cor Galom\'s laboratory in the Swamp Camp - his bedroom where he sleeps. The recipe for Dexter\'s quest is in a different chest between the laboratory tables on the ground floor.',
+      inside: 'Purification ring (fire protection +5, wind +3, ice +3, energy +3), pyromancy scroll, 3 brimstones, 3 dark flowers, 2 flasks, and a figurine.',
+      faq: `<details><summary>Is this the recipe chest for Dexter's quest?</summary><p>No. The recipe is in the chest between laboratory tables on the ground floor (<code>LagFFgA</code>, 15 moves). This bedroom chest is a separate lock with a ring and alchemy items.</p></details><details><summary>What does the purification ring give?</summary><p>Fire protection +5, wind +3, ice +3, energy +3.</p></details><details><summary>How many moves?</summary><p>60 moves (6 plates, 7 links). The solver shows the path step by step.</p></details>`,
     },
   },
   'rice-lord-storeroom': {
