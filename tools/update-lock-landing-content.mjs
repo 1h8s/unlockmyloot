@@ -145,6 +145,151 @@ const LOCKS = {
       faq: `<details><summary>Does this count as theft?</summary><p>No - you can pick this chest safely; it doesn't count as theft.</p></details><details><summary>Is this the chamber chest?</summary><p>No. Gomez's chambers are behind a separate door (<a href="/en/locks/gomez-chambers-door/">chamber door</a>). This chest is in the throne hall next to the boss.</p></details><details><summary>How many moves?</summary><p>16 moves (4 plates, 6 links) - one of the shorter locks in the catalog.</p></details>`,
     },
   },
+  'old-camp-dungeon-door': {
+    code: 'YMTCAKIgIEBiAA',
+    ru: {
+      lead: 'Дверь в темницу под замком Старого лагеря - ориентир: рядом висит расстрелянный призрак. 68 ходов; вход в темницу для квеста «Перекрыть правду» и камер заключённых.',
+      where: 'Замок Старого лагеря, темница под замком. Пройти мимо Торуса у ворот, направо до конца коридора, спуститься по лестнице - дверь внизу. Ориентир: расстрелянный призрак у входа в темницу. Не путать с <a href="/locks/gomez-chambers-door/">дверью в покои Гомеза</a> и <a href="/locks/arlin-dungeon-key/">ключом от темницы Арлина</a> дальше внутри.',
+      inside: 'Доступ в темницу - камеры заключённых. Здесь сидит Арлин (квест «Перекрыть правду» / лагерь разбойников); позже - камеры сюжета со Стоуном.',
+      faq: `<details><summary>Это дверь камеры Арлина?</summary><p>Нет. Это вход в зону темницы. Камера Арлина - дальше; там <a href="/locks/arlin-dungeon-key/">ключ от темницы Арлина</a> или взлом (25 ходов).</p></details><details><summary>Зачем взламывать?</summary><p>Квест «Перекрыть правду» от Браннока. Можно открыть ключом от темницы Гомеза, но взлом тоже работает.</p></details><details><summary>Сколько ходов?</summary><p>68 ходов (6 плиток, 10 связей). Вторая плитка уже в центре.</p></details>`,
+    },
+    en: {
+      lead: 'Door to the dungeon beneath the Old Camp castle - landmark: an executed ghost hanging nearby. 68 moves; entrance to the dungeon for Bar the Truth and the prison cells.',
+      where: 'Old Camp castle dungeons below the keep. Pass Thorus at the gate, go right to the end of the corridor, climb down the ladder - door at the bottom. Landmark: executed ghost by the dungeon entrance. Not the <a href="/en/locks/gomez-chambers-door/">chamber door</a> or <a href="/en/locks/arlin-dungeon-key/">Arlin\'s dungeon key</a> further inside.',
+      inside: 'Access to the dungeon cells. Arlin is held here (Bar the Truth); later, story cells with Stone.',
+      faq: `<details><summary>Is this Arlin's cell door?</summary><p>No. This is the dungeon entrance. Arlin's cell is further in - <a href="/en/locks/arlin-dungeon-key/">Arlin's dungeon key</a> or lockpicking (25 moves).</p></details><details><summary>Why pick it?</summary><p>Bar the Truth from Brannok. Gomez's dungeon key also works, but lockpicking is fine.</p></details><details><summary>How many moves?</summary><p>68 moves (6 plates, 10 links). Plate 2 is already centred.</p></details>`,
+    },
+  },
+  'arlin-dungeon-key': {
+    code: 'gBDXAECQhAAQAQAIRAA',
+    ru: {
+      lead: 'Ключ от темницы Арлина - замок в темнице под замком, у камеры Арлина. 25 ходов, 7 плиток; для квеста «Перекрыть правду» можно взять ключ у стражника или взломать.',
+      where: 'Темница под замком Старого лагеря - после <a href="/locks/old-camp-dungeon-door/">двери с расстрелянным призраком</a>. Ключ у стражника у камер или взлом этой двери вместо ключа.',
+      inside: 'Открывает доступ к камере Арлина - квест «Перекрыть правду» (лагерь разбойников).',
+      faq: `<details><summary>Это не вход в темницу?</summary><p>Нет. Вход - <a href="/locks/old-camp-dungeon-door/">дверь с расстрелянным призраком</a> (68 ходов). Это замок у камеры Арлина внутри.</p></details><details><summary>Нужен ли ключ?</summary><p>Можно выбить у стражника рядом с камерами. Или взломать - 25 ходов, короче входной двери.</p></details><details><summary>Сколько ходов?</summary><p>25 ходов (7 плиток, 10 связей).</p></details>`,
+    },
+    en: {
+      lead: "Arlin's dungeon key - lock in the dungeon under the castle, at Arlin's cell. 25 moves, 7 plates; for Bar the Truth you can take the key from the warder or pick the lock.",
+      where: 'Dungeon beneath the Old Camp castle - after the <a href="/en/locks/old-camp-dungeon-door/">door by the executed ghost</a>. Key on the warder by the cells, or pick this lock instead.',
+      inside: 'Opens access to Arlin\'s cell - Bar the Truth quest (Rogues\' Camp).',
+      faq: `<details><summary>Isn't this the dungeon entrance?</summary><p>No. The entrance is the <a href="/en/locks/old-camp-dungeon-door/">door by the executed ghost</a> (68 moves). This lock is at Arlin's cell inside.</p></details><details><summary>Do I need the key?</summary><p>You can loot it from the warder by the cells. Or pick the lock - 25 moves, shorter than the entrance door.</p></details><details><summary>How many moves?</summary><p>25 moves (7 plates, 10 links).</p></details>`,
+    },
+  },
+  'gomez-wine-cellar': {
+    code: 'bI02qgAAIBgEAg',
+    ru: {
+      lead: 'Винный погреб Гомеза - склад под замком, дверь внизу вертикальной лестницы (как подвал). 31 ход, 6 плиток; не путать с темницей и тронным залом.',
+      where: 'Замок Старого лагеря, уровень под Гомезом. Спуститься по вертикальной лестнице вниз - дверь в конце. Это склад / винный погреб, не <a href="/locks/old-camp-dungeon-door/">темница с призраком</a> (другой путь) и не <a href="/locks/gomez-throne-hall-chest/">тронный зал</a>.',
+      inside: 'Винный погреб - вино и запасы в складе под замком.',
+      faq: `<details><summary>Это темница?</summary><p>Нет. Темница - через коридор к <a href="/locks/old-camp-dungeon-door/">двери с расстрелянным призраком</a> (68 ходов). Погреб - вертикальная лестница под Гомезом.</p></details><details><summary>Где лестница?</summary><p>В замке Старого лагеря, спуск вниз к складу под Гомезом - дверь внизу лестницы.</p></details><details><summary>Сколько ходов?</summary><p>31 ход (6 плиток, 10 связей).</p></details>`,
+    },
+    en: {
+      lead: "Gomez's wine cellar - storeroom beneath the castle, door at the bottom of a vertical ladder (basement-style). 31 moves, 6 plates; not the dungeon or throne hall.",
+      where: 'Old Camp castle, level below Gomez. Climb down the vertical ladder - door at the bottom. This storeroom / wine cellar is not the <a href="/en/locks/old-camp-dungeon-door/">dungeon by the ghost</a> (different route) or the <a href="/en/locks/gomez-throne-hall-chest/">throne hall</a>.',
+      inside: 'Wine cellar - wine and supplies in the storeroom under the castle.',
+      faq: `<details><summary>Is this the dungeon?</summary><p>No. The dungeon is via the corridor to the <a href="/en/locks/old-camp-dungeon-door/">door by the executed ghost</a> (68 moves). The cellar is a vertical ladder down under Gomez.</p></details><details><summary>Where is the ladder?</summary><p>In the Old Camp castle - climb down to the storeroom under Gomez; the lock is on the door at the bottom.</p></details><details><summary>How many moves?</summary><p>31 moves (6 plates, 10 links).</p></details>`,
+    },
+  },
+  'popular-lock': {
+    code: 'TAmBLEwMAE',
+    ru: {
+      lead: 'Популярный замок из копилки игроков - расстановка 7-1-2-2-5, 46 ходов. Ссылка ?lock= несёт все 10 связей; без одной связи решение не сходится.',
+      where: 'Локация в игре пока не опознана - замок добавлен по копилке UnlockMyLoot (сотни открытий). Если узнаете, где он в колонии, напишите.',
+      inside: 'Лут зависит от локации - название уточним, когда замок опознают в игре.',
+      faq: `<details><summary>Почему «популярный»?</summary><p>Одна из самых частых расстановок в копилке. Игроки жаловались, что вручную не хватало одной связи - в коде <code>TAmBLEwMAE</code> все 10 связей уже зашиты.</p></details><details><summary>Чем отличается от TAmALEwMAE?</summary><p>Та же расстановка штифтов (5.71225), но другой набор связей в коде. Для этого замка нужен именно <code>TAmBLEwMAE</code> (10 связей, 46 ходов).</p></details><details><summary>Сколько ходов?</summary><p>46 ходов (5 плиток, 10 связей).</p></details>`,
+    },
+    en: {
+      lead: 'Popular lock from the player pool - pin layout 7-1-2-2-5, 46 moves. The ?lock= URL carries all 10 links; missing one link breaks the solution.',
+      where: 'In-game location not identified yet - added from the UnlockMyLoot pool (hundreds of opens). Let us know if you recognise it in the colony.',
+      inside: 'Loot depends on the location - we will name it once the lock is identified in-game.',
+      faq: `<details><summary>Why «popular»?</summary><p>One of the most frequent pin layouts in the pool. Players reported missing one link when entering manually - code <code>TAmBLEwMAE</code> includes all 10 links.</p></details><details><summary>How is this different from TAmALEwMAE?</summary><p>Same pin layout (5.71225), different links in the code. This lock needs <code>TAmBLEwMAE</code> specifically (10 links, 46 moves).</p></details><details><summary>How many moves?</summary><p>46 moves (5 plates, 10 links).</p></details>`,
+    },
+  },
+  'alberto-mine-hut-chest': {
+    code: 'ULWBAQhAKg',
+    ru: {
+      lead: 'Сундук в хижине у шахты Альберто - первый этаж. 36 ходов, 5 плиток; один из трёх замков в этой шахте.',
+      where: 'Шахта Альберто - сундук в хижине на <strong>1-м этаже</strong>. Наверху по лестнице ещё два: <a href="/locks/alberto-mine-upstairs-left-chest/">левый</a> и <a href="/locks/alberto-mine-upstairs-right-chest/">правый</a> сундуки.',
+      inside: 'Лут в сундуке на первом этаже хижины у шахты.',
+      faq: `<details><summary>Где ещё сундуки в шахте?</summary><p>Наверху по лестнице - <a href="/locks/alberto-mine-upstairs-left-chest/">левый</a> (20 ходов) и <a href="/locks/alberto-mine-upstairs-right-chest/">правый</a> (13 ходов).</p></details><details><summary>Откуда конфигурация?</summary><p>Прислала <a href="https://dtf.ru/id3493234">nepetacataria · DTF</a> в <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">комментарии</a> к гайду по взлому.</p></details><details><summary>Сколько ходов?</summary><p>36 ходов (5 плиток, 7 связей).</p></details>`,
+      credit: 'Конфигурацию прислала: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+    en: {
+      lead: "Chest in the hut by Alberto's mine - ground floor. 36 moves, 5 plates; one of three locks in this mine.",
+      where: 'Alberto\'s mine - chest in the hut on the <strong>1st floor</strong>. Up the ladder: <a href="/en/locks/alberto-mine-upstairs-left-chest/">left</a> and <a href="/en/locks/alberto-mine-upstairs-right-chest/">right</a> chests.',
+      inside: 'Loot in the chest on the hut\'s ground floor by the mine.',
+      faq: `<details><summary>Any other chests in the mine?</summary><p>Up the ladder - <a href="/en/locks/alberto-mine-upstairs-left-chest/">left</a> (20 moves) and <a href="/en/locks/alberto-mine-upstairs-right-chest/">right</a> (13 moves).</p></details><details><summary>Where is this config from?</summary><p>Submitted by <a href="https://dtf.ru/id3493234">nepetacataria · DTF</a> in a <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">comment</a> on the lockpicking guide.</p></details><details><summary>How many moves?</summary><p>36 moves (5 plates, 7 links).</p></details>`,
+      credit: 'Config submitted by: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+  },
+  'alberto-mine-upstairs-left-chest': {
+    code: 'MEAIAho',
+    ru: {
+      lead: 'Левый сундук наверху в шахте Альберто - после подъёма по лестнице из хижины. 20 ходов, 4 плитки.',
+      where: 'Шахта Альберто - наверху по лестнице из <a href="/locks/alberto-mine-hut-chest/">хижины (1-й этаж)</a>. Это <strong>левый</strong> сундук; справа - <a href="/locks/alberto-mine-upstairs-right-chest/">отдельный замок</a> (13 ходов).',
+      inside: 'Лут в левом сундуке наверху шахты.',
+      faq: `<details><summary>Это сундук внизу?</summary><p>Нет. Внизу в хижине - <a href="/locks/alberto-mine-hut-chest/">другой сундук</a> (36 ходов).</p></details><details><summary>Откуда конфигурация?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">комментарий на DTF</a>.</p></details><details><summary>Сколько ходов?</summary><p>20 ходов (4 плитки, 5 связей).</p></details>`,
+      credit: 'Конфигурацию прислала: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+    en: {
+      lead: "Left chest upstairs in Alberto's mine - after climbing from the hut. 20 moves, 4 plates.",
+      where: 'Alberto\'s mine - upstairs from the <a href="/en/locks/alberto-mine-hut-chest/">hut (ground floor)</a>. This is the <strong>left</strong> chest; on the right - <a href="/en/locks/alberto-mine-upstairs-right-chest/">a separate lock</a> (13 moves).',
+      inside: 'Loot in the left upstairs chest in the mine.',
+      faq: `<details><summary>Is this the downstairs chest?</summary><p>No. Downstairs in the hut - <a href="/en/locks/alberto-mine-hut-chest/">another chest</a> (36 moves).</p></details><details><summary>Where is this config from?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">DTF comment</a>.</p></details><details><summary>How many moves?</summary><p>20 moves (4 plates, 5 links).</p></details>`,
+      credit: 'Config submitted by: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+  },
+  'alberto-mine-upstairs-right-chest': {
+    code: 'UZ1wAFAKxU',
+    ru: {
+      lead: 'Правый сундук наверху в шахте Альберто - всего 13 ходов, один из коротких в каталоге. 5 плиток; слева - <a href="/locks/alberto-mine-upstairs-left-chest/">левый сундук</a> (20 ходов).',
+      where: 'Шахта Альберто - наверху по лестнице. <strong>Правый</strong> сундук; слева <a href="/locks/alberto-mine-upstairs-left-chest/">левый</a>. Внизу в хижине - <a href="/locks/alberto-mine-hut-chest/">сундук 1-го этажа</a>.',
+      inside: 'Лут в правом сундуке наверху.',
+      faq: `<details><summary>Почему так мало ходов?</summary><p>13 ходов - короткий замок (5 плиток, 10 связей). Левый сундук рядом - 20 ходов.</p></details><details><summary>Откуда конфигурация?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">комментарий на DTF</a>.</p></details><details><summary>Сколько ходов?</summary><p>13 ходов.</p></details>`,
+      credit: 'Конфигурацию прислала: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+    en: {
+      lead: 'Right chest upstairs in Alberto\'s mine - only 13 moves, one of the shorter locks in the catalog. 5 plates; on the left - <a href="/en/locks/alberto-mine-upstairs-left-chest/">left chest</a> (20 moves).',
+      where: 'Alberto\'s mine - upstairs by the ladder. <strong>Right</strong> chest; on the left the <a href="/en/locks/alberto-mine-upstairs-left-chest/">left chest</a>. Downstairs in the hut - <a href="/en/locks/alberto-mine-hut-chest/">ground-floor chest</a>.',
+      inside: 'Loot in the right upstairs chest.',
+      faq: `<details><summary>Why so few moves?</summary><p>13 moves - a short lock (5 plates, 10 links). The left chest nearby is 20 moves.</p></details><details><summary>Where is this config from?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">DTF comment</a>.</p></details><details><summary>How many moves?</summary><p>13 moves.</p></details>`,
+      credit: 'Config submitted by: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+  },
+  'cavalorn-storeroom-door': {
+    code: 'cuaSQAAQgoQJQA',
+    ru: {
+      lead: 'Дверь на склад охотника Кавалорна - 41 ход, 6 плиток. Отдельный замок у охотника, не путать с шахтой Альберто.',
+      where: 'Лагерь охотников - дверь на <strong>склад Кавалорна</strong> (охотник). Не сундуки в <a href="/locks/alberto-mine-hut-chest/">шахте Альберто</a>.',
+      inside: 'Склад охотника Кавалорна - припасы и лут за дверью.',
+      faq: `<details><summary>Это шахта Альберто?</summary><p>Нет. Три сундука в шахте Альберто - отдельные карточки (<a href="/locks/alberto-mine-hut-chest/">хижина</a>, <a href="/locks/alberto-mine-upstairs-left-chest/">левый</a>, <a href="/locks/alberto-mine-upstairs-right-chest/">правый</a>).</p></details><details><summary>Откуда конфигурация?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">комментарий на DTF</a>.</p></details><details><summary>Сколько ходов?</summary><p>41 ход (6 плиток, 10 связей).</p></details>`,
+      credit: 'Конфигурацию прислала: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+    en: {
+      lead: "Door to hunter Cavalorn's storeroom - 41 moves, 6 plates. A separate lock at the hunter's camp, not Alberto's mine.",
+      where: 'Hunters\' camp - door to <strong>Cavalorn\'s storeroom</strong>. Not the chests in <a href="/en/locks/alberto-mine-hut-chest/">Alberto\'s mine</a>.',
+      inside: "Cavalorn's storeroom - supplies and loot behind the door.",
+      faq: `<details><summary>Is this Alberto's mine?</summary><p>No. The three chests in Alberto's mine are separate catalog entries (<a href="/en/locks/alberto-mine-hut-chest/">hut</a>, <a href="/en/locks/alberto-mine-upstairs-left-chest/">left</a>, <a href="/en/locks/alberto-mine-upstairs-right-chest/">right</a>).</p></details><details><summary>Where is this config from?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">DTF comment</a>.</p></details><details><summary>How many moves?</summary><p>41 moves (6 plates, 10 links).</p></details>`,
+      credit: 'Config submitted by: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+  },
+  'old-to-new-camp-bandits-chest': {
+    code: 'cOEMSCgBGIQAAA',
+    ru: {
+      lead: 'Сундук рядом с двумя разбойниками на пути из Старого лагеря в Новый - 33 хода. К ним можно не подходить: подойти к сундуку и взломать отдельно.',
+      where: 'Тропа <strong>из Старого лагеря в Новый</strong> - стоят двое разбойников (при разговоре хотят ограбить). Сундук рядом; можно обойти и взломать, не заговаривая.',
+      inside: 'Лут в сундуке у разбойников на дороге между лагерями.',
+      faq: `<details><summary>Обязательно драться?</summary><p>Нет - можно не подходить к разбойникам и просто взломать сундук.</p></details><details><summary>Это путь в Старый лагерь?</summary><p>Нет, наоборот: из <strong>Старого</strong> в <strong>Новый</strong> лагерь (исправление от автора конфигурации).</p></details><details><summary>Откуда конфигурация?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">комментарий на DTF</a>.</p></details><details><summary>Сколько ходов?</summary><p>33 хода (6 плиток, 9 связей).</p></details>`,
+      credit: 'Конфигурацию прислала: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+    en: {
+      lead: 'Chest next to two bandits on the path from the Old Camp to the New Camp - 33 moves. You can skip talking to them and pick the chest separately.',
+      where: 'Trail <strong>from the Old Camp to the New Camp</strong> - two bandits (they want to rob you if you talk). Chest nearby; walk up and pick it without engaging.',
+      inside: 'Loot in the chest by the bandits on the road between camps.',
+      faq: `<details><summary>Do I have to fight?</summary><p>No - you can avoid the bandits and just pick the chest.</p></details><details><summary>Is this the path to the Old Camp?</summary><p>No - the other way: from the <strong>Old</strong> to the <strong>New</strong> Camp (author correction).</p></details><details><summary>Where is this config from?</summary><p><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a>, <a href="https://dtf.ru/games/5121406-kak-vskryt-zamki-v-gothic-1-remake?comment=65516715">DTF comment</a>.</p></details><details><summary>How many moves?</summary><p>33 moves (6 plates, 9 links).</p></details>`,
+      credit: 'Config submitted by: <b><a href="https://dtf.ru/id3493234">nepetacataria · DTF</a></b>',
+    },
+  },
   'gomez-wall-chest': {
     code: 'ZDAkKqACQECQAA',
     ru: {
