@@ -68,6 +68,21 @@ const LOCKS = {
       faq: `<details><summary>Is this the recipe chest for Dexter's quest?</summary><p>No. The recipe is in the chest between laboratory tables on the ground floor (<code>LagFFgA</code>, 15 moves). This bedroom chest is a separate lock with a ring and alchemy items.</p></details><details><summary>What does the purification ring give?</summary><p>Fire protection +5, wind +3, ice +3, energy +3.</p></details><details><summary>How many moves?</summary><p>60 moves (6 plates, 7 links). The solver shows the path step by step.</p></details>`,
     },
   },
+  'swamp-camp-forge-chest': {
+    code: 'YQY0gBgAAGACIE',
+    ru: {
+      lead: 'Сундук в кузнице Болотного лагеря: 41 ход и 6 плиток. Внутри одноручный топор на 29 урона (рассечением) и пачка кузнечных материалов - сталь, дуб, кожа, железо и ива.',
+      where: 'Кузница в Болотном лагере - сундук стоит прямо в кузнечной. Это не сундуки лаборатории Кор Галома и не кладовые Нового лагеря.',
+      inside: 'Одноручный топор - 29 урона рассечением, требует 23 силы. Плюс 2 стали, 3 древесины дуба, 3 полоски кожи, 3 железа и 4 древесины ивы.',
+      faq: `<details><summary>Какой топор внутри?</summary><p>Одноручный топор на 29 урона рассечением. Чтобы экипировать, нужно 23 силы.</p></details><details><summary>Где кузница в Болотном лагере?</summary><p>В самом Болотном лагере - отдельное здание кузницы, не лаборатория Кор Галома.</p></details><details><summary>Сколько ходов?</summary><p>41 ход (6 плиток, 8 связей). Решатель показывает путь по шагам.</p></details>`,
+    },
+    en: {
+      lead: 'The chest in the Swamp Camp forge: 41 moves across 6 plates. Inside are a one-handed axe with 29 slash damage and a bundle of smithing materials - steel, oak, leather, iron, and willow wood.',
+      where: 'The forge in the Swamp Camp - the chest sits right in the smithy. Not the Cor Galom laboratory chests or New Camp storerooms.',
+      inside: 'A one-handed axe - 29 slash damage, requires 23 Strength. Plus 2 steel, 3 oak wood, 3 leather strips, 3 iron, and 4 willow wood.',
+      faq: `<details><summary>What axe is inside?</summary><p>A one-handed axe with 29 slash damage. You need 23 Strength to equip it.</p></details><details><summary>Where is the forge in the Swamp Camp?</summary><p>In the Swamp Camp itself - a separate forge building, not Cor Galom's laboratory.</p></details><details><summary>How many moves?</summary><p>41 moves (6 plates, 8 links). The solver shows the path step by step.</p></details>`,
+    },
+  },
   'rice-lord-storeroom': {
     code: 'RY2VUBQAiA',
     ru: {
