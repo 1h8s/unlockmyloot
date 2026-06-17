@@ -2542,8 +2542,13 @@ var PV_ON = true;
 try { PLATE_MODE = localStorage.getItem('uml-dirmode') !== 'pin'; } catch (e) {}
 
 /* visual step-by-step mode */
-var SOL_MODE = 'list';
-try { if (localStorage.getItem('uml-solmode') === 'play') SOL_MODE = 'play'; } catch (e) {}
+var SOL_MODE = 'play';
+try {
+  var solModePref = localStorage.getItem('uml-solmode');
+  var solModeExplicit = localStorage.getItem('uml-solmode-explicit') === '1';
+  if (solModePref === 'play') SOL_MODE = 'play';
+  else if (solModePref === 'list' && solModeExplicit) SOL_MODE = 'list';
+} catch (e) {}
 var vpIdx = 0, vpLayers = [], vpPlates = [], vpPins = [], vpGroups = [], vpStates = [];
 var VP_PW = 150, VP_MARG = 14, VP_CENTER = 4, VP_STEP = (VP_PW - 2 * VP_MARG) / 6;
 
@@ -2604,16 +2609,21 @@ function renderSolution(fresh) {
     renderSolution(false);
   };
   var mbs = body.querySelectorAll('.solmode-b');
-  for (var mi = 0; mi < mbs.length; mi++) mbs[mi].onclick = function () { setSolMode(this.getAttribute('data-mode')); };
+  for (var mi = 0; mi < mbs.length; mi++) mbs[mi].onclick = function () { setSolMode(this.getAttribute('data-mode'), true); };
   if (fresh) vpIdx = 0;
   buildPlayer();
-  setSolMode(SOL_MODE);
+  setSolMode(SOL_MODE, false);
 }
 
 /* ---------- visual step-by-step mode ---------- */
-function setSolMode(mode) {
+function setSolMode(mode, explicit) {
   SOL_MODE = (mode === 'play') ? 'play' : 'list';
-  try { localStorage.setItem('uml-solmode', SOL_MODE); } catch (e) {}
+  if (explicit) {
+    try {
+      localStorage.setItem('uml-solmode', SOL_MODE);
+      localStorage.setItem('uml-solmode-explicit', '1');
+    } catch (e) {}
+  }
   var list = document.getElementById('solList'), play = document.getElementById('solPlayer');
   var bs = document.querySelectorAll('.solmode-b');
   for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-mode') === SOL_MODE);
