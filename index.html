@@ -608,6 +608,16 @@
     color:var(--accent-ink);font-size:14.5px;
     animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
+  .suggest-main{display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1 1 340px;}
+  .suggest-copy{display:block;min-width:0;}
+  .beta-chip{
+    flex:0 0 auto;display:inline-flex;align-items:center;
+    font-family:var(--mono);font-size:10.5px;font-weight:700;line-height:1;
+    letter-spacing:.12em;text-transform:uppercase;
+    padding:5px 7px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--accent-border);
+    color:var(--accent-ink);
+  }
   .suggest b{font-weight:600;}
   .sg-act{display:flex;gap:8px;}
   .suggest .btn{padding:8px 14px;font-size:13.5px;}
@@ -618,7 +628,9 @@
     color:var(--accent-ink);font-size:14px;line-height:1.5;
     animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
+  .wizsuggest-head{display:flex;align-items:flex-start;gap:10px;margin:0 0 10px;}
   .wizsuggest p{margin:0 0 10px;}
+  .wizsuggest-head p{margin:0;}
   .wizsuggest b{font-weight:600;}
   .wizsuggest .btn{width:100%;}
   /* приглашение к помощнику, когда автоподсказки нет */
@@ -2165,12 +2177,12 @@ function wizMaybeSuggest() {
     var lc = LOCK_COUNTS[d.code];
     var lcStr = (typeof lc === 'number') ? ' Открыт <b>' + lc + '</b> раз.' : '';
     var lead = d.name
-      ? 'Похоже на замок: <b>' + d.name + '</b>.' + lcStr + ' Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.'
-      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+      ? 'Похоже на замок: <b>' + d.name + '</b>.' + lcStr + ' Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.'
+      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
     el.innerHTML = '<div class="wizsuggest">' +
-      '<p>' + lead + ' ' +
-      '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p>' +
-      '<button class="btn primary" type="button" id="wizSgYes">Подставить бета-связи и продолжить</button></div>';
+      '<div class="wizsuggest-head"><span class="beta-chip">Бета</span><p>' + lead + ' ' +
+      '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p></div>' +
+      '<button class="btn primary" type="button" id="wizSgYes">Подставить связи и продолжить</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
       var n = applySuggestedLinks(d.code);
       if (n < 0) return;
@@ -3212,14 +3224,14 @@ function renderSuggestBox(d) {
   var cntStr = (typeof cnt === 'number') ? ' Открыт <b>' + cnt + '</b> раз.' : '';
   var msg;
   if (d.name) {
-    msg = 'Похоже на замок: <b>' + d.name + '</b>.' + cntStr + ' Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+    msg = 'Похоже на замок: <b>' + d.name + '</b>.' + cntStr + ' Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   } else {
-    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   }
   box.innerHTML = '<div class="suggest">' +
-    '<span>' + msg + '</span>' +
+    '<span class="suggest-main"><span class="beta-chip">Бета</span><span class="suggest-copy">' + msg + '</span></span>' +
     '<span class="sg-act">' +
-    '<button class="btn" type="button" id="sgYes">Подставить бета</button>' +
+    '<button class="btn" type="button" id="sgYes">Подставить</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Сам введу</button>' +
     '</span></div>';
   box.querySelector('#sgYes').onclick = function () {

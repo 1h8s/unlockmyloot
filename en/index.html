@@ -561,6 +561,16 @@
     color:var(--accent-ink);font-size:14.5px;
     animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
+  .suggest-main{display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1 1 340px;}
+  .suggest-copy{display:block;min-width:0;}
+  .beta-chip{
+    flex:0 0 auto;display:inline-flex;align-items:center;
+    font-family:var(--mono);font-size:10.5px;font-weight:700;line-height:1;
+    letter-spacing:.12em;text-transform:uppercase;
+    padding:5px 7px;border-radius:999px;
+    background:var(--surface);border:1px solid var(--accent-border);
+    color:var(--accent-ink);
+  }
   .suggest b{font-weight:600;}
   .sg-act{display:flex;gap:8px;}
   .suggest .btn{padding:8px 14px;font-size:13.5px;}
@@ -571,7 +581,9 @@
     color:var(--accent-ink);font-size:14.5px;
     animation:suggestin .55s var(--ease) backwards;will-change:opacity,transform;
   }
+  .wizsuggest-head{display:flex;align-items:flex-start;gap:10px;margin:0 0 10px;}
   .wizsuggest p{margin:0 0 10px;}
+  .wizsuggest-head p{margin:0;}
   .wizsuggest b{font-weight:600;}
   .wizsuggest .btn{width:100%;}
   /* nudge toward the wizard when no autosuggest matched */
@@ -2102,15 +2114,15 @@ function wizMaybeSuggest() {
     if (!el || !matrixNeedsSuggest()) return;
     var unk = matrixUnknownCount();
     el.innerHTML = '<div class="wizsuggest">' +
-      '<p>' + (function () {
+      '<div class="wizsuggest-head"><span class="beta-chip">Beta</span><p>' + (function () {
         var lc = LOCK_COUNTS[d.code];
         var lcStr = (typeof lc === 'number') ? ' Opened <b>' + lc + '</b> times.' : '';
         return d.name
-          ? 'Looks like: <b>' + d.name + '</b>.' + lcStr + ' Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.'
-          : 'This layout was already cracked <b>' + d.count + '</b> times. Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
+          ? 'Looks like: <b>' + d.name + '</b>.' + lcStr + ' Check the matrix, and if a move differs in game, report it in the DTF comments or DM me.'
+          : 'This layout was already cracked <b>' + d.count + '</b> times. Check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
       })() + ' ' +
-      '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
-      '<button class="btn primary" type="button" id="wizSgYes">Fill beta links and continue</button></div>';
+      '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p></div>' +
+      '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
       var n = applySuggestedLinks(d.code);
       if (n < 0) return;
@@ -3120,14 +3132,14 @@ function renderSuggestBox(d) {
   var cntStr = (typeof cnt === 'number') ? ' Opened <b>' + cnt + '</b> times.' : '';
   var msg;
   if (d.name) {
-    msg = 'Looks like: <b>' + d.name + '</b>.' + cntStr + ' Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
+    msg = 'Looks like: <b>' + d.name + '</b>.' + cntStr + ' Check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
   } else {
-    msg = 'This layout was already cracked <b>' + d.count + '</b> times. Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
+    msg = 'This layout was already cracked <b>' + d.count + '</b> times. Check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
   }
   box.innerHTML = '<div class="suggest">' +
-    '<span>' + msg + '</span>' +
+    '<span class="suggest-main"><span class="beta-chip">Beta</span><span class="suggest-copy">' + msg + '</span></span>' +
     '<span class="sg-act">' +
-    '<button class="btn" type="button" id="sgYes">Fill beta</button>' +
+    '<button class="btn" type="button" id="sgYes">Fill in</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
     '</span></div>';
   box.querySelector('#sgYes').onclick = function () {
