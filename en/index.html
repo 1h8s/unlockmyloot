@@ -2106,20 +2106,20 @@ function wizMaybeSuggest() {
         var lc = LOCK_COUNTS[d.code];
         var lcStr = (typeof lc === 'number') ? ' Opened <b>' + lc + '</b> times.' : '';
         return d.name
-          ? 'This combination was entered before: <b>' + d.name + '</b>.' + lcStr + ' Fill the verified links and finish the rest here?'
-          : d.popular
-            ? 'Popular lock.' + (lcStr || ' It has been cracked many times.') + ' Fill the verified links and finish the rest here?'
-            : 'This layout was already cracked <b>' + d.count + '</b> times. Fill in known links and finish the rest here?';
+          ? 'Looks like: <b>' + d.name + '</b>.' + lcStr + ' Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.'
+          : 'This layout was already cracked <b>' + d.count + '</b> times. Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
       })() + ' ' +
       '(<b>' + unk + '</b> unknown link' + (unk === 1 ? '' : 's') + ' left)</p>' +
-      '<button class="btn primary" type="button" id="wizSgYes">Fill links and continue</button></div>';
+      '<button class="btn primary" type="button" id="wizSgYes">Fill beta links and continue</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
       var n = applySuggestedLinks(d.code);
       if (n < 0) return;
       LINK_WIZ.sim = pins.slice();
       LINK_WIZ.confirmedZero = WIZ_MEM.zero;
       LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
-      toast('Filled ' + n + ' links - ' + matrixUnknownCount() + ' still unknown');
+      toast(SUGGEST_CONFLICTS
+        ? 'Filled ' + n + ', but ' + SUGGEST_CONFLICTS + ' cells differ from your marks'
+        : 'Filled ' + n + ' links - ' + matrixUnknownCount() + ' still unknown');
       if (matrixUnknownCount() === 0) {
         wizRenderDone();
         return;
@@ -2922,6 +2922,7 @@ function counterLoad() {
 }
 var REPORTED_LOCKS = {};
 var SUGGESTED_CODE = null;
+var SUGGEST_CONFLICTS = 0;
 function pinsKeyOf(arr) { return N + '.' + arr.join(''); }
 function pinsKeyStr() { return pinsKeyOf(pins); }
 function lockBasePins() {
@@ -3002,20 +3003,15 @@ var KNOWN_LOCKS = [
   { fp: '6.216547', code: 'Yix4ABIAASCSAE', name: "Diego's chest" },
   { fp: '6.524145', code: 'aFhwAAABhgAAKY', name: "Grim's chest" },
   { fp: '6.312721', code: 'ZA4gEWAAAAASAQ', name: "Mercenary's chest (by Grim)" },
-  { fp: '5.71225', code: 'TAmBLEwMAE', name: 'Popular lock' },
   { fp: '5.13765', code: 'ULWBAQhAKg', name: "Chest in Alberto's mine hut" },
   { fp: '4.1211', code: 'MEAIAho', name: "Left chest upstairs in Alberto's mine" },
   { fp: '5.17464', code: 'UZ1wAFAKxU', name: "Right chest upstairs in Alberto's mine" },
   { fp: '6.245755', code: 'cuaSQAAQgoQJQA', name: "Hunter Cavalorn's storeroom door" },
   { fp: '6.145214', code: 'cOEMSCgBGIQAAA', name: 'Chest by bandits on the path to the New Camp' }
 ];
-/* Popular nameless layouts: leader links from the crowd pool. Suggested instantly
-   like KNOWN_LOCKS, but the plate shows an open-count instead of a name. */
-var POPULAR_LOCKS = [
-  { fp: '6.536727', code: 'aK44QgASERgACA' },
-  { fp: '6.317432', code: 'ZDNGAAECkAAAIA' },
-  { fp: '6.226647', code: 'Ym14CAIACQKQgg' }
-];
+/* Nameless popular layouts are not suggested from the client: identical pins can
+   have different links, so we wait for a confident /suggest response. */
+var POPULAR_LOCKS = [];
 var LOCK_COUNTS = {};
 function loadLockCounts() {
   fetch(COUNTER_API + '/locks?limit=100')
@@ -3068,14 +3064,17 @@ function applySuggestedLinks(code) {
   }
   var decodedLink = link.map(function (r) { return r.slice(); });
   wizEnsureZero();
-  var applied = 0, filled = {};
+  var applied = 0, filled = {}, conflicts = 0;
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       if (i === j) continue;
       var known = savedLink[i][j] !== 0 ||
         (savedZero && savedZero[i][j]);
-      if (known) continue;
       var v = decodedLink[i][j];
+      if (known) {
+        if (savedLink[i][j] !== v) conflicts++;
+        continue;
+      }
       savedLink[i][j] = v;
       WIZ_MEM.zero[i][j] = (v === 0);
       if (v !== 0) filled[i + ',' + j] = true;
@@ -3091,6 +3090,7 @@ function applySuggestedLinks(code) {
     updateFlipLabel();
   }
   SUGGESTED_CODE = code;
+  SUGGEST_CONFLICTS = conflicts;
   FILL_CELLS = filled;
   renderCount(); renderPins(); renderDeps();
   FILL_CELLS = null;
@@ -3120,23 +3120,23 @@ function renderSuggestBox(d) {
   var cntStr = (typeof cnt === 'number') ? ' Opened <b>' + cnt + '</b> times.' : '';
   var msg;
   if (d.name) {
-    msg = 'This combination was entered before: <b>' + d.name + '</b>.' + cntStr + ' Fill in the verified links?';
-  } else if (d.popular) {
-    msg = 'Popular lock.' + (cntStr || ' It has been cracked many times.') + ' Fill in the verified links?';
+    msg = 'Looks like: <b>' + d.name + '</b>.' + cntStr + ' Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
   } else {
-    msg = 'This layout was already cracked <b>' + d.count + '</b> times. Fill in the known links?';
+    msg = 'This layout was already cracked <b>' + d.count + '</b> times. Auto-fill is still beta: check the matrix, and if a move differs in game, report it in the DTF comments or DM me.';
   }
   box.innerHTML = '<div class="suggest">' +
     '<span>' + msg + '</span>' +
     '<span class="sg-act">' +
-    '<button class="btn" type="button" id="sgYes">Fill in</button>' +
+    '<button class="btn" type="button" id="sgYes">Fill beta</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
     '</span></div>';
   box.querySelector('#sgYes').onclick = function () {
     var n = applySuggestedLinks(d.code);
     if (n >= 0) {
       box.innerHTML = '';
-      toast('Links filled in - check the matrix and hit Pick lock');
+      toast(SUGGEST_CONFLICTS
+        ? SUGGEST_CONFLICTS + ' cells differ from your marks - check the matrix'
+        : 'Links filled in - check the matrix and hit Pick lock');
     }
   };
   box.querySelector('#sgNo').onclick = function () {

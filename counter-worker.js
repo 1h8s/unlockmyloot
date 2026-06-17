@@ -203,7 +203,8 @@ export class Counter {
       });
     }
     /* Подсказка связей: по штифтам отдаём вариант-лидер, только если он
-       уверенный (вводили >= 3 раз и >= 60% всех вводов этой расстановки). */
+       уверенный. Одинаковые штифты часто бывают у разных замков, поэтому лучше
+       не подсказать ничего, чем подставить чужие связи. */
     if (path === "/suggest" && req.method === "GET") {
       var qp = url.searchParams.get("pins") || "";
       if (!/^[3-8]\.[1-7]{3,8}$/.test(qp)) {
@@ -217,7 +218,7 @@ export class Counter {
         sum += idx2[c2];
         if (idx2[c2] > bestC) { bestC = idx2[c2]; bestCode = c2; }
       }
-      if (!bestCode || bestC < 3 || bestC / sum <= 0.6) {
+      if (!bestCode || bestC < 5 || bestC / sum < 0.85) {
         return new Response(JSON.stringify({ found: false }), {
           headers: { "Content-Type": "application/json" }
         });

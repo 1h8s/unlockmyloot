@@ -2165,21 +2165,21 @@ function wizMaybeSuggest() {
     var lc = LOCK_COUNTS[d.code];
     var lcStr = (typeof lc === 'number') ? ' Открыт <b>' + lc + '</b> раз.' : '';
     var lead = d.name
-      ? 'Эту комбинацию уже вводили: <b>' + d.name + '</b>.' + lcStr + ' Подставить проверенные связи и добить остальное здесь?'
-      : d.popular
-        ? 'Популярный замок.' + (lcStr || ' Его уже не раз вскрывали.') + ' Подставить проверенные связи и добить остальное здесь?'
-        : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи и добить остальное здесь?';
+      ? 'Похоже на замок: <b>' + d.name + '</b>.' + lcStr + ' Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.'
+      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
     el.innerHTML = '<div class="wizsuggest">' +
       '<p>' + lead + ' ' +
       '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p>' +
-      '<button class="btn primary" type="button" id="wizSgYes">Подставить связи и продолжить</button></div>';
+      '<button class="btn primary" type="button" id="wizSgYes">Подставить бета-связи и продолжить</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
       var n = applySuggestedLinks(d.code);
       if (n < 0) return;
       LINK_WIZ.sim = pins.slice();
       LINK_WIZ.confirmedZero = WIZ_MEM.zero;
       LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
-      toast('Подставлено связей: ' + n + ' - осталось проверить ' + matrixUnknownCount());
+      toast(SUGGEST_CONFLICTS
+        ? 'Подставлено: ' + n + ', но ' + SUGGEST_CONFLICTS + ' яч. отличались от твоих отметок'
+        : 'Подставлено связей: ' + n + ' - осталось проверить ' + matrixUnknownCount());
       if (matrixUnknownCount() === 0) {
         wizRenderDone();
         return;
@@ -3000,6 +3000,7 @@ function counterLoad() {
 }
 var REPORTED_LOCKS = {};
 var SUGGESTED_CODE = null;
+var SUGGEST_CONFLICTS = 0;
 function pinsKeyOf(arr) { return N + '.' + arr.join(''); }
 function pinsKeyStr() { return pinsKeyOf(pins); }
 /* исходная расстановка замка: до того как помощник сдвинул штифты (wizSyncPins).
@@ -3089,20 +3090,15 @@ var KNOWN_LOCKS = [
   { fp: '6.216547', code: 'Yix4ABIAASCSAE', name: 'Сундук Диего' },
   { fp: '6.524145', code: 'aFhwAAABhgAAKY', name: 'Сундук Грима' },
   { fp: '6.312721', code: 'ZA4gEWAAAAASAQ', name: 'Сундук наёмника (у Грима)' },
-  { fp: '5.71225', code: 'TAmBLEwMAE', name: 'Популярный замок' },
   { fp: '5.13765', code: 'ULWBAQhAKg', name: 'Сундук в хижине шахты Альберто' },
   { fp: '4.1211', code: 'MEAIAho', name: 'Левый сундук наверху в шахте Альберто' },
   { fp: '5.17464', code: 'UZ1wAFAKxU', name: 'Правый сундук наверху в шахте Альберто' },
   { fp: '6.245755', code: 'cuaSQAAQgoQJQA', name: 'Дверь на склад охотника Кавалорна' },
   { fp: '6.145214', code: 'cOEMSCgBGIQAAA', name: 'Сундук у разбойников на пути в Новый лагерь' }
 ];
-/* Популярные у игроков расстановки без названия: связи-лидеры по копилке.
-   Подсказываем сразу, как KNOWN_LOCKS, но в плашке показываем счётчик, а не имя. */
-var POPULAR_LOCKS = [
-  { fp: '6.536727', code: 'aK44QgASERgACA' },
-  { fp: '6.317432', code: 'ZDNGAAECkAAAIA' },
-  { fp: '6.226647', code: 'Ym14CAIACQKQgg' }
-];
+/* Безымянные популярные расстановки не подставляем с клиента: одинаковые штифты
+   часто имеют разные связи, поэтому ждём уверенный ответ /suggest. */
+var POPULAR_LOCKS = [];
 var LOCK_COUNTS = {};
 function loadLockCounts() {
   fetch(COUNTER_API + '/locks?limit=100')
@@ -3160,14 +3156,17 @@ function applySuggestedLinks(code) {
   }
   var decodedLink = link.map(function (r) { return r.slice(); });
   wizEnsureZero();
-  var applied = 0, filled = {};
+  var applied = 0, filled = {}, conflicts = 0;
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
       if (i === j) continue;
       var known = savedLink[i][j] !== 0 ||
         (savedZero && savedZero[i][j]);
-      if (known) continue;
       var v = decodedLink[i][j];
+      if (known) {
+        if (savedLink[i][j] !== v) conflicts++;
+        continue;
+      }
       savedLink[i][j] = v;
       WIZ_MEM.zero[i][j] = (v === 0);
       if (v !== 0) filled[i + ',' + j] = true;
@@ -3183,6 +3182,7 @@ function applySuggestedLinks(code) {
     updateFlipLabel();
   }
   SUGGESTED_CODE = code;
+  SUGGEST_CONFLICTS = conflicts;
   FILL_CELLS = filled;
   renderCount(); renderPins(); renderDeps();
   FILL_CELLS = null;
@@ -3212,22 +3212,22 @@ function renderSuggestBox(d) {
   var cntStr = (typeof cnt === 'number') ? ' Открыт <b>' + cnt + '</b> раз.' : '';
   var msg;
   if (d.name) {
-    msg = 'Эту комбинацию уже вводили: <b>' + d.name + '</b>.' + cntStr + ' Подставить проверенные связи?';
-  } else if (d.popular) {
-    msg = 'Популярный замок.' + (cntStr || ' Его уже не раз вскрывали.') + ' Подставить проверенные связи?';
+    msg = 'Похоже на замок: <b>' + d.name + '</b>.' + cntStr + ' Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   } else {
-    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Подставить известные связи?';
+    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Автоподстановка связей пока в бете: проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   }
   box.innerHTML = '<div class="suggest">' +
     '<span>' + msg + '</span>' +
     '<span class="sg-act">' +
-    '<button class="btn" type="button" id="sgYes">Подставить</button>' +
+    '<button class="btn" type="button" id="sgYes">Подставить бета</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Сам введу</button>' +
     '</span></div>';
   box.querySelector('#sgYes').onclick = function () {
     if (applySuggestedLinks(d.code) >= 0) {
       box.innerHTML = '';
-      toast('Связи подставлены - проверь матрицу и жми «Взломать»');
+      toast(SUGGEST_CONFLICTS
+        ? 'Есть отличия от твоих отметок: ' + SUGGEST_CONFLICTS + ' яч. Проверь матрицу'
+        : 'Связи подставлены - проверь матрицу и жми «Взломать»');
     }
   };
   box.querySelector('#sgNo').onclick = function () {
