@@ -4102,10 +4102,11 @@ var TRACK_SID = (function () {
   } catch (e) { return 'anon'; }
 })();
 var TRACK_Q = [], TRACK_TIMER = 0, TRACK_PINS_SENT = false;
+var TRACK_FLUSH_NOW = { solve_ok: 1, solve_fail: 1, solve_empty: 1, wizard_open: 1, wizard_done: 1, wizard_done_partial: 1 };
 function trackEvent(name) {
   if (!TRACK_EVENTS[name]) return;
   TRACK_Q.push({ e: name, t: Date.now() });
-  if (TRACK_Q.length >= 8) trackFlush();
+  if (TRACK_Q.length >= 8 || TRACK_FLUSH_NOW[name]) trackFlush();
   else if (!TRACK_TIMER) TRACK_TIMER = setTimeout(trackFlush, 4000);
 }
 function trackFlush() {
