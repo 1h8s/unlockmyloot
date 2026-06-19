@@ -131,8 +131,8 @@ export class Counter {
 
   async recordEvents(sid, events) {
     if (!Array.isArray(events) || !events.length) {
-      return { status: 400, body: { error: "bad_events" } };
-    }
+    return { status: 400, body: { error: "bad_events" } };
+  }
     if (events.length > 30) events = events.slice(0, 30);
     sid = String(sid || "").slice(0, 24);
     var n = 0;
@@ -425,7 +425,7 @@ export default {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");
         var id = env.COUNTER_DO.idFromName("global");
         var stub = env.COUNTER_DO.get(id);
-        var innerReq = new Request(req.url, { method: req.method, headers: req.headers });
+        var innerReq = new Request(req.url, req);
         var inner = await stub.fetch(innerReq);
         var body = await inner.text();
         return new Response(body, { status: inner.status, headers: cors });
