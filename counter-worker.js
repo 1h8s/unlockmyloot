@@ -4,6 +4,7 @@
  * POST /opened  -> инкремент, {"opened": N+1}
  * POST /events  -> {"sid":"...","events":[{"e":"solve_ok","t":...}]}
  * GET  /events?secret=... -> сводка воронки (STATS_SECRET в env воркера)
+ * POST /feedback/reset?secret=... -> сброс счётчиков оценок (STATS_SECRET)
  *
  * Счётчик живёт в Durable Object (без дневного лимита KV put).
  * При первом запуске подтягивает значение из KV-ключа "opened".
@@ -232,6 +233,18 @@ export class Counter {
     };
   }
 
+  async bumpEventDelta(name, delta, ts) {
+    if (!TRACK_EVENTS[name] || !delta) return;
+    var day = utcDayKey(ts);
+    var totalKey = "ev:all:" + name;
+    var dayKey = "ev:d:" + day + ":" + name;
+    var total = (await this.state.storage.get(totalKey)) || 0;
+    var dayN = (await this.state.storage.get(dayKey)) || 0;
+    await this.state.storage.put(totalKey, Math.max(0, total + delta));
+    await this.state.storage.put(dayKey, Math.max(0, dayN + delta));
+    if (delta > 0) await this.state.storage.put("ev:day:" + day, 1);
+  }
+
   async recordFeedback(ip, vote) {
     ip = String(ip || "").trim();
     if (!ip || ip.length > 64) {
@@ -241,15 +254,38 @@ export class Counter {
       return { status: 400, body: { ok: false, error: "bad_vote" } };
     }
     var key = "fb:ip:" + ip;
-    if (await this.state.storage.get(key)) {
-      return { status: 200, body: { ok: false, reason: "already" } };
+    var prev = await this.state.storage.get(key);
+    if (prev === vote) {
+      return { status: 200, body: { ok: true, vote: vote, same: true } };
+    }
+    var now = Date.now();
+    if (prev) {
+      var oldCk = prev === "up" ? "fb:all:up" : "fb:all:down";
+      var oldN = (await this.state.storage.get(oldCk)) || 0;
+      await this.state.storage.put(oldCk, Math.max(0, oldN - 1));
+      await this.bumpEventDelta(prev === "up" ? "feedback_up" : "feedback_down", -1, now);
     }
     await this.state.storage.put(key, vote);
     var ck = vote === "up" ? "fb:all:up" : "fb:all:down";
     var n = (await this.state.storage.get(ck)) || 0;
     await this.state.storage.put(ck, n + 1);
-    await this.bumpEvent(vote === "up" ? "feedback_up" : "feedback_down", Date.now());
-    return { status: 200, body: { ok: true } };
+    await this.bumpEvent(vote === "up" ? "feedback_up" : "feedback_down", now);
+    return { status: 200, body: { ok: true, vote: vote, changed: !!prev } };
+  }
+
+  async resetFeedback(secret) {
+    if (!secret || secret !== this.env.STATS_SECRET) {
+      return { status: 403, body: { error: "forbidden" } };
+    }
+    var del = [];
+    var ips = await this.state.storage.list({ prefix: "fb:ip:" });
+    ips.forEach(function (_v, k) { del.push(k); });
+    for (var i = 0; i < del.length; i++) await this.state.storage.delete(del[i]);
+    await this.state.storage.put("fb:all:up", 0);
+    await this.state.storage.put("fb:all:down", 0);
+    await this.state.storage.put("ev:all:feedback_up", 0);
+    await this.state.storage.put("ev:all:feedback_down", 0);
+    return { status: 200, body: { ok: true, deleted_ips: del.length } };
   }
 
   async feedbackStatus(ip) {
@@ -446,6 +482,14 @@ export class Counter {
         headers: { "Content-Type": "application/json" }
       });
     }
+    if (path === "/feedback/reset" && req.method === "POST") {
+      var fbResetSecret = url.searchParams.get("secret") || req.headers.get("X-Stats-Secret") || "";
+      var fbReset = await this.resetFeedback(fbResetSecret);
+      return new Response(JSON.stringify(fbReset.body), {
+        status: fbReset.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
   }
@@ -470,7 +514,8 @@ export default {
       (url.pathname === "/suggest" && req.method === "GET") ||
       (url.pathname === "/purge-locks" && req.method === "POST") ||
       (url.pathname === "/events" && (req.method === "GET" || req.method === "POST")) ||
-      (url.pathname === "/feedback" && (req.method === "GET" || req.method === "POST"))
+      (url.pathname === "/feedback" && (req.method === "GET" || req.method === "POST")) ||
+      (url.pathname === "/feedback/reset" && req.method === "POST")
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");

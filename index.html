@@ -810,14 +810,16 @@
   .vp-fb-btn:disabled{opacity:.55;cursor:default;}
   .vp-fb-up:hover:not(:disabled){border-color:var(--accent-border);background:var(--accent-soft);}
   .vp-fb-down:hover:not(:disabled){border-color:var(--danger-border);background:var(--danger-soft);}
+  .vp-fb-btn--sel.vp-fb-up{border-color:var(--accent-border);background:var(--accent-soft);box-shadow:0 0 0 2px rgba(52,168,131,.25);}
+  .vp-fb-btn--sel.vp-fb-down{border-color:var(--danger-border);background:var(--danger-soft);box-shadow:0 0 0 2px rgba(232,93,106,.2);}
+  .vp-fb-hint{margin:10px 0 0;font-size:12px;color:var(--ink-3);}
+  .vp-fb-hint[hidden]{display:none!important;}
   .vp-fb-thanks{
-    display:inline-block;margin:0;padding:11px 28px;border-radius:12px;
+    display:inline-block;margin:8px 0 0;padding:8px 20px;border-radius:12px;
     background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-ink);
-    font-weight:600;font-size:15px;opacity:0;transform:scale(.88);max-height:0;
-    transition:opacity .45s var(--ease),transform .45s var(--ease),max-height .45s var(--ease);}
-  .vp-feedback--voted .vp-fb-q{opacity:0;max-height:0;margin:0;pointer-events:none;}
-  .vp-feedback--voted .vp-fb-act{opacity:0;max-height:0;transform:scale(.92);pointer-events:none;}
-  .vp-feedback--voted .vp-fb-thanks{opacity:1;transform:scale(1);max-height:48px;}
+    font-weight:600;font-size:14px;opacity:0;transform:scale(.92);max-height:0;
+    transition:opacity .35s var(--ease),transform .35s var(--ease),max-height .35s var(--ease);}
+  .vp-feedback--flash .vp-fb-thanks{opacity:1;transform:scale(1);max-height:40px;}
   @media(prefers-reduced-motion:reduce){
     .vp-plate,.vp-pin,.vp-layer,.vp-bar i{transition-duration:.001s!important;}
     .vp.show{animation:none!important;}
@@ -931,7 +933,6 @@
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
 
-  /* 50k celebration slide-in + confetti (off)
   .fixnote{
     position:fixed;right:20px;bottom:20px;z-index:55;
     width:min(340px,calc(100vw - 32px));
@@ -958,8 +959,7 @@
   }
   .fixnote-title{font-weight:600;font-size:15px;letter-spacing:-.02em;line-height:1.3;}
   .fixnote-body{color:var(--ink-2);font-size:13.5px;line-height:1.45;margin-top:6px;}
-  .confetti{position:fixed;inset:0;z-index:65;pointer-events:none;width:100%;height:100%;}
-  */
+  @media(prefers-reduced-motion:reduce){.fixnote{transition:none;}}
 
   @media(max-width:860px){
     .hero{padding:48px 0 80px;}
@@ -1421,6 +1421,12 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<aside class="fixnote" id="revertNote" role="status" aria-live="polite" hidden>
+  <button class="fixnote-close" id="revertNoteClose" type="button" aria-label="Закрыть">&times;</button>
+  <div class="fixnote-tag">Обновление</div>
+  <p class="fixnote-title">Вернули привычный ввод</p>
+  <p class="fixnote-body">Увидел, что прошлое обновление не всем зашло — откатил обратно. Спасибо, что оставляете обратную связь!</p>
+</aside>
 <!-- 50k celebration + confetti (off)
 <aside class="fixnote" id="fixNote" role="status" aria-live="polite" hidden>
   <button class="fixnote-close" id="fixNoteClose" type="button" aria-label="Закрыть">&times;</button>
@@ -2778,6 +2784,7 @@ function buildPlayer() {
           '<button class="vp-fb-btn vp-fb-up" id="vpFbUp" type="button">Да</button>' +
           '<button class="vp-fb-btn vp-fb-down" id="vpFbDn" type="button">Нет</button>' +
         '</div>' +
+        '<p class="vp-fb-hint" id="vpFbHint" hidden>Оценку можно изменить</p>' +
         '<p class="vp-fb-thanks" id="vpFbThanks">Спасибо!</p>' +
       '</div>' +
     '</div>';
@@ -2806,65 +2813,67 @@ function buildPlayer() {
   document.getElementById('vpFbDn').onclick = function () { vpSubmitFeedback('down'); };
 }
 
-var VP_FB_KEY = 'uml-fb-voted';
 var vpFbChecked = false;
+var vpCurrentVote = null;
+var vpFbFlashTimer = 0;
 
-function vpHasVoted() {
-  try { return !!localStorage.getItem(VP_FB_KEY); } catch (e) { return false; }
-}
-
-function vpMarkVoted() {
-  try { localStorage.setItem(VP_FB_KEY, '1'); } catch (e) {}
+function vpApplyVote(vote) {
+  vpCurrentVote = vote || null;
+  var up = document.getElementById('vpFbUp');
+  var dn = document.getElementById('vpFbDn');
+  var hint = document.getElementById('vpFbHint');
+  if (up) up.classList.toggle('vp-fb-btn--sel', vote === 'up');
+  if (dn) dn.classList.toggle('vp-fb-btn--sel', vote === 'down');
+  if (hint) hint.hidden = !vote;
 }
 
 function vpHideFeedback() {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
   el.hidden = true;
-  el.classList.remove('vp-feedback--voted');
+  el.classList.remove('vp-feedback--flash');
 }
 
-function vpShowThanks() {
+function vpShowFeedback() {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
   el.hidden = false;
-  el.classList.add('vp-feedback--voted');
-  vpMarkVoted();
 }
 
-function vpShowQuestion() {
+function vpFlashThanks() {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
-  el.hidden = false;
-  el.classList.remove('vp-feedback--voted');
+  clearTimeout(vpFbFlashTimer);
+  el.classList.add('vp-feedback--flash');
+  vpFbFlashTimer = setTimeout(function () { el.classList.remove('vp-feedback--flash'); }, 1400);
 }
 
 function vpSubmitFeedback(vote) {
-  var up = document.getElementById('vpFbUp');
-  var dn = document.getElementById('vpFbDn');
-  if (up) up.disabled = true;
-  if (dn) dn.disabled = true;
+  vpApplyVote(vote);
   fetch(COUNTER_API + '/feedback', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ vote: vote }),
     keepalive: true
-  }).catch(function () {});
-  vpShowThanks();
+  }).then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.ok && j.vote) vpApplyVote(j.vote);
+    })
+    .catch(function () {});
+  vpFlashThanks();
 }
 
 function vpSyncFeedback(done) {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
   if (!done) { vpHideFeedback(); return; }
-  if (vpHasVoted()) { vpHideFeedback(); return; }
-  vpShowQuestion();
+  vpShowFeedback();
   if (!vpFbChecked) {
     vpFbChecked = true;
     fetch(COUNTER_API + '/feedback')
       .then(function (r) { return r.json(); })
       .then(function (j) {
-        if (j && j.voted) { vpMarkVoted(); vpHideFeedback(); }
+        if (j && j.voted && j.vote) vpApplyVote(j.vote);
       })
       .catch(function () {});
   }
@@ -3532,6 +3541,29 @@ try { loadLockCounts(); } catch (e) {}
 
 if (!bootConfigFromUrl()) init(6);
 maybeShowLinkHelpAnnounce();
+
+var REVERT_NOTE_KEY = 'uml-revert-ui-v1';
+function closeRevertNote() {
+  var el = document.getElementById('revertNote');
+  if (!el) return;
+  el.classList.remove('show');
+  setTimeout(function () { el.hidden = true; }, 450);
+  try { localStorage.setItem(REVERT_NOTE_KEY, '1'); } catch (e) {}
+}
+function maybeShowRevertNote() {
+  try { if (localStorage.getItem(REVERT_NOTE_KEY)) return; } catch (e) {}
+  var el = document.getElementById('revertNote');
+  if (!el) return;
+  setTimeout(function () {
+    el.hidden = false;
+    requestAnimationFrame(function () { el.classList.add('show'); });
+  }, 1200);
+}
+(function bindRevertNote() {
+  var btn = document.getElementById('revertNoteClose');
+  if (btn) btn.onclick = closeRevertNote;
+})();
+maybeShowRevertNote();
 </script>
 </body>
 </html>
