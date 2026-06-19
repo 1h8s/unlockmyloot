@@ -589,32 +589,34 @@
     cursor:pointer;font-family:inherit;text-align:center;
   }
   .wizdetail-collapse:hover{color:var(--ink);}
-  .wizreact{margin-top:12px;padding-top:14px;border-top:1px solid var(--line);}
+  .wizreact{margin-top:6px;padding-top:12px;border-top:1px solid var(--line);}
   .wizdetail-hd{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.45;}
   .wizdetail-hd span{font-family:var(--mono);font-weight:700;color:var(--ink-2);}
   .wizfoot-actions .btn[hidden]{display:none;}
-  .wizmap{margin:0;padding:0 2px;overflow:visible;}
+  .wizmap{margin:0;padding:0 2px;overflow:visible;display:flex;flex-direction:column;gap:10px;}
   .wizmap-gamestep{
-    margin:0 0 12px;padding:14px 16px;border-radius:14px;text-align:center;
+    margin:0;padding:14px 16px;border-radius:14px;text-align:center;
     background:linear-gradient(165deg,var(--accent-soft),var(--bg));
     border:2px solid var(--accent-border);
     font-size:15px;line-height:1.45;color:var(--ink);
+    position:relative;z-index:2;flex-shrink:0;
   }
   .wizmap-gamestep b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--accent-ink);}
   .wizmap-gamestep .wizmap-game-dir{font-size:18px;font-weight:800;white-space:nowrap;}
   .wizmap--left .wizmap-gamestep .wizmap-game-dir{color:var(--dir-left);}
   .wizmap--right .wizmap-gamestep .wizmap-game-dir{color:var(--dir-right);}
-  .wizmap-gamestep-hint{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--ink-3);}
+  .wizmap-gamestep-hint{display:block;margin-top:6px;font-size:12px;font-weight:500;color:var(--ink-3);}
+  .wizmap-gamestep-hint b{font-family:var(--mono);font-weight:700;color:var(--ink-2);}
   .wizmap-scene{
-    position:relative;
-    height:clamp(150px,calc(118px + var(--wmap-n,6) * 11px),208px);
+    position:relative;flex-shrink:0;
+    height:clamp(176px,calc(136px + var(--wmap-n,6) * 14px),228px);
     display:flex;align-items:center;justify-content:center;
-    perspective:820px;perspective-origin:50% 50%;
-    padding:10px 34px 4px;overflow:visible;
+    perspective:820px;perspective-origin:50% 62%;
+    padding:18px 34px 8px;overflow:hidden;
   }
   .wizmap-lock{
     position:relative;width:118px;height:42px;transform-style:preserve-3d;
-    transform:translate(calc(var(--wmap-n,6) * -3px - 6px),calc(var(--wmap-n,6) * 7px + 8px))
+    transform:translate(calc(var(--wmap-n,6) * -3px - 6px),calc(var(--wmap-n,6) * 7px + 18px))
       scale(.86) rotateX(-50deg) rotateY(-22deg);
   }
   .wizmap-layer{
@@ -763,19 +765,21 @@
     .wizmap-plate.active,.wizmap-arrow{animation:none!important;}
   }
   #linkWizPanel.wiz-compact .wiztag{display:none;}
-  #linkWizPanel.wiz-compact .wizbody{padding:10px 20px 8px;overflow-x:visible;}
-  #linkWizPanel.wiz-compact .wizfoot{padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));gap:8px;}
-  #linkWizPanel.wiz-compact .wizfoot-aside{font-size:11.5px;}
-  #linkWizPanel.wiz-compact .wizhead{padding:14px 18px 10px;border-bottom:1px solid var(--line);}
+  #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 20px;overflow-x:visible;}
+  #linkWizPanel.wiz-compact .wizfoot{padding:16px 22px calc(18px + env(safe-area-inset-bottom,0px));gap:14px;}
+  #linkWizPanel.wiz-compact .wizfoot-aside{
+    margin-top:2px;padding-top:14px;border-top:1px solid var(--line);
+  }
+  #linkWizPanel.wiz-compact .wizfoot-aside button{padding:12px 20px;font-size:13px;border-radius:10px;}
+  #linkWizPanel.wiz-compact .wizhead{padding:18px 22px 14px;border-bottom:1px solid var(--line);}
   #linkWizPanel.wiz-compact .wiztitle{font-size:16px;margin-bottom:2px;padding-right:34px;}
   #linkWizPanel.wiz-compact .wizsub{font-size:12px;line-height:1.3;margin:0;}
   #linkWizPanel.wiz-compact .wizprog{margin:8px 18px 0;}
   #linkWizPanel.wiz-compact .wizmap-scene{
-    height:clamp(136px,calc(100px + var(--wmap-n,6) * 10px),196px);
-    padding:6px 32px 4px;
+    height:clamp(168px,calc(128px + var(--wmap-n,6) * 13px),218px);
+    padding:16px 32px 6px;
   }
-  #linkWizPanel.wiz-compact .wizmap-caption{margin-top:6px;padding:8px 12px;font-size:13.5px;line-height:1.35;}
-  #linkWizPanel.wiz-compact .wizreact{margin-top:8px;padding-top:10px;}
+  #linkWizPanel.wiz-compact .wizreact{margin-top:4px;padding-top:10px;}
   #linkWizPanel.wiz-compact .wizreact-q{margin:0 0 5px;font-size:13px;}
   #linkWizPanel.wiz-compact .wizmap-legend{margin:0 0 5px;font-size:10.5px;line-height:1.35;}
   #linkWizPanel.wiz-compact .wizdetail-hd{margin:0 0 5px;font-size:11px;}
@@ -819,7 +823,7 @@
     .wizback.open #linkWizPanel{transform:none;}
     .wizhead{padding:16px 18px 0;}
     .wizbody{padding:12px 18px;}
-    .wizfoot{padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));}
+    .wizfoot{padding:16px 20px calc(18px + env(safe-area-inset-bottom,0px));gap:14px;}
     .wiztitle{font-size:18px;}
     .wizsub{font-size:13px;line-height:1.4;}
     .wizcmd{padding:14px 12px;margin-bottom:12px;}
@@ -851,23 +855,20 @@
       flex:0 0 auto;min-height:0;overflow-x:visible;overflow-y:visible;
     }
     #linkWizPanel{width:min(725px,100%);}
-    #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 12px;}
+    #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 20px;}
     #linkWizPanel.wiz-compact .wizmap-scene{
-      height:clamp(272px,calc(205px + var(--wmap-n,6) * 20px),385px);
-      padding:18px 56px 12px;
+      height:clamp(196px,calc(146px + var(--wmap-n,6) * 15px),246px);
+      padding:20px 44px 8px;
     }
     .wizmap-lock{
-      transform:translate(calc(var(--wmap-n,6) * -4px - 10px),calc(var(--wmap-n,6) * 9px + 6px))
-        scale(1.22) rotateX(-50deg) rotateY(-22deg);
+      transform:translate(calc(var(--wmap-n,6) * -4px - 10px),calc(var(--wmap-n,6) * 8px + 16px))
+        scale(1.08) rotateX(-50deg) rotateY(-22deg);
     }
     .wizmap-layer{transform:translateZ(calc(var(--s) * -40px)) rotateX(96deg);}
-    #linkWizPanel.wiz-compact .wizmap-gamestep{margin-bottom:10px;padding:16px 18px;font-size:16px;}
+    #linkWizPanel.wiz-compact .wizmap-gamestep{margin-bottom:0;padding:16px 18px;font-size:16px;}
     #linkWizPanel.wiz-compact .wizmap-gamestep b{font-size:26px;}
     #linkWizPanel.wiz-compact .wizmap-gamestep .wizmap-game-dir{font-size:21px;}
-    #linkWizPanel.wiz-compact .wizmap-caption{
-      margin-top:10px;padding:12px 16px;font-size:16px;line-height:1.45;
-    }
-    #linkWizPanel.wiz-compact .wizmap-caption b{font-size:19px;}
+    #linkWizPanel.wiz-compact .wizmap-gamestep-hint{font-size:13px;}
     #linkWizPanel.wiz-compact .wizmap-meta{font-size:13px;}
     @keyframes wmapNudgeL{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) - 6px))}}
     @keyframes wmapNudgeR{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) + 6px))}}
@@ -878,12 +879,16 @@
   .wizlockreset:not([hidden]){animation:wizContentIn .24s var(--ease) both;}
   .wizlockreset input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
   .wizlockreset b{color:var(--ink);}
-  .wizfoot{display:flex;flex-direction:column;gap:10px;padding:14px 22px calc(14px + env(safe-area-inset-bottom,0px));}
-  .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .wizfoot{display:flex;flex-direction:column;gap:14px;padding:18px 24px calc(20px + env(safe-area-inset-bottom,0px));}
+  .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .wizfoot-actions .btn{width:100%;justify-content:center;min-width:0;}
-  .wizfoot-aside{text-align:center;line-height:1.35;}
-  .wizfoot-aside button{background:none;border:none;padding:4px 6px;font-size:12px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;}
-  .wizfoot-aside button:hover{color:var(--ink);}
+  .wizfoot-aside{text-align:center;line-height:1.35;margin-top:2px;padding-top:14px;border-top:1px solid var(--line);}
+  .wizfoot-aside button{
+    background:none;border:none;padding:12px 20px;font-size:13px;color:var(--ink-2);
+    text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;
+    border-radius:10px;transition:color .18s,background .18s;
+  }
+  .wizfoot-aside button:hover{color:var(--ink);background:var(--bg);}
   .wizfoot-aside button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
   @media(max-width:430px){.wizfoot-actions{grid-template-columns:1fr;}}
   .wizmeta{font-size:12px;color:var(--ink-3);text-align:center;margin-top:10px;}
@@ -2941,10 +2946,9 @@ function wizRenderSchematic(wiz, driver, d) {
     (driver + 1) + ' ' + capMove + '">' +
     '<p class="wizmap-gamestep">First move in-game: plate <b>' + (driver + 1) + '</b> ' +
     '<span class="wizmap-game-dir">' + capMove + (moveLeft ? ' ←' : ' →') + '</span>' +
-    '<span class="wizmap-gamestep-hint">Then answer below who else jerked</span></p>' +
+    '<span class="wizmap-gamestep-hint">Pin <b>' + pinFrom + ' → ' + pinTo + '</b> · then mark who jerked</span></p>' +
     '<div class="wizmap-scene" style="--wmap-n:' + N + '"><div class="wizmap-lock" style="--wmap-n:' + N + '">' +
-    layers + '</div></div>' +
-    '<p class="wizmap-caption">Pin <b>' + pinFrom + '</b> → <b>' + pinTo + '</b></p></div>';
+    layers + '</div></div></div>';
 }
 function wizRenderCmdStrip(wiz, i, d) {
   return wizRenderSchematic(wiz, i, d);
@@ -3076,8 +3080,6 @@ function wizBindStepActions(wiz, c) {
   }
   var backBtn = document.getElementById('wizBack');
   if (backBtn) backBtn.onclick = wizUndoStep;
-  var noneBtn = document.getElementById('wizNone');
-  if (noneBtn) noneBtn.onclick = function () { wizFinish([], false); };
   if (confirmBtn) confirmBtn.onclick = function () {
     if (!answersEl) return;
     var movers = [], jerks = 0, slides = 0;
@@ -3188,9 +3190,7 @@ function wizRenderStep() {
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Back</button>' +
     '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
-    '<p class="wizfoot-aside">' +
-    '<button type="button" id="wizNone">Nothing jerked</button>' +
-    ' · <button type="button" id="wizGameReset">Reset the lock</button></p>';
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Reset the lock</button></p>';
   wizBindStepActions(wiz, c);
 }
 function wizRenderDone() {
