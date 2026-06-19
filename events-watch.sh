@@ -26,6 +26,9 @@ def n(x):
 
 print(f"UnlockMyLoot · воронка · UTC {today}")
 print(f"Взломано (solve_ok счётчик): {n(opened)}")
+fb = d.get("feedback", {})
+if fb:
+    print(f"Оценка сайта: 👍 {n(fb.get('up', 0))}  👎 {n(fb.get('down', 0))}")
 print("─" * 52)
 print("Всего:")
 for k in sorted(tot.keys()):

@@ -50,7 +50,8 @@ var TRACK_EVENTS = {
   wizard_helper: 1, wizard_done: 1, wizard_done_partial: 1, wizard_reset: 1,
   suggest_show: 1, suggest_apply_ok: 1, suggest_apply_fail: 1, suggest_skip: 1,
   lock_url_ok: 1, lock_url_fail: 1,
-  pins_edit: 1, mode_matrix: 1, mode_find: 1
+  pins_edit: 1, mode_matrix: 1, mode_find: 1,
+  feedback_up: 1, feedback_down: 1
 };
 var TRACK_RING_MAX = 80;
 var TRACK_DAY_KEEP = 14;
@@ -201,6 +202,10 @@ export class Counter {
       totals: totals,
       today_counts: todayCounts,
       yesterday_counts: yesterdayCounts,
+      feedback: {
+        up: (await this.state.storage.get("fb:all:up")) || 0,
+        down: (await this.state.storage.get("fb:all:down")) || 0
+      },
       funnel: {
         wizard_open: wOpen,
         wizard_step_none: totals.wizard_step_none || 0,
@@ -224,6 +229,34 @@ export class Counter {
       },
       recent: ring.slice(-30)
     };
+  }
+
+  async recordFeedback(ip, vote) {
+    ip = String(ip || "").trim();
+    if (!ip || ip.length > 64) {
+      return { status: 400, body: { ok: false, error: "no_ip" } };
+    }
+    if (vote !== "up" && vote !== "down") {
+      return { status: 400, body: { ok: false, error: "bad_vote" } };
+    }
+    var key = "fb:ip:" + ip;
+    if (await this.state.storage.get(key)) {
+      return { status: 200, body: { ok: false, reason: "already" } };
+    }
+    await this.state.storage.put(key, vote);
+    var ck = vote === "up" ? "fb:all:up" : "fb:all:down";
+    var n = (await this.state.storage.get(ck)) || 0;
+    await this.state.storage.put(ck, n + 1);
+    await this.bumpEvent(vote === "up" ? "feedback_up" : "feedback_down", Date.now());
+    return { status: 200, body: { ok: true } };
+  }
+
+  async feedbackStatus(ip) {
+    ip = String(ip || "").trim();
+    if (!ip) return { voted: false };
+    var v = await this.state.storage.get("fb:ip:" + ip);
+    if (!v) return { voted: false };
+    return { voted: true, vote: v };
   }
 
   /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
@@ -396,6 +429,22 @@ export class Counter {
         headers: { "Content-Type": "application/json" }
       });
     }
+    if (path === "/feedback" && req.method === "GET") {
+      var ipGet = req.headers.get("X-Uml-IP") || "";
+      return new Response(JSON.stringify(await this.feedbackStatus(ipGet)), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    if (path === "/feedback" && req.method === "POST") {
+      var ipPost = req.headers.get("X-Uml-IP") || "";
+      var fbBody = {};
+      try { fbBody = await req.json(); } catch (e) {}
+      var fbRes = await this.recordFeedback(ipPost, fbBody.vote);
+      return new Response(JSON.stringify(fbRes.body), {
+        status: fbRes.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
   }
@@ -419,13 +468,22 @@ export default {
       (url.pathname === "/locks" && req.method === "GET") ||
       (url.pathname === "/suggest" && req.method === "GET") ||
       (url.pathname === "/purge-locks" && req.method === "POST") ||
-      (url.pathname === "/events" && (req.method === "GET" || req.method === "POST"))
+      (url.pathname === "/events" && (req.method === "GET" || req.method === "POST")) ||
+      (url.pathname === "/feedback" && (req.method === "GET" || req.method === "POST"))
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");
         var id = env.COUNTER_DO.idFromName("global");
         var stub = env.COUNTER_DO.get(id);
-        var innerReq = new Request(req.url, req);
+        var fwdHeaders = new Headers(req.headers);
+        var clientIp = req.headers.get("CF-Connecting-IP") || "";
+        if (clientIp) fwdHeaders.set("X-Uml-IP", clientIp);
+        var innerInit = { method: req.method, headers: fwdHeaders };
+        if (req.method !== "GET" && req.method !== "HEAD") {
+          innerInit.body = req.body;
+          innerInit.duplex = "half";
+        }
+        var innerReq = new Request(req.url, innerInit);
         var inner = await stub.fetch(innerReq);
         var body = await inner.text();
         return new Response(body, { status: inner.status, headers: cors });
