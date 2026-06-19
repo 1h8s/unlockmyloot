@@ -9,8 +9,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UnlockMyLoot - калькулятор замков Gothic 1 Remake</title>
-<meta name="description" content="UnlockMyLoot - бесплатный калькулятор-решатель замков Gothic 1 Remake: введи штифты и связи и получи кратчайшую безопасную последовательность ходов.">
+<title>Калькулятор замков Gothic 1 Remake - решатель взлома | UnlockMyLoot</title>
+<meta name="description" content="Бесплатный калькулятор-решатель замков Gothic 1 Remake: введи штифты и связи - получишь кратчайшую безопасную последовательность ходов, без движений в стену.">
 <meta name="keywords" content="gothic 1 remake решатель замков, gothic remake взлом замков, решатель замков готика ремейк, lockpick solver gothic remake, взлом замков без отмычки, калькулятор замков gothic, unlockmyloot">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="yandex-verification" content="57d0dc84810da636">
@@ -22,14 +22,14 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://unlockmyloot.com/">
 <meta property="og:site_name" content="UnlockMyLoot">
-<meta property="og:title" content="UnlockMyLoot - калькулятор замков Gothic 1 Remake">
+<meta property="og:title" content="Калькулятор и решатель замков Gothic 1 Remake">
 <meta property="og:description" content="Кратчайшая последовательность ходов для любого замка Gothic Remake. Ни одного движения в стену - ноль сломанных отмычек.">
 <meta property="og:image" content="https://unlockmyloot.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="UnlockMyLoot - калькулятор замков Gothic 1 Remake">
+<meta name="twitter:title" content="Калькулятор и решатель замков Gothic 1 Remake">
 <meta name="twitter:description" content="Кратчайшая последовательность ходов для любого замка. Ни одного движения в стену - ноль сломанных отмычек.">
 <meta name="twitter:image" content="https://unlockmyloot.com/og.png">
 <meta name="theme-color" content="#101214">
@@ -195,11 +195,6 @@
     content:"";position:absolute;inset:-90px 0 0 0;pointer-events:none;
     background:var(--hero-glow);z-index:0;
   }
-  .herozone::after{
-    content:"";position:absolute;left:0;right:0;top:0;height:108px;pointer-events:none;z-index:1;
-    background:linear-gradient(180deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 86%,transparent) 52%,transparent 100%);
-  }
-  .herozone > .wrap{position:relative;z-index:2;}
   .hero{
     position:relative;z-index:1;
     padding:84px 0 120px;
@@ -374,71 +369,11 @@
   .helpbtn:active{transform:scale(.95);}
   .helpbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
   .helpbtn svg{flex:none;}
-  .helpbtn.pulse,#linkFindStart.pulse{animation:helppulse 1.1s var(--ease) 3;}
+  .helpbtn.pulse{animation:helppulse 1.1s var(--ease) 3;}
   @keyframes helppulse{
     0%,100%{box-shadow:none;}
     50%{box-shadow:0 0 0 4px var(--accent),var(--cta-glow);}
   }
-  .phead-linkmode{grid-template-columns:auto 1fr auto;align-items:center;}
-  .phead-linkmode .pdesc{grid-column:2 / -1;}
-  .linkmode{display:inline-flex;gap:4px;padding:4px;border-radius:13px;
-    background:var(--bg);border:1px solid var(--line);}
-  .linkmode button{
-    font-family:inherit;font-size:14px;font-weight:600;padding:8px 18px;border-radius:10px;
-    border:none;background:transparent;color:var(--ink-3);cursor:pointer;
-    display:inline-flex;align-items:center;gap:7px;transition:all .25s var(--ease);white-space:nowrap;
-  }
-  .linkmode button:hover{color:var(--ink);}
-  .linkmode button:active{transform:scale(.97);}
-  .linkmode button.on{background:var(--accent);color:var(--on-accent);box-shadow:0 4px 12px -7px rgba(0,0,0,.5);}
-  .linkpanes{position:relative;}
-  .linkpanes.is-switching{overflow:hidden;transition:height .32s var(--ease);}
-  .linkpane{
-    transition:opacity .26s var(--ease),transform .28s var(--ease);
-    will-change:opacity,transform;
-  }
-  .linkpane.is-enter{opacity:0;transform:translateY(8px) scale(.99);}
-  .linkpane.is-exit{opacity:0;transform:translateY(-6px) scale(.99);pointer-events:none;}
-  .linkpanes.is-switching .linkpane.is-exit{position:absolute;left:0;right:0;top:0;width:100%;}
-  .linkpane.is-active{opacity:1;transform:none;}
-  .linkpane[hidden]{display:none;}
-  .linkfind[hidden]{display:none;}
-  .linkfind{
-    display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:flex-start;
-    padding:18px;border-radius:18px;background:var(--accent-soft);border:1px solid var(--accent-border);
-    animation:suggestin .55s var(--ease) backwards;
-    transition:opacity .22s var(--ease),transform .24s var(--ease);
-  }
-  .linkfind.is-exit{opacity:0;transform:translateY(-6px) scale(.99);pointer-events:none;}
-  .lf-ic{
-    width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-    color:var(--on-accent);background:var(--accent);box-shadow:0 10px 24px -12px var(--accent);
-  }
-  .lf-ic svg{flex:none;}
-  .lf-title{font-size:17px;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
-  .lf-copy{font-size:14px;color:var(--ink-2);line-height:1.55;margin-top:5px;max-width:62ch;}
-  .lf-steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px;}
-  .lf-steps span{
-    display:inline-flex;align-items:center;gap:6px;
-    font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--accent-ink);
-    background:var(--surface);border:1px solid var(--accent-border);border-radius:999px;padding:6px 9px;
-  }
-  .lf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;}
-  .lf-actions .btn{padding:10px 16px;font-size:14px;}
-  .lf-actions .btn.primary{width:auto;}
-  .lf-note{font-size:12.5px;color:var(--ink-3);line-height:1.45;margin-top:10px;}
-  @media(max-width:560px){
-    .linkfind{grid-template-columns:1fr;gap:12px;}
-    .lf-actions{flex-direction:column;}
-    .lf-actions .btn,.lf-actions .btn.primary{width:100%;justify-content:center;}
-  }
-
-  html.wiz-open{overscroll-behavior:none;}
-  html.wiz-open body{
-    position:fixed;left:0;right:0;width:100%;
-    overflow:hidden;overscroll-behavior:none;touch-action:none;
-  }
-  html.wiz-open .linknotice{right:calc(20px + var(--wiz-sb, 0px));}
 
   /* мастер поиска связей */
   .wizback{
@@ -449,53 +384,25 @@
   }
   .wizback.open{opacity:1;pointer-events:auto;}
   .wizpanel{
-    width:min(520px,100%);
+    width:min(520px,100%);max-height:min(90vh,720px);overflow:auto;
     background:var(--surface);border:1px solid var(--line);border-radius:22px;
     box-shadow:var(--panel-shadow);position:relative;
     transform:translateY(18px) scale(.97);transition:transform .4s var(--ease);
-  }
-  .annpanel{max-height:min(90vh,720px);overflow:auto;}
-  #linkWizPanel{
-    display:flex;flex-direction:column;
-    max-height:min(calc(100dvh - 40px),900px);
-    overflow:hidden;
-  }
-  #linkWizPanel .wizhead{flex-shrink:0;}
-  #linkWizPanel .wizbody{
-    flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;
-    overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-    scrollbar-gutter:stable;
     scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;
   }
-  #linkWizPanel .wizbody::-webkit-scrollbar{width:8px;}
-  #linkWizPanel .wizbody::-webkit-scrollbar-thumb{
-    background:var(--line-2);border-radius:8px;border:2px solid transparent;background-clip:content-box;
+  .wizpanel::-webkit-scrollbar{width:10px;}
+  .wizpanel::-webkit-scrollbar-track{background:transparent;margin:22px 0;}
+  .wizpanel::-webkit-scrollbar-thumb{
+    background:var(--line-2);border-radius:10px;
+    border:3px solid transparent;background-clip:content-box;
   }
-  #linkWizPanel .wizfoot{
-    flex-shrink:0;border-top:1px solid var(--line);
-    background:var(--surface);
-    box-shadow:0 -10px 28px -16px rgba(28,32,36,.12);
-  }
-  [data-theme="dark"] #linkWizPanel .wizfoot{
-    box-shadow:0 -10px 28px -16px rgba(0,0,0,.45);
-  }
-  .wizback.open #linkWizPanel{transform:none;}
-  .wizpanel.is-changing{pointer-events:none;}
-  .wizbody,.wizfoot{will-change:opacity,transform;}
-  .wizbody.is-leaving,.wizfoot.is-leaving{animation:wizContentOut .12s var(--ease) forwards;}
-  .wizbody.is-entering{animation:wizContentIn .22s var(--ease) both;}
-  .wizfoot.is-entering{animation:wizContentIn .2s var(--ease) both;animation-delay:40ms;}
-  @keyframes wizContentIn{
-    from{opacity:0;transform:translateY(8px);}
-    to{opacity:1;transform:none;}
-  }
-  @keyframes wizContentOut{
-    to{opacity:0;transform:translateY(-4px);}
-  }
+  .wizpanel::-webkit-scrollbar-thumb:hover{background:var(--ink-3);background-clip:content-box;}
+  .wizpanel::-webkit-scrollbar-corner{background:transparent;}
+  .wizback.open .wizpanel{transform:none;}
   .wizclose{
     position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;
     border:1px solid var(--line-2);background:var(--bg);color:var(--ink-2);cursor:pointer;
-    font-size:20px;line-height:1;transition:all .2s;z-index:2;
+    font-size:20px;line-height:1;transition:all .2s;
   }
   .wizclose:hover{border-color:var(--ink-3);color:var(--ink);}
   .wizhead{padding:26px 26px 0;}
@@ -538,17 +445,10 @@
   }
   .wizpin b{color:var(--ink);font-weight:600;}
   .wizpin.wall{border-color:var(--danger-border);color:var(--danger-text);background:var(--danger-soft);}
-  .wizpick{font-size:14px;font-weight:700;margin-bottom:4px;}
-  .wizobserve{
-    margin-bottom:12px;padding:11px 12px;border-radius:12px;
-    background:var(--surface);border:1px solid var(--line);
-    display:flex;flex-direction:column;align-items:flex-start;gap:4px;
-  }
-  .wizobserve b{font-size:13.5px;color:var(--ink);}
-  .wizobserve span{font-size:12.5px;color:var(--ink-3);line-height:1.35;}
-  .wizchips{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin-bottom:14px;}
+  .wizpick{font-size:14px;font-weight:600;margin-bottom:10px;}
+  .wizchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
   .wizchip{
-    display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:10px;
+    display:inline-flex;align-items:center;padding:9px 14px;border-radius:10px;
     border:1px solid var(--line-2);background:var(--bg);cursor:pointer;
     transition:border-color .18s,background .18s,color .18s,box-shadow .18s,transform .1s;
     font-size:13.5px;user-select:none;line-height:1;
@@ -557,370 +457,71 @@
   .wizchip:active{transform:scale(.96);}
   .wizchip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
   .wizchip input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
-  .wizchip .wizchip-check{display:none;}
+  .wizchip .wizchip-check{
+    width:0;height:13px;opacity:0;transform:scale(.4) rotate(-12deg);flex-shrink:0;
+    transition:width .18s var(--ease),opacity .18s,transform .22s var(--ease),margin .18s;
+    margin-right:0;
+  }
   .wizchip b{margin-left:5px;}
   .wizchip.on{
     border-color:var(--accent);background:var(--accent);color:var(--on-accent);
     box-shadow:var(--pos-glow);
   }
-  .wizanswers{display:flex;flex-direction:column;gap:8px;margin-bottom:4px;}
-  .wizanswers--split{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin-bottom:2px;}
-  .wizcol{display:flex;flex-direction:column;gap:6px;min-width:0;}
-  .wizanswer{
-    min-width:0;display:grid;grid-template-columns:minmax(72px,.55fr) minmax(0,2fr);gap:8px;align-items:center;
-    min-height:0;padding:10px 11px;border-radius:13px;background:var(--bg);border:1px solid var(--line);
-    animation:wizAnswerIn .32s var(--ease) both;
-    animation-delay:calc(80ms + var(--wi,0) * 28ms);
-  }
-  .wiztile{
-    grid-template-columns:30px minmax(0,1fr);gap:5px;padding:5px 6px;border-radius:10px;
-    animation-delay:calc(40ms + var(--wi,0) * 18ms);
-  }
-  .wiztile-id{text-align:center;line-height:1.05;}
-  .wiztile-id b{display:block;font-size:13px;color:var(--ink);}
-  .wiztile-id span{display:block;font-family:var(--mono);font-size:9px;color:var(--ink-3);}
-  .wiztile .wizchoice-row{grid-template-columns:1fr 1fr 1fr;gap:3px;}
-  .wiztile .wizchoice{min-height:34px;padding:3px 2px;border-radius:8px;}
-  .wiztile .wizchoice b{font-size:15px;line-height:1;}
-  .wiztile .wizchoice span{display:none;}
-  .wiztile .wizchoice.jerk b{font-size:11px;}
-  .wizcmd--strip{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:10px 12px;margin-bottom:8px;border-radius:12px;text-align:left;
-    background:linear-gradient(165deg,var(--accent-soft),var(--bg));border:1px solid var(--accent-border);
-  }
-  .wizcmd-strip-main{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap;}
-  .wizcmd-strip-plate{font-size:12px;color:var(--ink-2);white-space:nowrap;}
-  .wizcmd-strip-plate b{color:var(--ink);font-size:14px;}
-  .wizcmd-strip-move{
-    font-size:17px;font-weight:700;display:inline-flex;align-items:center;gap:6px;
-    letter-spacing:-.02em;color:var(--accent-ink);
-  }
-  .wizcmd-strip-move svg{width:18px;height:18px;flex:none;color:var(--accent);}
-  .wizcmd-strip-move.dir-l{color:var(--dir-left);}
-  .wizcmd-strip-move.dir-l svg{color:var(--dir-left);}
-  .wizcmd-strip-meta{font-family:var(--mono);font-size:11px;color:var(--ink-3);white-space:nowrap;flex-shrink:0;}
-  .wizhelper-hint{
-    margin:0 0 6px;font-size:12px;line-height:1.35;color:var(--ink-3);text-align:center;
-  }
-  .wizfork{display:flex;flex-direction:column;gap:10px;margin-top:0;}
-  .wizfork-q{margin:0;font-size:15px;font-weight:600;color:var(--ink);text-align:center;line-height:1.35;}
-  .wizfork-none{width:100%;justify-content:center;padding:13px 16px;font-size:15px;}
-  .wizfork-some{width:100%;justify-content:center;font-size:14px;}
-  .wizdetail[hidden]{display:none!important;}
-  .wizdetail-collapse{
-    display:block;width:100%;margin:0 0 8px;padding:4px 6px;background:none;border:none;
-    font-size:12px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;
-    cursor:pointer;font-family:inherit;text-align:center;
-  }
-  .wizdetail-collapse:hover{color:var(--ink);}
-  .wizreact{margin-top:6px;padding-top:12px;border-top:1px solid var(--line);}
-  .wizdetail-hd{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.45;}
-  .wizdetail-hd span{font-family:var(--mono);font-weight:700;color:var(--ink-2);}
-  .wizfoot-actions .btn[hidden]{display:none;}
-  /* схема замка в помощнике */
-  .wizmap{margin:0;padding:0 2px;overflow:visible;display:flex;flex-direction:column;gap:10px;}
-  .wizmap-gamestep{
-    margin:0;padding:14px 16px;border-radius:14px;text-align:center;
-    background:linear-gradient(165deg,var(--accent-soft),var(--bg));
-    border:2px solid var(--accent-border);
-    font-size:15px;line-height:1.45;color:var(--ink);
-    position:relative;z-index:2;flex-shrink:0;
-  }
-  .wizmap-gamestep b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--accent-ink);}
-  .wizmap-gamestep .wizmap-game-dir{font-size:18px;font-weight:800;white-space:nowrap;}
-  .wizmap--left .wizmap-gamestep .wizmap-game-dir{color:var(--dir-left);}
-  .wizmap--right .wizmap-gamestep .wizmap-game-dir{color:var(--dir-right);}
-  .wizmap-gamestep-hint{display:block;margin-top:6px;font-size:12px;font-weight:500;color:var(--ink-3);}
-  .wizmap-gamestep-hint b{font-family:var(--mono);font-weight:700;color:var(--ink-2);}
-  .wizmap-scene{
-    position:relative;flex-shrink:0;
-    height:clamp(176px,calc(136px + var(--wmap-n,6) * 14px),228px);
-    display:flex;align-items:center;justify-content:center;
-    perspective:820px;perspective-origin:50% 62%;
-    padding:18px 34px 8px;overflow:hidden;
-  }
-  .wizmap-lock{
-    position:relative;width:118px;height:42px;transform-style:preserve-3d;
-    transform:translate(calc(var(--wmap-n,6) * -3px - 6px),calc(var(--wmap-n,6) * 7px + 18px))
-      scale(.86) rotateX(-50deg) rotateY(-22deg);
-  }
-  .wizmap-layer{
-    position:absolute;left:50%;top:50%;width:118px;height:42px;margin:-21px 0 0 -59px;
-    transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -34px)) rotateX(96deg);
-  }
-  .wizmap-plate{
-    position:absolute;inset:0;border-radius:10px;
-    background:linear-gradient(155deg,#3a4049,#171a20);border:1px solid #3a424d;
-    box-shadow:0 6px 12px -6px rgba(0,0,0,.65);
-    transform:translateX(var(--shift,0));
-    transition:transform .45s var(--ease),border-color .25s,box-shadow .25s;
-  }
-  .wizmap-plate::after{
-    content:"";position:absolute;inset:3px 5px;border-radius:7px;
-    background:linear-gradient(155deg,rgba(255,255,255,.07),transparent 45%);pointer-events:none;
-  }
-  .wizmap-plate.active{
-    border-color:var(--accent);background:linear-gradient(155deg,#2f4940,#16241f);
-    animation:wmapPulse 1.6s var(--ease) infinite;
-  }
-  .wizmap--left .wizmap-plate.active{border-color:var(--dir-left);}
-  @keyframes wmapPulse{
-    0%,100%{box-shadow:0 0 0 2px rgba(52,168,131,.75),0 0 12px 1px rgba(52,168,131,.4),0 6px 12px -6px rgba(0,0,0,.65);}
-    50%{box-shadow:0 0 0 2px rgba(52,168,131,1),0 0 20px 3px rgba(52,168,131,.65),0 6px 12px -6px rgba(0,0,0,.65);}
-  }
-  @keyframes wmapNudgeL{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) - 5px))}}
-  @keyframes wmapNudgeR{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) + 5px))}}
-  .wizmap--left .wizmap-plate.active{animation:wmapPulse 1.6s var(--ease) infinite,wmapNudgeL 1.6s var(--ease) infinite;}
-  .wizmap--right .wizmap-plate.active{
-    animation:wmapPulse 1.6s var(--ease) infinite,wmapNudgeR 1.6s var(--ease) infinite;
-    border-color:var(--dir-right);
-  }
-  .wizmap-num{
-    position:absolute;left:-24px;top:50%;transform:translateY(-50%);
-    z-index:6;min-width:18px;padding:2px 5px;border-radius:5px;
-    font-family:var(--mono);font-size:10.5px;font-weight:700;line-height:1.2;
-    text-align:center;color:#f0f4f8;
-    background:rgba(10,12,16,.9);border:1px solid rgba(255,255,255,.16);
-    box-shadow:0 1px 4px rgba(0,0,0,.5);
-  }
-  .wizmap-plate.active .wizmap-num{
-    color:#fff;background:rgba(28,72,58,.95);border-color:rgba(134,235,194,.45);
-  }
-  .wizmap--left .wizmap-plate.active .wizmap-num{
-    color:#fff;background:rgba(28,48,92,.95);border-color:rgba(158,197,255,.45);
-  }
-  .wizmap--right .wizmap-plate.active .wizmap-num{
-    color:#fff;background:rgba(24,68,56,.95);border-color:rgba(127,212,181,.45);
-  }
-  .wizmap-track{
-    position:absolute;left:10px;right:10px;top:50%;height:6px;transform:translateY(-50%);
-    border-radius:4px;background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.85);
-  }
-  .wizmap-hole{
-    position:absolute;top:50%;width:7px;height:7px;border-radius:50%;
-    transform:translate(-50%,-50%);background:#0a0c0f;box-shadow:inset 0 1px 2px rgba(0,0,0,.9);
-  }
-  .wizmap-hole--c{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);}
-  .wizmap-pin{
-    position:absolute;top:50%;width:12px;height:12px;border-radius:50%;z-index:4;
-    transform:translate(-50%,-50%);
-    background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
-    box-shadow:0 0 7px rgba(52,168,131,.85);
-  }
-  .wizmap-plate.active .wizmap-pin{
-    background:radial-gradient(circle at 34% 30%,#f2f5f8,#c5ccd4 56%,#8a929c);
-    box-shadow:0 0 8px rgba(255,255,255,.55);
-  }
-  .wizmap-arrow{
-    position:absolute;top:50%;z-index:8;display:flex;align-items:center;justify-content:center;
-    width:26px;height:26px;border-radius:999px;color:#fff;
-    background:var(--accent);box-shadow:0 0 14px rgba(52,168,131,.55);
-    animation:wmapArrow 1.1s var(--ease) infinite;
-  }
-  .wizmap-arrow svg{width:15px;height:15px;}
-  .wizmap-arrow--left{left:-14px;transform:translateY(-50%);}
-  .wizmap-arrow--right{right:-14px;transform:translateY(-50%);}
-  .wizmap--left .wizmap-arrow{background:var(--dir-left);box-shadow:0 0 14px rgba(37,99,201,.45);}
-  .wizmap--right .wizmap-arrow{background:var(--dir-right);}
-  @keyframes wmapArrow{0%,100%{opacity:1;transform:translateY(-50%) scale(1)}50%{opacity:.88;transform:translateY(-50%) scale(1.08)}}
-  .wizmap-plate.shifted{
-    animation:none!important;
-    border-width:2px;border-style:dashed;
-    box-shadow:0 0 0 1px rgba(255,255,255,.04),0 6px 12px -6px rgba(0,0,0,.65);
-  }
-  .wizmap-plate.shift-left{border-color:rgba(110,168,255,.55);}
-  .wizmap-plate.shift-right{border-color:rgba(98,199,164,.55);}
-  .wizmap-plate.shift-wall{border-color:var(--danger-border);}
-  .wizmap-plate.shifted .wizmap-num{
-    color:#fff8e8;background:rgba(58,44,12,.92);border-color:rgba(255,232,168,.35);
-  }
-  .wizmap-plate.shift-left .wizmap-num{
-    color:#eef4ff;background:rgba(28,48,92,.92);border-color:rgba(158,197,255,.4);
-  }
-  .wizmap-plate.shift-right .wizmap-num{
-    color:#eafff6;background:rgba(24,68,56,.92);border-color:rgba(127,212,181,.4);
-  }
-  .wizmap-plate.shift-wall .wizmap-num{
-    color:#ffe8e4;background:rgba(72,20,20,.92);border-color:rgba(255,140,120,.4);
-  }
-  .wizmap-plate.shifted .wizmap-pin{
-    background:radial-gradient(circle at 34% 30%,#ffe8a8,#d4a84a 56%,#9a7028);
-    box-shadow:0 0 8px rgba(212,168,74,.75);
-  }
-  .wizmap-react{
-    position:absolute;top:50%;z-index:7;
-    width:22px;height:22px;border-radius:999px;
-    display:flex;align-items:center;justify-content:center;
-    transform:translateY(-50%);
-    color:#fff;pointer-events:none;
-    box-shadow:0 0 12px rgba(0,0,0,.35);
-  }
-  .wizmap-react[hidden]{display:none!important;}
-  .wizmap-react svg{width:13px;height:13px;}
-  .wizmap-react--left{left:-12px;background:var(--dir-left);box-shadow:0 0 14px rgba(37,99,201,.55);}
-  .wizmap-react--right{right:-12px;background:var(--dir-right);box-shadow:0 0 14px rgba(52,168,131,.5);}
-  .wizmap-react--wall{
-    top:2px;left:50%;transform:translateX(-50%);
-    min-width:22px;height:22px;padding:0 5px;border-radius:999px;
-    font-family:var(--mono);font-size:13px;font-weight:800;line-height:1;
-    background:var(--danger-soft);border:2px solid var(--danger-border);
-    color:var(--danger-text);box-shadow:0 0 12px rgba(220,80,80,.35);
-  }
-  .wizmap-legend{
-    margin:0 0 8px;font-size:11px;line-height:1.4;color:var(--ink-3);text-align:center;
-  }
-  .wizmap-legend b{color:var(--ink-2);font-weight:600;}
-  .wizmap-caption{
-    margin:10px 0 0;padding:11px 14px;border-radius:13px;text-align:center;
+  .wizchip.on .wizchip-check{width:13px;opacity:1;transform:none;margin-right:7px;}
+  .wizmovers{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
+  .wizmover{
+    display:none;padding:12px 14px;border-radius:12px;
     background:var(--bg);border:1px solid var(--line);
-    font-size:14.5px;font-weight:600;line-height:1.4;color:var(--ink);
   }
-  .wizmap-caption b{font-size:15px;font-weight:700;letter-spacing:-.01em;}
-  .wizmap-cap-dir{font-weight:700;}
-  .wizmap--left .wizmap-cap-dir{color:var(--dir-left);}
-  .wizmap--right .wizmap-cap-dir{color:var(--dir-right);}
-  .wizmap-cap-arr{font-weight:700;}
-  .wizmap--left .wizmap-cap-arr{color:var(--dir-left);}
-  .wizmap--right .wizmap-cap-arr{color:var(--dir-right);}
-  .wizmap-meta{
-    display:block;margin-top:3px;font-family:var(--mono);font-size:11.5px;font-weight:600;
-    color:var(--ink-2);
+  .wizmover.show{display:block;}
+  .wizmover-head{font-size:13px;font-weight:600;margin-bottom:8px;color:var(--ink-2);line-height:1.4;}
+  .wizmover-head b{color:var(--ink);}
+  .wizposrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wizpos{
+    display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+    padding:10px 12px;border-radius:10px;border:1px solid var(--line-2);
+    background:var(--surface);text-align:left;
+    cursor:pointer;transition:all .15s;color:var(--ink-2);
   }
-  @media(prefers-reduced-motion:reduce){
-    .wizmap-plate.active,.wizmap-arrow{animation:none!important;}
-  }
-  #linkWizPanel.wiz-compact .wiztag{display:none;}
-  #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 20px;overflow-x:visible;}
-  #linkWizPanel.wiz-compact .wizfoot{padding:16px 22px calc(18px + env(safe-area-inset-bottom,0px));gap:14px;}
-  #linkWizPanel.wiz-compact .wizfoot-aside{
-    margin-top:2px;padding-top:14px;border-top:1px solid var(--line);
-  }
-  #linkWizPanel.wiz-compact .wizfoot-aside button{padding:12px 20px;font-size:13px;border-radius:10px;}
-  #linkWizPanel.wiz-compact .wizhead{padding:18px 22px 14px;border-bottom:1px solid var(--line);}
-  #linkWizPanel.wiz-compact .wiztitle{font-size:16px;margin-bottom:2px;padding-right:34px;}
-  #linkWizPanel.wiz-compact .wizsub{font-size:12px;line-height:1.3;margin:0;}
-  #linkWizPanel.wiz-compact .wizprog{margin:8px 18px 0;}
-  #linkWizPanel.wiz-compact .wizmap-scene{
-    height:clamp(168px,calc(128px + var(--wmap-n,6) * 13px),218px);
-    padding:16px 32px 6px;
-  }
-  #linkWizPanel.wiz-compact .wizreact{margin-top:4px;padding-top:10px;}
-  #linkWizPanel.wiz-compact .wizreact-q{margin:0 0 5px;font-size:13px;}
-  #linkWizPanel.wiz-compact .wizmap-legend{margin:0 0 5px;font-size:10.5px;line-height:1.35;}
-  #linkWizPanel.wiz-compact .wizdetail-hd{margin:0 0 5px;font-size:11px;}
-  #linkWizPanel.wiz-compact .wizanswers--split{gap:4px 6px;}
-  #linkWizPanel.wiz-compact .wiztile{padding:3px 5px;}
-  #linkWizPanel.wiz-compact .wiztile .wizchoice{min-height:30px;}
-  #linkWizPanel.wiz-compact .wiztile .wizchoice b{font-size:14px;}
-  .wizfoot-actions:has(.btn.primary[hidden]){grid-template-columns:1fr;}
-  .wizanswer-label{display:flex;flex-direction:column;gap:2px;min-width:0;}
-  .wizanswer-label b{font-size:13px;color:var(--ink);font-weight:700;}
-  .wizanswer-label span{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
-  .wizchoice-row{display:grid;grid-template-columns:1fr .86fr 1fr;gap:7px;}
-  .wizchoice-row--single{grid-template-columns:1fr 1fr;max-width:280px;margin:0 auto;}
-  .wizchoice-row--single .wizchoice-spacer{display:none;}
-  .wizchoice-spacer{visibility:hidden;pointer-events:none;}
-  .wizchoice{
-    min-width:0;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-    padding:7px 6px;border-radius:10px;border:1px solid var(--line-2);
-    background:var(--surface);color:var(--ink-2);cursor:pointer;text-align:center;
-    transition:border-color .18s var(--ease),background .18s var(--ease),color .18s var(--ease),box-shadow .18s var(--ease),transform .1s;
-  }
-  .wizchoice b{font-size:12.5px;font-weight:700;color:var(--ink);}
-  .wizchoice span{font-size:10.5px;line-height:1.25;color:var(--ink-3);}
-  .wizchoice:hover{border-color:var(--ink-3);}
-  .wizchoice:active{transform:scale(.97);}
-  .wizchoice.on{border-color:var(--line-2);background:var(--surface);box-shadow:inset 0 0 0 1px var(--line-2);}
-  .wizchoice.none.on{background:var(--bg);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line);}
-  .wizchoice.dir-r.on{border-color:var(--pos);background:var(--pos-soft);box-shadow:0 8px 22px -18px var(--pos);}
-  .wizchoice.dir-r.on b,.wizchoice.dir-r.on span{color:var(--pos-ink);}
-  .wizchoice.dir-l.on{border-color:var(--dir-left);background:var(--dir-left-soft);box-shadow:0 8px 22px -18px var(--dir-left);}
-  .wizchoice.dir-l.on b,.wizchoice.dir-l.on span{color:var(--dir-left);}
-  .wizchoice.jerk.on{border-color:var(--danger-border);background:var(--danger-soft);}
-  .wizchoice.jerk.on b,.wizchoice.jerk.on span{color:var(--danger-text);}
-  @media(max-width:560px){
-    .wizback{padding:0;align-items:flex-end;}
-    #linkWizPanel{
-      width:100%;max-height:min(94dvh,100%);
-      border-radius:20px 20px 0 0;border-bottom:none;
-      transform:translateY(100%);
-    }
-    .wizback.open #linkWizPanel{transform:none;}
-    .wizhead{padding:16px 18px 0;}
-    .wizbody{padding:12px 18px;}
-    .wizfoot{padding:16px 20px calc(18px + env(safe-area-inset-bottom,0px));gap:14px;}
-    .wiztitle{font-size:18px;}
-    .wizsub{font-size:13px;line-height:1.4;}
-    .wizcmd{padding:14px 12px;margin-bottom:12px;}
-    .wizcmd .move{font-size:clamp(24px,7vw,32px);}
-    .wizobserve{padding:9px 10px;margin-bottom:10px;}
-    .wizobserve span{display:none;}
-    .wizanswers{gap:6px;}
-    .wizanswers--split{gap:5px 6px;}
-    .wizanswer{padding:9px 10px;gap:6px;}
-    .wiztile{padding:4px 5px;grid-template-columns:26px minmax(0,1fr);}
-    .wiztile .wizchoice{min-height:32px;}
-    .wizmap-scene{padding:8px 30px 4px;height:clamp(146px,calc(112px + var(--wmap-n,6) * 10px),196px);}
-    .wizmap-lock{transform:translate(calc(var(--wmap-n,6) * -3px - 4px),calc(var(--wmap-n,6) * 6px + 6px)) scale(.82) rotateX(-50deg) rotateY(-22deg);}
-    .wizmap-caption{font-size:14px;padding:10px 12px;margin-top:8px;}
-    .wizreact{margin-top:10px;padding-top:12px;}
-    .wizchoice b{font-size:12px;}
-    .wizchoice span{font-size:10px;}
-    .wizanswer-label b{font-size:12.5px;}
-  }
-  @media(max-width:560px){
-    .wizanswer:not(.wiztile){grid-template-columns:1fr;gap:6px;align-items:stretch;}
-    .wizanswer:not(.wiztile) .wizanswer-label{flex-direction:row;align-items:baseline;justify-content:space-between;}
-  }
-  @media(min-width:561px){
-    .wizback{padding:10px;}
-    #linkWizPanel{max-height:calc(100dvh - 20px);}
-    #linkWizPanel.wiz-compact{overflow-y:auto;}
-    #linkWizPanel.wiz-compact .wizbody{
-      flex:0 0 auto;min-height:0;overflow-x:visible;overflow-y:visible;
-    }
-    #linkWizPanel{width:min(725px,100%);}
-    #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 20px;}
-    #linkWizPanel.wiz-compact .wizmap-scene{
-      height:clamp(196px,calc(146px + var(--wmap-n,6) * 15px),246px);
-      padding:20px 44px 8px;
-    }
-    .wizmap-lock{
-      transform:translate(calc(var(--wmap-n,6) * -4px - 10px),calc(var(--wmap-n,6) * 8px + 16px))
-        scale(1.08) rotateX(-50deg) rotateY(-22deg);
-    }
-    .wizmap-layer{transform:translateZ(calc(var(--s) * -40px)) rotateX(96deg);}
-    #linkWizPanel.wiz-compact .wizmap-gamestep{margin-bottom:0;padding:16px 18px;font-size:16px;}
-    #linkWizPanel.wiz-compact .wizmap-gamestep b{font-size:26px;}
-    #linkWizPanel.wiz-compact .wizmap-gamestep .wizmap-game-dir{font-size:21px;}
-    #linkWizPanel.wiz-compact .wizmap-gamestep-hint{font-size:13px;}
-    #linkWizPanel.wiz-compact .wizmap-meta{font-size:13px;}
-    @keyframes wmapNudgeL{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) - 6px))}}
-    @keyframes wmapNudgeR{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) + 6px))}}
-  }
-  @keyframes wizAnswerIn{from{opacity:0;transform:translateY(8px) scale(.992);}to{opacity:1;transform:none;}}
+  .wizpos-dir{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;letter-spacing:.04em;color:var(--ink);}
+  .wizpos-dir svg{flex-shrink:0;transition:transform .18s var(--ease);}
+  .wizpos-sub{font-size:11.5px;color:var(--ink-3);line-height:1.35;}
+  .wizpos:hover{border-color:var(--ink-3);}
+  .wizpos:hover .wizpos-dir svg{transform:translateX(var(--nudge,0));}
+  .wizpos:active{transform:scale(.97);}
+  .wizpos:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .wizpos.on{border-color:var(--accent);background:var(--accent-soft);}
+  .wizpos.on .wizpos-dir{color:var(--accent-ink);}
+  .wizpos.on .wizpos-sub{color:var(--accent-ink);opacity:.7;}
+  /* выбранный вариант красим по СВОЕМУ направлению: влево синий, вправо зелёный
+     (зелёный через --pos-*, чтобы не зависеть от подсветки основного хода) */
+  .wizpos.dir-r.on{border-color:var(--pos);background:var(--pos-soft);}
+  .wizpos.dir-r.on .wizpos-dir{color:var(--pos-ink);}
+  .wizpos.dir-r.on .wizpos-sub{color:var(--pos-ink);opacity:.7;}
+  .wizpos.dir-l.on{border-color:var(--dir-left);background:var(--dir-left-soft);}
+  .wizpos.dir-l.on .wizpos-dir{color:var(--dir-left);}
+  .wizpos.dir-l.on .wizpos-sub{color:var(--dir-left);opacity:.7;}
+  .wizpos.jerk.on{border-color:var(--danger-border);background:var(--danger-soft);}
+  .wizpos.jerk.on .wizpos-dir,.wizpos.jerk.on .wizpos-sub{color:var(--danger-text);opacity:1;}
   .wizlockreset{
     display:flex;align-items:flex-start;gap:10px;margin:4px 0 2px;padding:12px 14px;
     border-radius:12px;border:1px solid var(--danger-border);background:var(--danger-soft);
     font-size:13px;line-height:1.45;color:var(--ink-2);cursor:pointer;
   }
   .wizlockreset[hidden]{display:none;}
-  .wizlockreset:not([hidden]){animation:wizContentIn .24s var(--ease) both;}
   .wizlockreset input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
   .wizlockreset b{color:var(--ink);}
   .wizfoot{
-    display:flex;flex-direction:column;gap:14px;padding:18px 24px calc(20px + env(safe-area-inset-bottom,0px));
+    display:flex;flex-direction:column;gap:12px;padding:0 22px 22px;
   }
-  .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .wizfoot-actions .btn{width:100%;justify-content:center;min-width:0;}
-  .wizfoot-aside{text-align:center;line-height:1.35;margin-top:2px;padding-top:14px;border-top:1px solid var(--line);}
+  .wizfoot-aside{text-align:center;line-height:1.35;}
   .wizfoot-aside button{
-    background:none;border:none;padding:12px 20px;font-size:13px;color:var(--ink-2);
+    background:none;border:none;padding:4px 6px;font-size:12px;color:var(--ink-2);
     text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit;
-    border-radius:10px;transition:color .18s,background .18s;
   }
-  .wizfoot-aside button:hover{color:var(--ink);background:var(--bg);}
+  .wizfoot-aside button:hover{color:var(--ink);}
   .wizfoot-aside button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
   @media(max-width:430px){
     .wizfoot-actions{grid-template-columns:1fr;}
@@ -1057,9 +658,8 @@
     .hn-act .btn.primary{width:100%;justify-content:center;}
   }
   @media(prefers-reduced-motion:reduce){.helpnudge{animation:none;transition:none;}.hn-ic svg{animation:none;}}
-  #suggestStep:empty{display:none;}
-  #suggestStep:not(:empty){margin-bottom:14px;}
-  #suggestStep .helpnudge{margin-top:0;margin-bottom:0;}
+  #suggestTop:empty{display:none;}
+  #suggestTop .helpnudge{margin-top:0;margin-bottom:14px;}
   .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
   .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
   .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
@@ -1084,8 +684,6 @@
   .btn:hover{border-color:var(--ink-3);transform:translateY(-2px);}
   .btn:hover svg{color:var(--ink);}
   .btn:active{transform:scale(.97);}
-  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
-  .btn:disabled:hover{border-color:var(--line-2);transform:none;}
   .btn.primary{
     background:var(--accent);border-color:var(--accent);color:var(--on-accent);
     font-weight:600;font-size:16px;padding:14px 28px;
@@ -1332,36 +930,6 @@
     box-shadow:var(--toast-shadow);
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
-  .linknotice{
-    position:fixed;right:20px;bottom:20px;z-index:55;
-    width:min(380px,calc(100dvw - 32px - var(--wiz-sb, 0px)));
-    padding:18px 46px 18px 18px;
-    background:var(--surface);border:1px solid var(--line);
-    border-radius:16px;box-shadow:var(--card-shadow);
-    transform:translateX(calc(100% + 28px));opacity:0;
-    pointer-events:none;
-    transition:transform .5s var(--ease),opacity .4s var(--ease);
-  }
-  .linknotice.show{transform:translateX(0);opacity:1;pointer-events:auto;}
-  .linknotice-close{
-    position:absolute;top:10px;right:10px;width:28px;height:28px;
-    border:none;background:transparent;color:var(--ink-3);
-    font-size:20px;line-height:1;cursor:pointer;border-radius:8px;
-    transition:color .2s,background .2s;
-  }
-  .linknotice-close:hover{color:var(--ink);background:var(--bg);}
-  .linknotice-tag{
-    display:inline-block;font-family:var(--mono);font-size:10.5px;
-    font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--accent-ink);background:var(--accent-soft);
-    border:1px solid var(--accent-border);border-radius:999px;padding:4px 8px;margin-bottom:10px;
-  }
-  .linknotice-title{font-weight:700;font-size:15.5px;letter-spacing:-.02em;line-height:1.3;}
-  .linknotice-body{color:var(--ink-2);font-size:13.5px;line-height:1.48;margin-top:6px;}
-  @media(max-width:560px){
-    .linknotice{right:16px;bottom:16px;}
-    html.wiz-open .linknotice{right:calc(16px + var(--wiz-sb, 0px));}
-  }
 
   /* 50k celebration slide-in + confetti (off)
   .fixnote{
@@ -1404,9 +972,6 @@
     .phead-flip .ptitle{grid-column:1;}
     .phead-flip .flipbtn{grid-column:2;justify-self:end;}
     .phead-flip .pdesc{grid-column:1 / -1;}
-    .phead-linkmode .ptitle{grid-column:1 / -1;}
-    .phead-linkmode .linkmode{grid-column:1 / -1;justify-self:start;margin-top:8px;}
-    .phead-linkmode .pdesc{grid-column:1 / -1;}
     .pdesc{grid-column:1;}
     .pbody{margin-left:0;}
     .hole{width:40px;height:40px;border-radius:11px;}
@@ -1501,28 +1066,14 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
-      "@id": "https://unlockmyloot.com/#organization",
-      "name": "UnlockMyLoot",
-      "url": "https://unlockmyloot.com/",
-      "logo": "https://unlockmyloot.com/og.png",
-      "sameAs": [
-        "https://github.com/1h8s/unlockmyloot",
-        "https://www.youtube.com/@1h8s"
-      ]
-    },
-    {
       "@type": "WebSite",
-      "@id": "https://unlockmyloot.com/#website",
       "name": "UnlockMyLoot",
       "url": "https://unlockmyloot.com/",
       "inLanguage": "ru",
-      "publisher": { "@id": "https://unlockmyloot.com/#organization" },
       "description": "Решатель замков Gothic 1 Remake - кратчайший безопасный взлом без поломки отмычки"
     },
     {
       "@type": "WebApplication",
-      "@id": "https://unlockmyloot.com/#app",
       "name": "UnlockMyLoot",
       "alternateName": [
         "Gothic 1 Remake Lockpick Solver",
@@ -1535,7 +1086,6 @@
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "publisher": { "@id": "https://unlockmyloot.com/#organization" },
       "description": "Онлайн-решатель мини-игры взлома замков в Gothic 1 Remake. BFS находит кратчайшую последовательность ходов без удара штифтов о стену.",
       "inLanguage": ["ru", "en"],
       "author": {
@@ -1611,7 +1161,7 @@
 
     <section class="hero">
       <div class="eyebrow rise" style="--d:1">Gothic 1 Remake · взлом замков</div>
-      <h1 class="rise" style="--d:2">UnlockMyLoot: любой замок. Ноль сломанных отмычек.</h1>
+      <h1 class="rise" style="--d:2">Любой замок. Ноль сломанных отмычек.</h1>
       <p class="rise" style="--d:3">Опиши замок - позиции штифтов и связи между плитками - и получи кратчайшую последовательность ходов. Каждый шаг проверен: ни одного движения в стену.</p>
       <a class="cta rise" style="--d:4" href="#solver">
         Начать взлом
@@ -1688,47 +1238,25 @@
     </div>
 
     <div class="pstep">
-      <div class="phead phead-linkmode">
+      <div class="phead phead-flip">
         <span class="pnum">03</span>
         <span class="ptitle">Связи между плитками</span>
-        <div class="linkmode" role="group" aria-label="Способ ввода связей">
-          <button type="button" id="linkModeFind" data-link-mode="find">Пошаговый поиск</button>
-          <button type="button" id="linkModeMatrix" data-link-mode="matrix">Матрица</button>
-        </div>
-        <p class="pdesc" id="linkModeDesc">Если не знаешь связи, иди пошагово: сдвинь плитку в игре, отметь реакцию остальных, а матрица заполнится сама.</p>
+        <button class="helpbtn" id="linkHelpBtn" type="button" disabled title="Сначала укажи позиции штифтов на шаге 02">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.8" stroke="currentColor" stroke-width="1.5"/><path d="M5.4 5.1a1.8 1.8 0 0 1 3.5.7c0 1.1-1.7 1.2-1.7 2.4M7 10.2h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Помощник
+        </button>
+        <p class="pdesc">Сдвинь каждую плитку на шаг и верни обратно. Отметь, кто дёрнулся вместе с ней и куда. Связи бывают односторонними: 1 может тянуть 3, даже если 3 не тянет 1.</p>
       </div>
-      <div class="pbody linkpanes">
-        <div id="suggestStep"></div>
-        <div class="linkpane" id="linkFindPane">
-          <div class="linkfind" id="linkFindIntro">
-            <div class="lf-ic">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v3M12 18v3M4.5 4.5l2 2M17.5 17.5l2 2M3 12h3M18 12h3M19.5 4.5l-2 2M6.5 17.5l-2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-              <div class="lf-title">Пошаговый поиск связей</div>
-              <div class="lf-copy">Мы подскажем, какую плитку сдвинуть. Ты отмечаешь только реакцию остальных плиток, а UnlockMyLoot записывает связи в матрицу.</div>
-              <div class="lf-steps">
-                <span>1. Сдвинь плитку</span>
-                <span>2. Отметь движение</span>
-                <span>3. Получи связи</span>
-              </div>
-              <div class="lf-actions">
-                <button class="btn primary" id="linkFindStart" type="button" disabled>Начать пошаговый поиск</button>
-                <button class="btn" id="linkFindMatrix" type="button">Я знаю связи</button>
-              </div>
-              <div class="lf-note" id="linkFindNote">Сначала укажи позиции штифтов на шаге 02. После этого мастер станет доступен.</div>
-            </div>
-          </div>
+      <div class="pbody">
+        <div id="suggestTop"></div>
+        <div class="depscroll"><table id="deps"></table></div>
+        <div class="legend">
+          <span><svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="#7d858d"/></svg> не двигается</span>
+          <span style="color:var(--pos-ink)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в ту же сторону</span>
+          <span style="color:var(--danger)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в противоположную</span>
         </div>
-        <div class="linkpane" id="linkMatrixPane" hidden>
-          <div class="depscroll"><table id="deps"></table></div>
-          <div class="legend">
-            <span><svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="#7d858d"/></svg> не двигается</span>
-            <span style="color:var(--pos-ink)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M1 3h9m0 0L7 .5M10 3 7 5.5M4 8h9m0 0-3-2.5M13 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в ту же сторону</span>
-            <span style="color:var(--danger)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> в противоположную</span>
-          </div>
-          <div class="linksum" id="linksum"></div>
-        </div>
+        <div class="linksum" id="linksum"></div>
+        <div id="suggestBox"></div>
       </div>
     </div>
     </div>
@@ -1862,7 +1390,7 @@
     <div class="wizhead">
       <div class="wiztag">Новое</div>
       <div class="wiztitle" id="linkHelpAnnTitle">Помощь со связями</div>
-      <p class="wizsub">На шаге 03 выбери «Пошаговый поиск». Покажем, как безопасно найти связи между плитками.</p>
+      <p class="wizsub">На шаге 03 - кнопка «Помощник». Покажем, как безопасно найти связи между плитками.</p>
     </div>
     <div class="wizbody">
       <ol class="annfeat">
@@ -1880,8 +1408,8 @@
   </div>
 </div>
 <div class="wizback" id="linkWizBack" aria-hidden="true">
-  <div class="wizpanel" id="linkWizPanel" role="region" aria-labelledby="linkWizTitle">
-    <button class="wizclose" id="linkWizClose" type="button" aria-label="Закрыть" onclick="closeLinkWizard()">&times;</button>
+  <div class="wizpanel" role="dialog" aria-modal="true" aria-labelledby="linkWizTitle">
+    <button class="wizclose" id="linkWizClose" type="button" aria-label="Закрыть">&times;</button>
     <div class="wizhead">
       <div class="wiztag" id="linkWizTag">Пошаговый поиск</div>
       <div class="wiztitle" id="linkWizTitle">Безопасные связи</div>
@@ -1893,12 +1421,6 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<aside class="linknotice" id="linkModeNote" role="status" aria-live="polite" hidden>
-  <button class="linknotice-close" id="linkModeNoteClose" type="button" aria-label="Закрыть">&times;</button>
-  <div class="linknotice-tag">Обновление</div>
-  <div class="linknotice-title">Поиск связей теперь отдельный режим</div>
-  <div class="linknotice-body">Помощник теперь в шаге 03 как «Пошаговый поиск». Если удобнее вводить всё вручную, переключись на «Матрица» - она осталась на месте.</div>
-</aside>
 <!-- 50k celebration + confetti (off)
 <aside class="fixnote" id="fixNote" role="status" aria-live="polite" hidden>
   <button class="fixnote-close" id="fixNoteClose" type="button" aria-label="Закрыть">&times;</button>
@@ -2142,7 +1664,6 @@ document.getElementById('themeBtn').onclick = function () {
 /* фоновая анимация штифтов за hero */
 (function buildHeroBg() {
   var bg = document.getElementById('herobg');
-  if (!bg) return;
   var rows = [
     { top: 8,  x0: '12vw', dur: 7.2,  del: 0,    op: .8  },
     { top: 20, x0: '78vw', dur: 8.6,  del: .9,   op: .55 },
@@ -2243,7 +1764,6 @@ function renderPins() {
   }
   t.innerHTML = html;
   updateLinkHelpBtn();
-  syncDuoHeaders();
 }
 
 /* FLIP-анимация перестановки строк: замеряем позиции до, рендерим,
@@ -2296,10 +1816,9 @@ function animateRowSwap(tableIds, rerender) {
     var b = e.target.closest ? e.target.closest('.hole[data-i]') : null;
     if (!b) return;
     pinsTouched = true;
-    if (!TRACK_PINS_SENT) { TRACK_PINS_SENT = true; trackEvent('pins_edit'); }
-    if (!TRACK_PINS_SENT) { TRACK_PINS_SENT = true; trackEvent('pins_edit'); }
     PINS_EDITED[+b.dataset.i] = true;
     pins[+b.dataset.i] = +b.dataset.p;
+    if (!TRACK_PINS_SENT) { TRACK_PINS_SENT = true; trackEvent('pins_edit'); }
     WIZ_MEM.base = null; /* ручная правка позиций: новый снимок исходного состояния при следующем открытии мастера */
     renderPins();
   });
@@ -2353,23 +1872,6 @@ function renderDeps() {
   }
   t.innerHTML = html;
   renderLinkSum();
-  syncDuoHeaders();
-}
-
-var DUO_HEAD_SYNC_TIMER = 0;
-function syncDuoHeaders() {
-  clearTimeout(DUO_HEAD_SYNC_TIMER);
-  DUO_HEAD_SYNC_TIMER = setTimeout(function () {
-    var duo = document.querySelector('.duo');
-    if (!duo) return;
-    var heads = Array.prototype.slice.call(duo.querySelectorAll(':scope > .pstep > .phead'));
-    if (heads.length < 2) return;
-    heads.forEach(function (h) { h.style.minHeight = ''; });
-    if (window.innerWidth < 980) return;
-    var maxH = 0;
-    heads.forEach(function (h) { maxH = Math.max(maxH, Math.ceil(h.getBoundingClientRect().height)); });
-    heads.forEach(function (h) { h.style.minHeight = maxH + 'px'; });
-  }, 0);
 }
 
 function renderLinkSum() {
@@ -2472,11 +1974,6 @@ var WIZ_SVG_CHECK = '<svg class="wizchip-check" viewBox="0 0 14 14" fill="none" 
 var WIZ_SVG_ARR_L = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5m0 0 6-6m-6 6 6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var WIZ_SVG_ARR_R = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 var WIZ_SVG_R = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M10 6h8v8M18 6 8 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-var LINK_MODE = 'find';
-try {
-  var linkModePref = localStorage.getItem('uml-linkmode');
-  if (linkModePref === 'matrix') LINK_MODE = 'matrix';
-} catch (e) {}
 
 function pinsConfigured() {
   return pinsTouched && pins.length === N;
@@ -2491,126 +1988,13 @@ function pinsEnteredEnough() {
   return n >= 2;
 }
 function updateLinkHelpBtn() {
+  var b = document.getElementById('linkHelpBtn');
+  if (!b) return;
   var ok = pinsConfigured();
-  var start = document.getElementById('linkFindStart');
-  if (start) {
-    start.disabled = !ok;
-    start.title = ok ? 'Открыть пошаговый поиск связей' : 'Сначала укажи позиции штифтов на шаге 02';
-  }
-  var note = document.getElementById('linkFindNote');
-  if (note) {
-    note.textContent = ok
-      ? 'Мастер не угадывает: он ведёт по реальным ходам в игре и записывает только то, что ты подтвердил.'
-      : 'Сначала укажи позиции штифтов на шаге 02. После этого мастер станет доступен.';
-  }
-}
-function setLinkPaneVisible(el, show) {
-  if (!el) return;
-  clearTimeout(el._linkPaneTimer);
-  if (show) {
-    el.hidden = false;
-    el.classList.add('is-enter');
-    el.classList.remove('is-exit');
-    requestAnimationFrame(function () {
-      el.classList.remove('is-enter');
-      el.classList.add('is-active');
-    });
-    return;
-  }
-  if (el.hidden) return;
-  el.classList.remove('is-active', 'is-enter');
-  el.classList.add('is-exit');
-  el._linkPaneTimer = setTimeout(function () {
-    el.hidden = true;
-    el.classList.remove('is-exit');
-  }, 280);
-}
-function setLinkPaneMode(mode, skipAnim) {
-  var wrap = document.querySelector('.linkpanes');
-  var findPane = document.getElementById('linkFindPane');
-  var matrixPane = document.getElementById('linkMatrixPane');
-  var active = mode === 'matrix' ? matrixPane : findPane;
-  var inactive = mode === 'matrix' ? findPane : matrixPane;
-  if (!wrap || !active || !inactive) {
-    setLinkPaneVisible(findPane, mode !== 'matrix');
-    setLinkPaneVisible(matrixPane, mode === 'matrix');
-    return;
-  }
-  clearTimeout(wrap._linkPaneTimer);
-  clearTimeout(active._linkPaneTimer);
-  clearTimeout(inactive._linkPaneTimer);
-  if (skipAnim || (!active.hidden && inactive.hidden && active.classList.contains('is-active'))) {
-    active.hidden = false;
-    active.classList.add('is-active');
-    active.classList.remove('is-enter', 'is-exit');
-    inactive.hidden = true;
-    inactive.classList.remove('is-active', 'is-enter', 'is-exit');
-    wrap.classList.remove('is-switching');
-    wrap.style.height = '';
-    return;
-  }
-  var fromH = Math.max(1, wrap.offsetHeight);
-  wrap.classList.add('is-switching');
-  wrap.style.height = fromH + 'px';
-  if (!inactive.hidden) {
-    inactive.classList.remove('is-active', 'is-enter');
-    inactive.classList.add('is-exit');
-  }
-  active.hidden = false;
-  active.classList.remove('is-exit');
-  active.classList.add('is-active');
-  var toH = Math.max(1, active.offsetHeight);
-  active.classList.remove('is-active');
-  active.classList.add('is-enter');
-  requestAnimationFrame(function () {
-    wrap.style.height = toH + 'px';
-    active.classList.remove('is-enter');
-    active.classList.add('is-active');
-  });
-  wrap._linkPaneTimer = setTimeout(function () {
-    inactive.hidden = true;
-    inactive.classList.remove('is-exit', 'is-enter', 'is-active');
-    wrap.classList.remove('is-switching');
-    wrap.style.height = '';
-  }, 340);
-}
-var LINK_PANE_INIT = true;
-function updateLinkModeUI() {
-  var find = document.getElementById('linkModeFind');
-  var matrix = document.getElementById('linkModeMatrix');
-  var findPane = document.getElementById('linkFindPane');
-  var matrixPane = document.getElementById('linkMatrixPane');
-  var desc = document.getElementById('linkModeDesc');
-  if (find) {
-    find.classList.toggle('on', LINK_MODE === 'find');
-    find.setAttribute('aria-pressed', LINK_MODE === 'find' ? 'true' : 'false');
-  }
-  if (matrix) {
-    matrix.classList.toggle('on', LINK_MODE === 'matrix');
-    matrix.setAttribute('aria-pressed', LINK_MODE === 'matrix' ? 'true' : 'false');
-  }
-  setLinkPaneMode(LINK_MODE, LINK_PANE_INIT);
-  LINK_PANE_INIT = false;
-  if (LINK_MODE === 'find' && !LINK_WIZ) {
-    var intro = document.getElementById('linkFindIntro');
-    if (intro) intro.hidden = false;
-  }
-  if (desc) {
-    desc.textContent = LINK_MODE === 'find'
-      ? 'Если не знаешь связи, иди пошагово: сдвинь плитку в игре, отметь реакцию остальных, а матрица заполнится сама.'
-      : 'Если связи уже известны, вводи их вручную в матрицу. Связи бывают односторонними: 1 может тянуть 3, даже если 3 не тянет 1.';
-  }
-  syncDuoHeaders();
-  updateLinkHelpBtn();
-}
-function setLinkMode(mode, explicit) {
-  LINK_MODE = mode === 'matrix' ? 'matrix' : 'find';
-  if (explicit) {
-    try { localStorage.setItem('uml-linkmode', LINK_MODE); } catch (e) {}
-    trackEvent(LINK_MODE === 'matrix' ? 'mode_matrix' : 'mode_find');
-  }
-  if (LINK_WIZ && LINK_MODE !== 'find') closeLinkWizard();
-  updateLinkModeUI();
+  b.disabled = !ok;
+  b.title = ok
+    ? 'Пошагово найти связи без удара в стену'
+    : 'Сначала укажи позиции штифтов на шаге 02';
 }
 function plateMoveLabel(d) {
   return d > 0 ? 'ВЛЕВО' : 'ВПРАВО';
@@ -2626,40 +2010,6 @@ function wizMk2d(fill) {
   var a = [];
   for (var i = 0; i < N; i++) { a[i] = []; for (var j = 0; j < N; j++) a[i][j] = fill; }
   return a;
-}
-function wizClone2d(a) {
-  return a ? a.map(function (r) { return r.slice(); }) : null;
-}
-function wizSnapshot(wiz) {
-  return {
-    sim: wiz.sim.slice(),
-    link: link.map(function (r) { return r.slice(); }),
-    zero: wizClone2d(wiz.confirmedZero),
-    cmd: wiz.cmd ? { driver: wiz.cmd.driver, d: wiz.cmd.d, helper: !!wiz.cmd.helper } : null,
-    step: wiz.step
-  };
-}
-function wizPushHistory(wiz) {
-  if (!wiz.history) wiz.history = [];
-  wiz.history.push(wizSnapshot(wiz));
-}
-function wizCanUndo() {
-  return !!(LINK_WIZ && LINK_WIZ.history && LINK_WIZ.history.length);
-}
-function wizUndoStep() {
-  var wiz = LINK_WIZ;
-  if (!wizCanUndo()) return;
-  var snap = wiz.history.pop();
-  wiz.sim = snap.sim;
-  link = snap.link;
-  WIZ_MEM.zero = snap.zero;
-  wiz.confirmedZero = WIZ_MEM.zero;
-  wiz.cmd = snap.cmd;
-  wiz.step = snap.step;
-  wizSyncPins(wiz);
-  renderDeps();
-  wizSwap(wizRenderStep, { fast: true });
-  toast('Шаг отменён');
 }
 function wizRowNeedsProbe(wiz, i) {
   for (var j = 0; j < N; j++) {
@@ -2830,80 +2180,8 @@ function wizProgress(wiz) {
   var pct = wiz.rows0 ? Math.min(100, Math.round((1 - left / wiz.rows0) * 100)) : 100;
   bar.style.width = pct + '%';
 }
-var WIZ_SWAP_MS = 100;
-var WIZ_SWAP_TIMER = null;
-function wizMotionReduced() {
-  try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
-}
-function wizMotionNodes() {
-  return [
-    document.getElementById('linkWizBody'),
-    document.getElementById('linkWizFoot')
-  ];
-}
-function wizSwapClearMotion() {
-  if (WIZ_SWAP_TIMER) {
-    clearTimeout(WIZ_SWAP_TIMER);
-    WIZ_SWAP_TIMER = null;
-  }
-  var panel = document.getElementById('linkWizPanel');
-  if (panel) panel.classList.remove('is-changing');
-  var nodes = wizMotionNodes();
-  for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i]) nodes[i].classList.remove('is-entering', 'is-leaving');
-  }
-}
-function wizMarkEntered() {
-  if (wizMotionReduced()) return;
-  var nodes = wizMotionNodes();
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      for (var i = 0; i < nodes.length; i++) {
-        var el = nodes[i];
-        if (!el) continue;
-        el.classList.remove('is-entering', 'is-leaving');
-        void el.offsetWidth;
-        el.classList.add('is-entering');
-      }
-    });
-  });
-}
-function wizScrollBodyTop() {
-  var body = document.getElementById('linkWizBody');
-  if (body) body.scrollTop = 0;
-}
-function wizSwap(render, opts) {
-  opts = opts || {};
-  var fast = !!opts.fast;
-  var panel = document.getElementById('linkWizPanel');
-  var body = document.getElementById('linkWizBody');
-  if (!body || wizMotionReduced() || fast) {
-    wizSwapClearMotion();
-    render();
-    if (!fast && !wizMotionReduced()) wizMarkEntered();
-    wizScrollBodyTop();
-    return;
-  }
-  wizSwapClearMotion();
-  if (panel) panel.classList.add('is-changing');
-  var nodes = wizMotionNodes();
-  for (var i = 0; i < nodes.length; i++) {
-    if (!nodes[i]) continue;
-    nodes[i].classList.remove('is-entering');
-    nodes[i].classList.add('is-leaving');
-  }
-  WIZ_SWAP_TIMER = setTimeout(function () {
-    WIZ_SWAP_TIMER = null;
-    for (var j = 0; j < nodes.length; j++) if (nodes[j]) nodes[j].classList.remove('is-leaving');
-    render();
-    wizMarkEntered();
-    wizScrollBodyTop();
-    if (panel) panel.classList.remove('is-changing');
-  }, WIZ_SWAP_MS);
-}
 function wizRenderIntro() {
   var wiz = LINK_WIZ;
-  wizSetPanelCompact(false);
   document.getElementById('linkWizTitle').textContent = 'Безопасный поиск связей';
   document.getElementById('linkWizSub').textContent =
     'Обычно один ход на плитку. Сдвинул в игре и отметил, кто дёрнулся. Дальше считаем сами.';
@@ -2917,10 +2195,9 @@ function wizRenderIntro() {
     '<div class="wizfoot-actions">' +
     '<button class="btn primary" type="button" id="wizStart">Начать</button>' +
     '<button class="btn ghost" type="button" id="wizCancelIntro">Отмена</button></div>';
-  document.getElementById('wizStart').onclick = function () { wizSwap(wizRenderStep, { fast: true }); };
+  document.getElementById('wizStart').onclick = function () { wizRenderStep(); };
   document.getElementById('wizCancelIntro').onclick = closeLinkWizard;
   wizMaybeSuggest();
-  wizMarkEntered();
 }
 /* подсказка связей из копилки прямо в помощнике: если расстановку уже вскрывали,
    предлагаем подставить известные связи и добить остальное пробами. */
@@ -2943,7 +2220,8 @@ function wizMaybeSuggest() {
       '<button class="btn primary" type="button" id="wizSgYes">Подставить связи и продолжить</button></div>';
     document.getElementById('wizSgYes').onclick = function () {
       var n = applySuggestedLinks(d.code);
-      if (n < 0) return;
+      if (n < 0) { trackEvent('suggest_apply_fail'); return; }
+      trackEvent('suggest_apply_ok');
       LINK_WIZ.sim = pins.slice();
       LINK_WIZ.confirmedZero = WIZ_MEM.zero;
       LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
@@ -2951,177 +2229,47 @@ function wizMaybeSuggest() {
         ? 'Подставлено: ' + n + ', но ' + SUGGEST_CONFLICTS + ' яч. отличались от твоих отметок'
         : 'Подставлено связей: ' + n + ' - осталось проверить ' + matrixUnknownCount());
       if (matrixUnknownCount() === 0) {
-        wizSwap(wizRenderDone);
+        wizRenderDone();
         return;
       }
-      wizSwap(wizRenderStep, { fast: true });
+      wizRenderStep();
     };
   });
 }
-function wizHelperTargets(wiz) {
-  var t = [];
-  for (var k = 0; k < N; k++) if (wizRowNeedsProbe(wiz, k)) t.push(k + 1);
-  return t;
-}
-function wizSetPanelCompact(on) {
-  var panel = document.getElementById('linkWizPanel');
-  if (panel) panel.classList.toggle('wiz-compact', !!on);
-}
-var WMAP_PW = 118, WMAP_MARG = 11, WMAP_CENTER = 4, WMAP_STEP = (WMAP_PW - 2 * WMAP_MARG) / 6;
-function wizMapPlateShift(pin) {
-  return (WMAP_CENTER - pin) * WMAP_STEP;
-}
-function wizRenderSchematic(wiz, driver, d) {
-  var moveLeft = d > 0;
-  var dirCls = moveLeft ? 'wizmap--left' : 'wizmap--right';
-  var capMove = moveLeft ? 'влево' : 'вправо';
-  var pinFrom = wiz.sim[driver], pinTo = pinFrom + d;
-  var layers = '';
-  for (var i = 0; i < N; i++) {
-    var active = i === driver;
-    var pin = wiz.sim[i];
-    var shift = wizMapPlateShift(pin);
-    var holes = '';
-    for (var k = 0; k < 7; k++) {
-      holes += '<span class="wizmap-hole' + (k === 3 ? ' wizmap-hole--c' : '') + '" style="left:' +
-        (WMAP_MARG + WMAP_STEP * k) + 'px"></span>';
-    }
-    var arrow = active
-      ? '<span class="wizmap-arrow wizmap-arrow--' + (moveLeft ? 'left' : 'right') + '" aria-hidden="true">' +
-        (moveLeft ? WIZ_SVG_ARR_L : WIZ_SVG_ARR_R) + '</span>'
-      : '';
-    layers += '<div class="wizmap-layer" data-plate="' + i + '" style="--s:' + i + '"><div class="wizmap-plate' +
-      (active ? ' active' : '') + '" style="--shift:' + shift + 'px">' +
-      '<span class="wizmap-num">' + (i + 1) + '</span><div class="wizmap-track"></div>' + holes +
-      '<span class="wizmap-pin" style="left:' + (WMAP_MARG + WMAP_STEP * (pin - 1)) + 'px"></span>' +
-      '<span class="wizmap-react" hidden aria-hidden="true"></span>' +
-      arrow + '</div></div>';
-  }
-  return '<div class="wizmap ' + dirCls + '" id="linkWizMap" role="img" aria-label="Схема замка: сдвинь плитку ' +
-    (driver + 1) + ' ' + capMove + '">' +
-    '<p class="wizmap-gamestep">Сначала сдвинь в игре: плитку <b>' + (driver + 1) + '</b> ' +
-    '<span class="wizmap-game-dir">' + capMove + (moveLeft ? ' ←' : ' →') + '</span>' +
-    '<span class="wizmap-gamestep-hint">Штифт <b>' + pinFrom + ' → ' + pinTo + '</b> · потом отметь, кто дёрнулся</span></p>' +
-    '<div class="wizmap-scene" style="--wmap-n:' + N + '"><div class="wizmap-lock" style="--wmap-n:' + N + '">' +
-    layers + '</div></div></div>';
-}
-function wizRenderCmdStrip(wiz, i, d) {
-  return wizRenderSchematic(wiz, i, d);
-}
-function wizSyncSchematicReactions(wiz, driver, d, answersEl) {
-  var map = document.getElementById('linkWizMap');
-  if (!map) return;
-  map.querySelectorAll('.wizmap-layer').forEach(function (layer) {
-    var idx = +layer.dataset.plate;
-    var plateEl = layer.querySelector('.wizmap-plate');
-    if (!plateEl || idx === driver) return;
-    plateEl.classList.remove('shifted', 'shift-left', 'shift-right', 'shift-wall');
-    var pin = plateEl.querySelector('.wizmap-pin');
-    var react = plateEl.querySelector('.wizmap-react');
-    if (react) { react.hidden = true; react.className = 'wizmap-react'; react.textContent = ''; }
-    var pinPos = wiz.sim[idx];
-    if (pin) pin.style.left = (WMAP_MARG + WMAP_STEP * (pinPos - 1)) + 'px';
-    plateEl.style.setProperty('--shift', wizMapPlateShift(pinPos) + 'px');
-  });
-  if (!answersEl) return;
-  answersEl.querySelectorAll('.wizanswer').forEach(function (row) {
-    var j = +row.dataset.j;
-    if (j === driver) return;
-    var sel = row.querySelector('.wizchoice.on');
-    if (!sel || !+sel.dataset.l) return;
-    var layer = map.querySelector('.wizmap-layer[data-plate="' + j + '"]');
-    if (!layer) return;
-    var plateEl = layer.querySelector('.wizmap-plate');
-    var pin = plateEl.querySelector('.wizmap-pin');
-    var react = plateEl.querySelector('.wizmap-react');
-    var linkVal = +sel.dataset.l;
-    var jerk = sel.dataset.jerk === '1';
-    var old = wiz.sim[j];
-    var pinD = linkVal * d;
-    var moveLeft = pinD > 0;
-    plateEl.classList.add('shifted');
-    if (!react) return;
-    react.hidden = false;
-    if (jerk) {
-      plateEl.classList.add('shift-wall');
-      react.className = 'wizmap-react wizmap-react--wall';
-      react.textContent = '!';
-    } else {
-      var neu = old + pinD;
-      plateEl.classList.add(moveLeft ? 'shift-left' : 'shift-right');
-      if (pin) pin.style.left = (WMAP_MARG + WMAP_STEP * (neu - 1)) + 'px';
-      plateEl.style.setProperty('--shift', wizMapPlateShift(neu) + 'px');
-      react.className = 'wizmap-react wizmap-react--' + (moveLeft ? 'left' : 'right');
-      react.innerHTML = moveLeft ? WIZ_SVG_ARR_L : WIZ_SVG_ARR_R;
-    }
-  });
-}
-function wizRenderHelperPreview(wiz, cmd) {
-  var i = cmd.driver, d = cmd.d;
-  var parts = [];
-  for (var j = 0; j < N; j++) {
-    if (j === i || !link[i][j]) continue;
-    parts.push((j + 1) + ':' + wiz.sim[j] + '→' + (wiz.sim[j] + link[i][j] * d));
-  }
-  if (!parts.length) return '<p class="wizhelper-hint">Остальные стоят — связи уже известны.</p>';
-  return '<p class="wizhelper-hint">Сдвинутся: ' + parts.join(' · ') + '</p>';
-}
-function wizBindHelperActions(wiz, c) {
-  var backBtn = document.getElementById('wizBack');
-  if (backBtn) backBtn.onclick = wizUndoStep;
-  document.getElementById('wizConfirm').onclick = function () {
-    trackEvent('wizard_helper');
-    wizPushHistory(wiz);
-    wizApplyReport(wiz, c, wizPredictKnownMovers(wiz, c));
-    wizSyncPins(wiz);
-    wiz.cmd = null;
-    wizSwap(wizRenderStep, { fast: true });
-  };
-  document.getElementById('wizGameReset').onclick = function () {
-    trackEvent('wizard_reset');
-    wizPushHistory(wiz);
-    wiz.sim = WIZ_MEM.base.slice();
-    wizSyncPins(wiz);
-    wiz.cmd = null;
-    toast('Штифты вернулись к исходным, найденные связи сохранены');
-    wizSwap(wizRenderStep, { fast: true });
-  };
-}
-function wizRenderAnswerPanel(wiz, driver, d) {
-  return '<div class="wizreact">' +
-    '<div class="wizobserve"><b>Отметь, кто дёрнулся</b>' +
-    '<span>«Нет» уже выбрано. Меняй только те плитки, которые дёрнулись.</span></div>' +
-    '<p class="wizdetail-hd"><span>←</span> влево · <span>—</span> стоит · <span>→</span> вправо · <span>!</span> стена</p>' +
-    wizBuildAnswerGrid(wiz, driver, d) +
-    '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
-    '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label></div>';
-}
-function wizBindStepActions(wiz, c) {
-  var answersEl = document.getElementById('wizAnswers');
-  var confirmBtn = document.getElementById('wizConfirm');
+function wizBindStepActions(wiz, c, chipsEl, moversEl) {
   function wizSyncLockReset() {
     var box = document.getElementById('wizLockReset');
-    if (!box || !answersEl) return;
-    var hasJerk = !!answersEl.querySelector('.wizchoice.on[data-jerk="1"]');
+    if (!box) return;
+    var hasJerk = !!moversEl.querySelector('.wizpos.on[data-jerk="1"]');
     box.hidden = !hasJerk;
     if (!hasJerk) document.getElementById('wizLockResetCb').checked = false;
   }
-  function wizSyncReactions() {
-    wizSyncSchematicReactions(wiz, c.driver, c.d, answersEl);
+  function wizSyncMovers() {
+    chipsEl.querySelectorAll('.wizchip').forEach(function (lab) {
+      var j = +lab.dataset.j;
+      var on = lab.querySelector('input').checked;
+      lab.classList.toggle('on', on);
+      var panel = document.getElementById('wizMover' + j);
+      if (panel) panel.classList.toggle('show', on);
+      if (!on) moversEl.querySelectorAll('.wizpos[data-j="' + j + '"]').forEach(function (b) { b.classList.remove('on'); });
+    });
+    wizSyncLockReset();
   }
-  if (answersEl) answersEl.onclick = function (e) {
-    var btn = e.target.closest ? e.target.closest('.wizchoice') : null;
+  chipsEl.onchange = function (e) {
+    if (!e.target.matches('input')) return;
+    wizSyncMovers();
+  };
+  moversEl.onclick = function (e) {
+    var btn = e.target.closest ? e.target.closest('.wizpos') : null;
     if (!btn) return;
-    var row = btn.closest('.wizanswer');
-    row.querySelectorAll('.wizchoice').forEach(function (b) { b.classList.remove('on'); });
+    var j = btn.dataset.j;
+    moversEl.querySelectorAll('.wizpos[data-j="' + j + '"]').forEach(function (b) { b.classList.remove('on'); });
     btn.classList.add('on');
     wizSyncLockReset();
-    wizSyncReactions();
   };
-  wizSyncReactions();
   function wizFinish(movers, lockReset) {
-    trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
-    wizPushHistory(wiz);
+    if (c.helper) trackEvent('wizard_helper');
+    else trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
     var failed = wizApplyReport(wiz, c, movers);
     if (lockReset) {
       wiz.sim = WIZ_MEM.base.slice();
@@ -3131,25 +2279,24 @@ function wizBindStepActions(wiz, c) {
     }
     wizSyncPins(wiz);
     wiz.cmd = null;
-    wizSwap(wizRenderStep, { fast: true });
+    wizRenderStep();
   }
-  var backBtn = document.getElementById('wizBack');
-  if (backBtn) backBtn.onclick = wizUndoStep;
-  if (confirmBtn) confirmBtn.onclick = function () {
-    if (!answersEl) return;
-    var movers = [], jerks = 0, slides = 0;
-    answersEl.querySelectorAll('.wizchoice.on').forEach(function (sel) {
-      var linkVal = +sel.dataset.l;
-      if (!linkVal) return;
-      var j = +sel.dataset.j;
+  document.getElementById('wizNone').onclick = function () { wizFinish([], false); };
+  document.getElementById('wizConfirm').onclick = function () {
+    var movers = [], bad = false, jerks = 0, slides = 0;
+    chipsEl.querySelectorAll('.wizchip input:checked').forEach(function (inp) {
+      var j = +inp.closest('.wizchip').dataset.j;
+      var sel = moversEl.querySelector('.wizpos.on[data-j="' + j + '"]');
+      if (!sel) {
+        toast('Отметь, что стало с плиткой ' + (j + 1));
+        bad = true;
+        return;
+      }
       var jerk = sel.dataset.jerk === '1';
       if (jerk) jerks++; else slides++;
-      movers.push({ plate: j, link: linkVal, jerk: jerk });
+      movers.push({ plate: j, link: +sel.dataset.l, jerk: jerk });
     });
-    if (!movers.length) {
-      wizFinish([], false);
-      return;
-    }
+    if (bad) return;
     if (jerks > 0 && slides > 0) {
       toast('Если кто-то упёрся в стену, ход не прошёл и съехать никто не мог. Проверь отметки');
       return;
@@ -3159,101 +2306,80 @@ function wizBindStepActions(wiz, c) {
   };
   document.getElementById('wizGameReset').onclick = function () {
     trackEvent('wizard_reset');
-    wizPushHistory(wiz);
     wiz.sim = WIZ_MEM.base.slice();
     wizSyncPins(wiz);
     wiz.cmd = null;
     toast('Штифты вернулись к исходным, найденные связи сохранены');
-    wizSwap(wizRenderStep, { fast: true });
+    wizRenderStep();
   };
 }
-function wizMoverTile(wiz, j, d, order) {
+function wizMoverPanel(wiz, j, d) {
   var old = wiz.sim[j];
   var opts = wizMoverOptions(old, d);
   var btnL = '', btnR = '';
   for (var s = 0; s < opts.length; s++) {
     var o = opts[s];
     var pinD = o.link * d;
-    var left = pinD > 0;
-    var aria = 'Плитка ' + (j + 1) + ', ' + (o.jerk ? 'упёрлась в стену' : (left ? 'влево' : 'вправо'));
-    var html = '<button type="button" class="wizchoice' + (left ? ' dir-l' : ' dir-r') + (o.jerk ? ' jerk' : '') + '"' +
-      ' aria-label="' + aria + '" data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' +
-      '<b>' + (o.jerk ? '!' : (left ? '←' : '→')) + '</b></button>';
+    var left = pinD > 0; // штифт вправо = плитка едет влево
+    var dir = left
+      ? WIZ_SVG_ARR_L + '<span>ВЛЕВО</span>'
+      : '<span>ВПРАВО</span>' + WIZ_SVG_ARR_R;
+    var sub = o.jerk
+      ? 'упёрлась в стену: штифт остался на ' + o.pos
+      : 'штифт ' + old + ' &rarr; ' + o.pos;
+    var html = '<button type="button" class="wizpos' + (left ? ' dir-l' : ' dir-r') + (o.jerk ? ' jerk' : '') + '" style="--nudge:' + (left ? '-2px' : '2px') + '"' +
+      ' data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' +
+      '<span class="wizpos-dir">' + dir + '</span>' +
+      '<span class="wizpos-sub">' + sub + '</span></button>';
     if (left) btnL = html; else btnR = html;
   }
-  if (!btnL) btnL = '<span class="wizchoice-spacer" aria-hidden="true"></span>';
-  if (!btnR) btnR = '<span class="wizchoice-spacer" aria-hidden="true"></span>';
-  var rowCls = (btnL.indexOf('wizchoice-spacer') >= 0 || btnR.indexOf('wizchoice-spacer') >= 0)
-    ? ' wizchoice-row--single' : '';
-  return '<div class="wizanswer wiztile" data-j="' + j + '" style="--wi:' + order + '">' +
-    '<div class="wiztile-id"><b>' + (j + 1) + '</b><span>' + old + '</span></div>' +
-    '<div class="wizchoice-row' + rowCls + '">' +
-      btnL +
-      '<button type="button" class="wizchoice none on" aria-label="Плитка ' + (j + 1) + ', стоит" data-j="' + j + '" data-l="0" data-jerk="0"><b>—</b></button>' +
-      btnR +
-    '</div></div>';
-}
-function wizBuildAnswerGrid(wiz, driver, d) {
-  var odd = '', even = '', order = 0;
-  for (var j = 0; j < N; j++) {
-    if (j === driver) continue;
-    var tile = wizMoverTile(wiz, j, d, order++);
-    if ((j + 1) % 2 === 1) odd += tile; else even += tile;
-  }
-  return '<div class="wizanswers wizanswers--split" id="wizAnswers">' +
-    '<div class="wizcol wizcol--odd">' + odd + '</div>' +
-    '<div class="wizcol wizcol--even">' + even + '</div></div>';
-}
-function wizMoverPanel(wiz, j, d, order) {
-  return wizMoverTile(wiz, j, d, order);
+  return '<div class="wizmover" id="wizMover' + j + '" data-j="' + j + '">' +
+    '<div class="wizmover-head">Плитка <b>' + (j + 1) + '</b>: куда дёрнулась?</div>' +
+    '<div class="wizposrow">' + btnL + btnR + '</div></div>';
 }
 function wizRenderStep() {
   var wiz = LINK_WIZ;
   if (!wiz.cmd) {
     wiz.cmd = wizNextCmd(wiz);
     if (!wiz.cmd) {
-      wizSwap(wizRenderDone);
+      wizRenderDone();
       return;
     }
   }
   var c = wiz.cmd, i = c.driver, d = c.d;
-  wizProgress(wiz);
-  if (c.helper) {
-    wizSetPanelCompact(true);
-    var goals = wizHelperTargets(wiz);
-    var goalTxt = goals.length === 1 ? 'плитку ' + goals[0]
-      : goals.length ? 'плитки ' + goals.join(', ') : 'оставшиеся связи';
-    document.getElementById('linkWizTitle').textContent = 'Подготовка · плитка ' + (i + 1);
-    document.getElementById('linkWizSub').textContent =
-      'Сдвинь в игре для ' + goalTxt + '. Отмечать не нужно.';
-    document.getElementById('linkWizBody').innerHTML =
-      wizRenderCmdStrip(wiz, i, d) + wizRenderHelperPreview(wiz, c);
-    document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
-    document.getElementById('linkWizFoot').innerHTML =
-      '<div class="wizfoot-actions">' +
-      '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Назад</button>' +
-      '<button class="btn primary" type="button" id="wizConfirm">Сдвинул</button></div>' +
-      '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Сбросил замок</button></p>';
-    wizBindHelperActions(wiz, c);
-    return;
+  var chips = '', moversHtml = '';
+  for (var j = 0; j < N; j++) {
+    if (j === i) continue;
+    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox">' + WIZ_SVG_CHECK + 'плитка<b>' + (j + 1) + '</b></label>';
+    moversHtml += wizMoverPanel(wiz, j, d);
   }
-  wizSetPanelCompact(true);
   document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
-  document.getElementById('linkWizSub').textContent =
-    'Шаг ' + (wiz.step + 1) + ' · сдвинь в игре, потом отметь';
+  document.getElementById('linkWizSub').textContent = c.helper
+    ? 'Вспомогательный ход: увести плитку от стены. Связи этой плитки уже известны.'
+    : 'Шаг ' + (wiz.step + 1) + ' · сдвинь в игре и отметь, кто дёрнулся.';
+  wizProgress(wiz);
   document.getElementById('linkWizBody').innerHTML =
-    wizRenderCmdStrip(wiz, i, d) + wizRenderAnswerPanel(wiz, i, d);
+    wizRenderPinsBar(wiz.sim, i) +
+    '<div class="wizcmd"><div class="lbl">Сдвинь в игре</div>' +
+    '<div class="plate">плитка <b>' + (i + 1) + '</b></div>' +
+    '<div class="move ' + (d > 0 ? 'dir-l' : 'dir-r') + '">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
+    '<p class="wizmeta">штифт ' + wiz.sim[i] + ' → ' + (wiz.sim[i] + d) + ' · откатывать не нужно</p></div>' +
+    '<p class="wizpick">Кто дёрнулся вместе с плиткой <b>' + (i + 1) + '</b>?</p>' +
+    '<div class="wizchips" id="wizChips">' + chips + '</div>' +
+    '<div class="wizmovers" id="wizMovers">' + moversHtml + '</div>' +
+    '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
+    '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label>';
   document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
-    '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Назад</button>' +
+    '<button class="btn" type="button" id="wizNone">Никто не дёрнулся</button>' +
     '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
-    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Сбросил замок</button></p>';
-  wizBindStepActions(wiz, c);
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Случайно сбросил замок</button></p>';
+  wizBindStepActions(wiz, c, document.getElementById('wizChips'), document.getElementById('wizMovers'));
 }
 function wizRenderDone() {
   var left = wizRowsLeft(LINK_WIZ);
-  wizSetPanelCompact(false);
+  trackEvent(left > 0 ? 'wizard_done_partial' : 'wizard_done');
   document.getElementById('linkWizProg').hidden = true;
   document.getElementById('linkWizTitle').textContent = left > 0 ? 'Не все связи проверены' : 'Готово';
   document.getElementById('linkWizSub').textContent = left > 0
@@ -3267,88 +2393,11 @@ function wizRenderDone() {
   document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Закрыть</button></div>';
-  document.getElementById('wizDone').onclick = function () {
-    closeLinkWizard();
-    setLinkMode('matrix', false);
-  };
+  document.getElementById('wizDone').onclick = closeLinkWizard;
   toast(left > 0 ? 'Часть связей не проверена - впиши вручную' : 'Связи записаны в матрицу');
-  trackEvent(left > 0 ? 'wizard_done_partial' : 'wizard_done');
-}
-var WIZ_SCROLL_LOCK = null;
-function wizScrollbarWidth() {
-  var live = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
-  if (live > 0) return live;
-  var probe = document.createElement('div');
-  probe.style.cssText = 'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll;visibility:hidden';
-  document.body.appendChild(probe);
-  var w = probe.offsetWidth - probe.clientWidth;
-  document.body.removeChild(probe);
-  return w;
-}
-function lockWizardScroll() {
-  if (WIZ_SCROLL_LOCK) return;
-  var y = window.scrollY || document.documentElement.scrollTop || 0;
-  var sb = wizScrollbarWidth();
-  WIZ_SCROLL_LOCK = { y: y, sb: sb };
-  document.documentElement.style.setProperty('--wiz-sb', sb + 'px');
-  if (sb > 0) {
-    document.documentElement.style.paddingRight = sb + 'px';
-    document.body.style.paddingRight = sb + 'px';
-  }
-  document.body.style.top = (-y) + 'px';
-  document.documentElement.classList.add('wiz-open');
-}
-function wizScrollRestore(y) {
-  var root = document.documentElement;
-  var prev = root.style.scrollBehavior;
-  root.style.scrollBehavior = 'auto';
-  root.scrollTop = y;
-  document.body.scrollTop = y;
-  window.scrollTo(0, y);
-  root.style.scrollBehavior = prev;
-}
-function unlockWizardScroll() {
-  if (!WIZ_SCROLL_LOCK) {
-    document.documentElement.classList.remove('wiz-open');
-    return;
-  }
-  var y = WIZ_SCROLL_LOCK.y;
-  var sb = WIZ_SCROLL_LOCK.sb;
-  WIZ_SCROLL_LOCK = null;
-  document.documentElement.classList.remove('wiz-open');
-  document.body.style.top = '';
-  if (sb > 0) {
-    document.documentElement.style.paddingRight = '';
-    document.body.style.paddingRight = '';
-  }
-  document.documentElement.style.removeProperty('--wiz-sb');
-  wizScrollRestore(y);
-}
-function openWizardModal() {
-  var panel = document.getElementById('linkWizPanel');
-  var back = document.getElementById('linkWizBack');
-  if (!back || !panel) return false;
-  if (panel.parentNode !== back) back.appendChild(panel);
-  var close = document.getElementById('linkWizClose');
-  if (close) close.onclick = closeLinkWizard;
-  panel.classList.remove('is-closing', 'is-changing');
-  var nodes = wizMotionNodes();
-  for (var i = 0; i < nodes.length; i++) if (nodes[i]) nodes[i].classList.remove('is-entering', 'is-leaving');
-  lockWizardScroll();
-  back.setAttribute('aria-hidden', 'false');
-  back.classList.remove('open');
-  void back.offsetWidth;
-  requestAnimationFrame(function () { back.classList.add('open'); });
-  wizScrollBodyTop();
-  return true;
 }
 function openLinkWizard() {
-  if (!pinsConfigured()) {
-    toast('Сначала укажи позиции штифтов на шаге 02');
-    return;
-  }
-  setLinkMode('find', false);
-  if (!openWizardModal()) return;
+  if (!pinsConfigured()) return;
   var resume = !!(WIZ_MEM.zero && WIZ_MEM.zero.length === N);
   if (!resume) WIZ_MEM.zero = wizMk2d(false);
   if (!WIZ_MEM.base || WIZ_MEM.base.length !== N) WIZ_MEM.base = pins.slice();
@@ -3361,49 +2410,33 @@ function openLinkWizard() {
   };
   LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
   trackEvent('wizard_open');
-  wizRenderStep();
+  var back = document.getElementById('linkWizBack');
+  back.classList.add('open');
+  back.setAttribute('aria-hidden', 'false');
+  if (resume) wizRenderStep();
+  else wizRenderIntro();
 }
 function closeLinkWizard() {
   var back = document.getElementById('linkWizBack');
-  var intro = document.getElementById('linkFindIntro');
-  var panel = document.getElementById('linkWizPanel');
-  if (WIZ_SWAP_TIMER) {
-    clearTimeout(WIZ_SWAP_TIMER);
-    WIZ_SWAP_TIMER = null;
-  }
-  if (back) {
-    back.classList.remove('open');
-    back.setAttribute('aria-hidden', 'true');
-  }
-  unlockWizardScroll();
-  if (panel) panel.classList.remove('is-closing', 'is-changing');
-  if (intro && LINK_MODE === 'find') intro.hidden = false;
+  back.classList.remove('open');
+  back.setAttribute('aria-hidden', 'true');
   LINK_WIZ = null;
 }
 (function bindLinkWizard() {
-  var start = document.getElementById('linkFindStart');
-  var manual = document.getElementById('linkFindMatrix');
-  var modeFind = document.getElementById('linkModeFind');
-  var modeMatrix = document.getElementById('linkModeMatrix');
+  var btn = document.getElementById('linkHelpBtn');
   var back = document.getElementById('linkWizBack');
   var close = document.getElementById('linkWizClose');
-  if (start) start.onclick = openLinkWizard;
-  if (manual) manual.onclick = function () { setLinkMode('matrix', true); };
-  if (modeFind) modeFind.onclick = function () { setLinkMode('find', true); };
-  if (modeMatrix) modeMatrix.onclick = function () { setLinkMode('matrix', true); };
+  if (btn) btn.onclick = openLinkWizard;
   if (close) close.onclick = closeLinkWizard;
   if (back) back.addEventListener('click', function (e) { if (e.target === back) closeLinkWizard(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && LINK_WIZ) closeLinkWizard();
-    var ann = document.getElementById('linkHelpAnn');
-    if (e.key === 'Escape' && ann && ann.classList.contains('open')) closeLinkHelpAnnounce();
+    if (e.key === 'Escape' && document.getElementById('linkHelpAnn').classList.contains('open')) closeLinkHelpAnnounce();
   });
-  updateLinkModeUI();
   updateLinkHelpBtn();
 })();
 
 var LINK_HELP_ANN_KEY = 'uml-linkhelp-intro-v1';
-var LINK_MODE_NOTE_KEY = 'uml-linkmode-note-v1';
 /* 50k celebration + confetti (off)
 (function bindFixNote() {
   document.getElementById('fixNoteClose').onclick = closeCelebrationNote;
@@ -3503,21 +2536,17 @@ function closeLinkHelpAnnounce() {
 }
 function scrollToLinkHelpBtn() {
   closeLinkHelpAnnounce();
-  var start = document.getElementById('linkFindStart');
-  var solver = document.getElementById('solver');
+  var hb = document.getElementById('linkHelpBtn');
+  if (!hb) return;
+  /* скроллим к самой кнопке «Помощь» по центру экрана, а не к верху решателя -
+     иначе на мобиле кнопка (шаг 03) остаётся ниже экрана */
   setTimeout(function () {
-    if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (start) {
-      setTimeout(function () {
-        start.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        start.classList.add('pulse');
-        setTimeout(function () { start.classList.remove('pulse'); }, 3600);
-      }, 280);
-    }
+    hb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    hb.classList.add('pulse');
+    setTimeout(function () { hb.classList.remove('pulse'); }, 3600);
   }, 120);
 }
 function maybeShowLinkHelpAnnounce() {
-  return;
   try { if (localStorage.getItem(LINK_HELP_ANN_KEY)) return; } catch (e) {}
   if (extractConfigCode()) return;
   setTimeout(function () {
@@ -3527,32 +2556,12 @@ function maybeShowLinkHelpAnnounce() {
     el.setAttribute('aria-hidden', 'false');
   }, 850);
 }
-function closeLinkModeNote() {
-  var el = document.getElementById('linkModeNote');
-  if (!el) return;
-  el.classList.remove('show');
-  try { localStorage.setItem(LINK_MODE_NOTE_KEY, '1'); } catch (e) {}
-  setTimeout(function () { el.hidden = true; }, 420);
-}
-function maybeShowLinkModeNote() {
-  try { if (localStorage.getItem(LINK_MODE_NOTE_KEY)) return; } catch (e) {}
-  if (extractConfigCode()) return;
-  setTimeout(function () {
-    if (LINK_WIZ) return;
-    var el = document.getElementById('linkModeNote');
-    if (!el) return;
-    el.hidden = false;
-    requestAnimationFrame(function () { el.classList.add('show'); });
-  }, 1100);
-}
 (function bindLinkHelpAnnounce() {
   var ann = document.getElementById('linkHelpAnn');
-  var noteClose = document.getElementById('linkModeNoteClose');
-  if (document.getElementById('linkHelpAnnOk')) document.getElementById('linkHelpAnnOk').onclick = closeLinkHelpAnnounce;
-  if (document.getElementById('linkHelpAnnGo')) document.getElementById('linkHelpAnnGo').onclick = scrollToLinkHelpBtn;
-  if (document.getElementById('linkHelpAnnClose')) document.getElementById('linkHelpAnnClose').onclick = closeLinkHelpAnnounce;
-  if (ann) ann.addEventListener('click', function (e) { if (e.target === ann) closeLinkHelpAnnounce(); });
-  if (noteClose) noteClose.onclick = closeLinkModeNote;
+  document.getElementById('linkHelpAnnOk').onclick = closeLinkHelpAnnounce;
+  document.getElementById('linkHelpAnnGo').onclick = scrollToLinkHelpBtn;
+  document.getElementById('linkHelpAnnClose').onclick = closeLinkHelpAnnounce;
+  ann.addEventListener('click', function (e) { if (e.target === ann) closeLinkHelpAnnounce(); });
 })();
 
 /* ---------- решение ---------- */
@@ -3886,7 +2895,6 @@ function playerRender() {
   document.getElementById('vpMove').innerHTML = done ? 'Все штифты в центре' : vpMoveText(vpGroups[vpIdx]);
   document.getElementById('vpPrev').disabled = vpIdx === 0;
   document.getElementById('vpNext').disabled = done;
-  vpSyncFeedback(done);
 }
 
 /* ---------- ссылки / пресеты / сброс ---------- */
@@ -4020,7 +3028,6 @@ function bootConfigFromUrl() {
   if (!raw) return false;
   if (decodeConfig(raw)) {
     history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins())));
-    if (!matrixEmpty()) setLinkMode('matrix', false);
     trackEvent('lock_url_ok');
     toast('Замок загружен из ссылки');
     var solver = document.getElementById('solver');
@@ -4089,7 +3096,7 @@ var TRACK_EVENTS = {
   wizard_helper: 1, wizard_done: 1, wizard_done_partial: 1, wizard_reset: 1,
   suggest_show: 1, suggest_apply_ok: 1, suggest_apply_fail: 1, suggest_skip: 1,
   lock_url_ok: 1, lock_url_fail: 1,
-  pins_edit: 1, mode_matrix: 1, mode_find: 1
+  pins_edit: 1
 };
 var TRACK_SID = (function () {
   try {
@@ -4332,7 +3339,7 @@ function applySuggestedLinks(code) {
       savedFlip = FLIP, savedN = N, savedBase = WIZ_MEM.base,
       savedZero = WIZ_MEM.zero ? WIZ_MEM.zero.map(function (r) { return r.slice(); }) : null,
       savedTouched = pinsTouched;
-  if (!decodeConfig(code, true)) return -1;
+  if (!decodeConfig(code)) return -1;
   if (N !== savedN) {
     N = savedN; pins = savedPins; link = savedLink; pinsTouched = savedTouched;
     WIZ_MEM.base = savedBase; WIZ_MEM.zero = savedZero; FLIP = savedFlip;
@@ -4370,55 +3377,29 @@ function applySuggestedLinks(code) {
   SUGGEST_CONFLICTS = conflicts;
   FILL_CELLS = filled;
   renderCount(); renderPins(); renderDeps();
-  if (typeof requestAnimationFrame === 'function') {
-    requestAnimationFrame(function () { FILL_CELLS = null; });
-  } else {
-    FILL_CELLS = null;
-  }
+  FILL_CELLS = null;
   return applied;
 }
-function afterSuggestedLinksApplied(applied, box) {
-  if (applied < 0) {
-    trackEvent('suggest_apply_fail');
-    toast('Не удалось подставить связи - попробуй вручную');
-    return;
-  }
-  trackEvent('suggest_apply_ok');
-  if (box) box.innerHTML = '';
-  setLinkMode('matrix', false);
-  toast(SUGGEST_CONFLICTS
-    ? 'Есть отличия от твоих отметок: ' + SUGGEST_CONFLICTS + ' яч. Проверь матрицу'
-    : 'Связи подставлены - проверь матрицу и жми «Взломать»');
-}
-function suggestStepEl() {
-  return document.getElementById('suggestStep');
-}
-function clearSuggestStep() {
-  var el = suggestStepEl();
-  if (el) el.innerHTML = '';
-}
 function maybeSuggestLinks() {
-  var box = suggestStepEl();
+  var box = document.getElementById('suggestBox');
   if (!box) return;
   if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) {
-    clearSuggestStep();
+    box.innerHTML = '';
+    var stEl = document.getElementById('suggestTop'); if (stEl) stEl.innerHTML = '';
     return;
   }
   clearTimeout(suggestTimer);
-  function runSuggestLookup() {
+  suggestTimer = setTimeout(function () {
     if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) return;
     suggestLookup(function (d) {
       if (!matrixNeedsSuggest() || SUGGEST_DISMISSED) return;
       if (d && d.found) { renderSuggestBox(d); return; }
       maybeShowHelpNudge();
     });
-  }
-  if (knownLockFor()) runSuggestLookup();
-  else suggestTimer = setTimeout(runSuggestLookup, 300);
+  }, 600);
 }
 function renderSuggestBox(d) {
-  var box = suggestStepEl();
-  if (!box) return;
+  var box = document.getElementById('suggestBox');
   var cnt = LOCK_COUNTS[d.code];
   var cntStr = (typeof cnt === 'number') ? ' Открыт <b>' + cnt + '</b> раз.' : '';
   var msg;
@@ -4427,15 +3408,23 @@ function renderSuggestBox(d) {
   } else {
     msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   }
+  trackEvent('suggest_show');
   box.innerHTML = '<div class="suggest">' +
     '<span class="suggest-main"><span class="beta-chip">Бета</span><span class="suggest-copy">' + msg + '</span></span>' +
     '<span class="sg-act">' +
     '<button class="btn" type="button" id="sgYes">Подставить</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Сам введу</button>' +
     '</span></div>';
-  trackEvent('suggest_show');
   box.querySelector('#sgYes').onclick = function () {
-    afterSuggestedLinksApplied(applySuggestedLinks(d.code), box);
+    var n = applySuggestedLinks(d.code);
+    if (n < 0) { trackEvent('suggest_apply_fail'); return; }
+    trackEvent('suggest_apply_ok');
+    if (n >= 0) {
+      box.innerHTML = '';
+      toast(SUGGEST_CONFLICTS
+        ? 'Есть отличия от твоих отметок: ' + SUGGEST_CONFLICTS + ' яч. Проверь матрицу'
+        : 'Связи подставлены - проверь матрицу и жми «Взломать»');
+    }
   };
   box.querySelector('#sgNo').onclick = function () {
     trackEvent('suggest_skip');
@@ -4450,8 +3439,10 @@ function helpAnnounceOpen() {
   return !!(a && a.classList.contains('open'));
 }
 function clearHelpNudge() {
-  var box = suggestStepEl();
-  if (box && box.querySelector('.helpnudge')) box.innerHTML = '';
+  ['suggestBox', 'suggestTop'].forEach(function (id) {
+    var b = document.getElementById(id);
+    if (b && b.querySelector('.helpnudge')) b.innerHTML = '';
+  });
 }
 /* раскрытие/скрытие гоним ТОЛЬКО инлайн-стилями (без класса) - иначе инлайн
    max-height перебивает класс и высота не анимируется -> матрица прыгает. */
@@ -4497,8 +3488,10 @@ function maybeShowHelpNudge() {
     clearHelpNudge();
     return;
   }
-  /* приглашение к помощнику - над шагом 03 (#suggestStep), видно в обоих режимах */
-  var box = suggestStepEl();
+  /* приглашение всегда НАД матрицей (#suggestTop) - и на ПК, и на мобилке */
+  var box = document.getElementById('suggestTop');
+  var other = document.getElementById('suggestBox');
+  if (other && other.querySelector('.helpnudge')) other.innerHTML = '';
   if (!box || box.querySelector('.helpnudge')) return;
   box.innerHTML =
     '<div class="helpnudge">' +
@@ -4520,14 +3513,11 @@ function maybeShowHelpNudge() {
   expandNudge(box.querySelector('.helpnudge'));
 }
 try { window.matchMedia('(max-width: 560px)').addEventListener('change', maybeShowHelpNudge); } catch (e) {}
-try { window.addEventListener('resize', syncDuoHeaders); } catch (e) {}
 /* хуки: проверяем подсказку при каждом изменении штифтов или матрицы */
 var _origRenderPins = renderPins;
 renderPins = function () { _origRenderPins(); maybeSuggestLinks(); };
 var _origRenderLinkSum = renderLinkSum;
 renderLinkSum = function () { _origRenderLinkSum(); maybeSuggestLinks(); };
-var _origRenderDeps = renderDeps;
-renderDeps = function () { _origRenderDeps(); maybeSuggestLinks(); };
 function counterBump() {
   var now = Date.now();
   if (now - lastCounted < 8000) return;
@@ -4541,7 +3531,7 @@ try { counterLoad(); } catch (e) {}
 try { loadLockCounts(); } catch (e) {}
 
 if (!bootConfigFromUrl()) init(6);
-maybeShowLinkModeNote();
+maybeShowLinkHelpAnnounce();
 </script>
 </body>
 </html>
