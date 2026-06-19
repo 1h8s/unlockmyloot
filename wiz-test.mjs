@@ -73,15 +73,28 @@ function runLock(ctx, N, startPins, hidden, preset, label, expectCmds) {
     const res = gameMove(game, hidden, i, d);
     game = res.pins;
     if (res.failed) failures++;
-    // пользователь: отмечает дёрнувшиеся/съехавшие, выбирая вариант по позиции и типу
-    const movers = res.reacted.map((r) => {
-      const opts = ctx.wizMoverOptions(wiz.sim[r.plate], d);
-      const hit = opts.filter((o) => o.pos === r.pos && o.jerk === r.jerk);
-      if (hit.length !== 1)
-        throw new Error(label + ': option mismatch plate' + (r.plate + 1) + ' pos ' + r.pos + ' jerk ' + r.jerk +
-          ' opts ' + JSON.stringify(opts));
-      return { plate: r.plate, link: hit[0].link, jerk: r.jerk };
-    });
+    let movers;
+    if (cmd.helper) {
+      movers = ctx.wizPredictKnownMovers(wiz, cmd);
+      for (const m of movers) {
+        const r = res.reacted.find((x) => x.plate === m.plate);
+        if (!r || r.jerk !== m.jerk)
+          throw new Error(label + ': helper predict mismatch plate' + (m.plate + 1));
+        const opts = ctx.wizMoverOptions(wiz.sim[m.plate], d);
+        const hit = opts.filter((o) => o.pos === r.pos && o.jerk === r.jerk);
+        if (hit.length !== 1 || hit[0].link !== m.link)
+          throw new Error(label + ': helper link mismatch plate' + (m.plate + 1));
+      }
+    } else {
+      movers = res.reacted.map((r) => {
+        const opts = ctx.wizMoverOptions(wiz.sim[r.plate], d);
+        const hit = opts.filter((o) => o.pos === r.pos && o.jerk === r.jerk);
+        if (hit.length !== 1)
+          throw new Error(label + ': option mismatch plate' + (r.plate + 1) + ' pos ' + r.pos + ' jerk ' + r.jerk +
+            ' opts ' + JSON.stringify(opts));
+        return { plate: r.plate, link: hit[0].link, jerk: r.jerk };
+      });
+    }
     const failed = ctx.wizApplyOutcome(wiz, cmd, movers);
     if (failed !== res.failed) throw new Error(label + ': failure flag mismatch');
     if (JSON.stringify(wiz.sim) !== JSON.stringify(game))
