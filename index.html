@@ -849,6 +849,12 @@
     .wizanswer:not(.wiztile) .wizanswer-label{flex-direction:row;align-items:baseline;justify-content:space-between;}
   }
   @media(min-width:561px){
+    .wizback{padding:10px;}
+    #linkWizPanel{max-height:calc(100dvh - 20px);}
+    #linkWizPanel.wiz-compact{overflow-y:auto;}
+    #linkWizPanel.wiz-compact .wizbody{
+      flex:0 0 auto;min-height:0;overflow-x:visible;overflow-y:visible;
+    }
     #linkWizPanel{width:min(580px,100%);}
     #linkWizPanel.wiz-compact .wizbody{padding:12px 24px 10px;}
     #linkWizPanel.wiz-compact .wizmap-scene{
