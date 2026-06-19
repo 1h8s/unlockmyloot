@@ -9,9 +9,9 @@ function loadCodec(file) {
     return m[0];
   };
   const src = [
-    grab(/var CODE_ABC[\s\S]*?function decodeConfigV2[\s\S]*?\n  return true;\n\}/),
+    grab(/var CODE_ABC[\s\S]*?function decodeConfigV2\(code, silent\)[\s\S]*?\n  return true;\n\}/),
     grab(/function normalizeConfigCode[\s\S]*?\n\}/),
-    grab(/function decodeConfig\(code\)[\s\S]*?\n  return true;\n\}/),
+    grab(/function decodeConfig\(code, silent\)[\s\S]*?\n  return true;\n\}/),
   ].join('\n');
   const ctx = {
     N: 0, pins: [], link: [], FLIP: false,

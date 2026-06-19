@@ -1,7 +1,9 @@
 /**
- * UnlockMyLoot - счётчик взломанных замков.
- * GET  /count  -> {"opened": N}
- * POST /opened -> инкремент, {"opened": N+1}
+ * UnlockMyLoot - счётчик взломанных замков + воронка UX-событий.
+ * GET  /count   -> {"opened": N}
+ * POST /opened  -> инкремент, {"opened": N+1}
+ * POST /events  -> {"sid":"...","events":[{"e":"solve_ok","t":...}]}
+ * GET  /events?secret=... -> сводка воронки (STATS_SECRET в env воркера)
  *
  * Счётчик живёт в Durable Object (без дневного лимита KV put).
  * При первом запуске подтягивает значение из KV-ключа "opened".
@@ -41,6 +43,30 @@ var RECONCILE_KEY_V2 = "reconcile_lost_v2";
 var LOST_WORKERS_429 = 681;
 var RECONCILE_KEY_V3 = "reconcile_lost_v3_workers429";
 var PURGE_ABORT_KEY = "purge_aborted_v1";
+
+var TRACK_EVENTS = {
+  solve_ok: 1, solve_fail: 1, solve_empty: 1, solve_verify_err: 1,
+  wizard_open: 1, wizard_step_none: 1, wizard_step_marked: 1,
+  wizard_helper: 1, wizard_done: 1, wizard_done_partial: 1, wizard_reset: 1,
+  suggest_show: 1, suggest_apply_ok: 1, suggest_apply_fail: 1, suggest_skip: 1,
+  lock_url_ok: 1, lock_url_fail: 1,
+  pins_edit: 1, mode_matrix: 1, mode_find: 1
+};
+var TRACK_RING_MAX = 80;
+var TRACK_DAY_KEEP = 14;
+
+function utcDayKey(ts) {
+  var d = new Date(ts == null ? Date.now() : ts);
+  var y = d.getUTCFullYear();
+  var m = d.getUTCMonth() + 1;
+  var day = d.getUTCDate();
+  return "" + y + (m < 10 ? "0" : "") + m + (day < 10 ? "0" : "") + day;
+}
+
+function pct(num, den) {
+  if (!den) return null;
+  return Math.round((num / den) * 1000) / 10;
+}
 
 export class Counter {
   constructor(state, env) {
@@ -82,6 +108,122 @@ export class Counter {
     }
     await this.state.storage.put("opened", seeded);
     return seeded;
+  }
+
+  async bumpEvent(name, ts) {
+    if (!TRACK_EVENTS[name]) return;
+    var day = utcDayKey(ts);
+    var totalKey = "ev:all:" + name;
+    var dayKey = "ev:d:" + day + ":" + name;
+    var total = (await this.state.storage.get(totalKey)) || 0;
+    var dayN = (await this.state.storage.get(dayKey)) || 0;
+    await this.state.storage.put(totalKey, total + 1);
+    await this.state.storage.put(dayKey, dayN + 1);
+    await this.state.storage.put("ev:day:" + day, 1);
+  }
+
+  async pushRing(entry) {
+    var ring = (await this.state.storage.get("ev:ring")) || [];
+    ring.push(entry);
+    if (ring.length > TRACK_RING_MAX) ring = ring.slice(-TRACK_RING_MAX);
+    await this.state.storage.put("ev:ring", ring);
+  }
+
+  async recordEvents(sid, events) {
+    if (!Array.isArray(events) || !events.length) {
+      return { status: 400, body: { error: "bad_events" } };
+    }
+    if (events.length > 30) events = events.slice(0, 30);
+    sid = String(sid || "").slice(0, 24);
+    var n = 0;
+    for (var i = 0; i < events.length; i++) {
+      var ev = events[i];
+      var name = ev && ev.e;
+      if (!TRACK_EVENTS[name]) continue;
+      var ts = +ev.t;
+      if (!Number.isFinite(ts) || ts < 1) ts = Date.now();
+      await this.bumpEvent(name, ts);
+      await this.pushRing({ t: ts, e: name, s: sid ? sid.slice(0, 8) : "" });
+      n++;
+    }
+    await this.pruneOldEventDays();
+    return { status: 200, body: { ok: true, n: n } };
+  }
+
+  async pruneOldEventDays() {
+    var keep = {};
+    for (var i = 0; i < TRACK_DAY_KEEP; i++) {
+      var d = new Date();
+      d.setUTCDate(d.getUTCDate() - i);
+      keep[utcDayKey(d.getTime())] = 1;
+    }
+    var del = [];
+    var days = await this.state.storage.list({ prefix: "ev:day:" });
+    days.forEach(function (_v, k) {
+      var day = k.slice(7);
+      if (!keep[day]) del.push(k);
+    });
+    var evDays = await this.state.storage.list({ prefix: "ev:d:" });
+    evDays.forEach(function (_v2, k2) {
+      var parts = k2.split(":");
+      if (parts.length >= 3 && !keep[parts[2]]) del.push(k2);
+    });
+    for (var j = 0; j < del.length; j++) await this.state.storage.delete(del[j]);
+  }
+
+  async readEventCounts(day) {
+    var out = {};
+    var prefix = day ? ("ev:d:" + day + ":") : "ev:all:";
+    var map = await this.state.storage.list({ prefix: prefix });
+    map.forEach(function (n, k) {
+      var name = day ? k.slice(prefix.length) : k.slice(7);
+      if (TRACK_EVENTS[name]) out[name] = n;
+    });
+    return out;
+  }
+
+  async getEventsStats() {
+    var today = utcDayKey();
+    var yd = new Date();
+    yd.setUTCDate(yd.getUTCDate() - 1);
+    var yesterday = utcDayKey(yd.getTime());
+    var totals = await this.readEventCounts(null);
+    var todayCounts = await this.readEventCounts(today);
+    var yesterdayCounts = await this.readEventCounts(yesterday);
+    var ring = (await this.state.storage.get("ev:ring")) || [];
+    var opened = await this.readCount();
+    var wOpen = totals.wizard_open || 0;
+    var wDone = (totals.wizard_done || 0) + (totals.wizard_done_partial || 0);
+    return {
+      opened: opened,
+      today: today,
+      yesterday: yesterday,
+      totals: totals,
+      today_counts: todayCounts,
+      yesterday_counts: yesterdayCounts,
+      funnel: {
+        wizard_open: wOpen,
+        wizard_step_none: totals.wizard_step_none || 0,
+        wizard_step_marked: totals.wizard_step_marked || 0,
+        wizard_done: totals.wizard_done || 0,
+        wizard_done_partial: totals.wizard_done_partial || 0,
+        suggest_show: totals.suggest_show || 0,
+        suggest_apply_ok: totals.suggest_apply_ok || 0,
+        solve_ok: totals.solve_ok || 0,
+        solve_fail: totals.solve_fail || 0
+      },
+      rates: {
+        wizard_finish_pct: pct(wDone, wOpen),
+        solve_ok_per_wizard_pct: pct(totals.solve_ok || 0, wOpen),
+        solve_fail_per_try_pct: pct(
+          totals.solve_fail || 0,
+          (totals.solve_ok || 0) + (totals.solve_fail || 0) + (totals.solve_empty || 0)
+        ),
+        suggest_apply_per_show_pct: pct(totals.suggest_apply_ok || 0, totals.suggest_show || 0),
+        step_none_per_open_pct: pct(totals.wizard_step_none || 0, wOpen)
+      },
+      recent: ring.slice(-30)
+    };
   }
 
   /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
@@ -235,6 +377,25 @@ export class Counter {
         headers: { "Content-Type": "application/json" }
       });
     }
+    if (path === "/events" && req.method === "POST") {
+      var body = {};
+      try { body = await req.json(); } catch (e) {}
+      var rec = await this.recordEvents(body.sid, body.events);
+      return new Response(JSON.stringify(rec.body), {
+        status: rec.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    if (path === "/events" && req.method === "GET") {
+      var statsSecret = url.searchParams.get("secret") || req.headers.get("X-Stats-Secret") || "";
+      if (!this.env.STATS_SECRET || statsSecret !== this.env.STATS_SECRET) {
+        return new Response(JSON.stringify({ error: "forbidden" }), { status: 403 });
+      }
+      var stats = await this.getEventsStats();
+      return new Response(JSON.stringify(stats), {
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     return new Response(JSON.stringify({ error: "not_found" }), { status: 404 });
   }
@@ -257,7 +418,8 @@ export default {
       (url.pathname === "/lock" && req.method === "POST") ||
       (url.pathname === "/locks" && req.method === "GET") ||
       (url.pathname === "/suggest" && req.method === "GET") ||
-      (url.pathname === "/purge-locks" && req.method === "POST")
+      (url.pathname === "/purge-locks" && req.method === "POST") ||
+      (url.pathname === "/events" && (req.method === "GET" || req.method === "POST"))
     ) {
       try {
         if (!env.COUNTER_DO) throw new Error("COUNTER_DO binding is missing");

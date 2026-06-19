@@ -578,12 +578,33 @@
   .wizhelper-hint{
     margin:0 0 6px;font-size:12px;line-height:1.35;color:var(--ink-3);text-align:center;
   }
+  .wizfork{display:flex;flex-direction:column;gap:10px;margin-top:0;}
+  .wizfork-q{margin:0;font-size:15px;font-weight:600;color:var(--ink);text-align:center;line-height:1.35;}
+  .wizfork-none{width:100%;justify-content:center;padding:13px 16px;font-size:15px;}
+  .wizfork-some{width:100%;justify-content:center;font-size:14px;}
+  .wizdetail[hidden]{display:none!important;}
+  .wizdetail-collapse{
+    display:block;width:100%;margin:0 0 8px;padding:4px 6px;background:none;border:none;
+    font-size:12px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;
+    cursor:pointer;font-family:inherit;text-align:center;
+  }
+  .wizdetail-collapse:hover{color:var(--ink);}
   .wizreact{margin-top:12px;padding-top:14px;border-top:1px solid var(--line);}
-  .wizreact-q{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--ink);text-align:center;line-height:1.35;}
   .wizdetail-hd{margin:0 0 8px;font-size:11.5px;color:var(--ink-3);text-align:center;line-height:1.45;}
   .wizdetail-hd span{font-family:var(--mono);font-weight:700;color:var(--ink-2);}
   .wizfoot-actions .btn[hidden]{display:none;}
   .wizmap{margin:0;padding:0 2px;overflow:visible;}
+  .wizmap-gamestep{
+    margin:0 0 12px;padding:14px 16px;border-radius:14px;text-align:center;
+    background:linear-gradient(165deg,var(--accent-soft),var(--bg));
+    border:2px solid var(--accent-border);
+    font-size:15px;line-height:1.45;color:var(--ink);
+  }
+  .wizmap-gamestep b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--accent-ink);}
+  .wizmap-gamestep .wizmap-game-dir{font-size:18px;font-weight:800;white-space:nowrap;}
+  .wizmap--left .wizmap-gamestep .wizmap-game-dir{color:var(--dir-left);}
+  .wizmap--right .wizmap-gamestep .wizmap-game-dir{color:var(--dir-right);}
+  .wizmap-gamestep-hint{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--ink-3);}
   .wizmap-scene{
     position:relative;
     height:clamp(150px,calc(118px + var(--wmap-n,6) * 11px),208px);
@@ -840,6 +861,9 @@
         scale(1.22) rotateX(-50deg) rotateY(-22deg);
     }
     .wizmap-layer{transform:translateZ(calc(var(--s) * -40px)) rotateX(96deg);}
+    #linkWizPanel.wiz-compact .wizmap-gamestep{margin-bottom:10px;padding:16px 18px;font-size:16px;}
+    #linkWizPanel.wiz-compact .wizmap-gamestep b{font-size:26px;}
+    #linkWizPanel.wiz-compact .wizmap-gamestep .wizmap-game-dir{font-size:21px;}
     #linkWizPanel.wiz-compact .wizmap-caption{
       margin-top:10px;padding:12px 16px;font-size:16px;line-height:1.45;
     }
@@ -985,8 +1009,9 @@
     .hn-act .btn.primary{width:100%;justify-content:center;}
   }
   @media(prefers-reduced-motion:reduce){.helpnudge{animation:none;transition:none;}.hn-ic svg{animation:none;}}
-  #suggestTop:empty{display:none;}
-  #suggestTop .helpnudge{margin-top:0;margin-bottom:14px;}
+  #suggestStep:empty{display:none;}
+  #suggestStep:not(:empty){margin-bottom:14px;}
+  #suggestStep .helpnudge{margin-top:0;margin-bottom:0;}
   .lchip.same{color:var(--pos-ink);border-color:var(--pos-border);background:var(--pos-soft);}
   .lchip.opp{color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);}
   .lchip .x{opacity:.4;font-size:14px;line-height:1;transition:opacity .2s;}
@@ -1601,6 +1626,7 @@
         <p class="pdesc" id="linkModeDesc">If you do not know the links, go step by step: move a plate in game, mark reactions, and the matrix fills itself.</p>
       </div>
       <div class="pbody linkpanes">
+        <div id="suggestStep"></div>
         <div class="linkpane" id="linkFindPane">
           <div class="linkfind" id="linkFindIntro">
             <div class="lf-ic">
@@ -1623,7 +1649,6 @@
           </div>
         </div>
         <div class="linkpane" id="linkMatrixPane" hidden>
-          <div id="suggestTop"></div>
           <div class="depscroll"><table id="deps"></table></div>
           <div class="legend">
             <span><svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="2.6" fill="#7d858d"/></svg> no movement</span>
@@ -1631,7 +1656,6 @@
             <span style="color:var(--danger)"><svg width="15" height="11" viewBox="0 0 15 11"><path d="M14 3H5m0 0 3-2.5M5 3l3 2.5M1 8h9m0 0L7 5.5M10 8l-3 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> opposite</span>
           </div>
           <div class="linksum" id="linksum"></div>
-          <div id="suggestBox"></div>
         </div>
       </div>
     </div>
@@ -2202,6 +2226,7 @@ function animateRowSwap(tableIds, rerender) {
     var b = e.target.closest ? e.target.closest('.hole[data-i]') : null;
     if (!b) return;
     pinsTouched = true;
+    if (!TRACK_PINS_SENT) { TRACK_PINS_SENT = true; trackEvent('pins_edit'); }
     PINS_EDITED[+b.dataset.i] = true;
     pins[+b.dataset.i] = +b.dataset.p;
     WIZ_MEM.base = null; /* manual pin edit: re-snapshot base state on next wizard open */
@@ -2507,6 +2532,7 @@ function setLinkMode(mode, explicit) {
   LINK_MODE = mode === 'matrix' ? 'matrix' : 'find';
   if (explicit) {
     try { localStorage.setItem('uml-linkmode', LINK_MODE); } catch (e) {}
+    trackEvent(LINK_MODE === 'matrix' ? 'mode_matrix' : 'mode_find');
   }
   if (LINK_WIZ && LINK_MODE !== 'find') closeLinkWizard();
   updateLinkModeUI();
@@ -2890,11 +2916,12 @@ function wizRenderSchematic(wiz, driver, d) {
   }
   return '<div class="wizmap ' + dirCls + '" id="linkWizMap" role="img" aria-label="Lock schematic: move plate ' +
     (driver + 1) + ' ' + capMove + '">' +
+    '<p class="wizmap-gamestep">First move in-game: plate <b>' + (driver + 1) + '</b> ' +
+    '<span class="wizmap-game-dir">' + capMove + (moveLeft ? ' ←' : ' →') + '</span>' +
+    '<span class="wizmap-gamestep-hint">Then answer below who else jerked</span></p>' +
     '<div class="wizmap-scene" style="--wmap-n:' + N + '"><div class="wizmap-lock" style="--wmap-n:' + N + '">' +
     layers + '</div></div>' +
-    '<p class="wizmap-caption">Plate <b>' + (driver + 1) + '</b> <span class="wizmap-cap-dir">' + capMove +
-    '</span><span class="wizmap-cap-arr">' + (moveLeft ? ' ←' : ' →') + '</span>' +
-    '<span class="wizmap-meta">pin ' + pinFrom + ' → ' + pinTo + '</span></p></div>';
+    '<p class="wizmap-caption">Pin <b>' + pinFrom + '</b> → <b>' + pinTo + '</b></p></div>';
 }
 function wizRenderCmdStrip(wiz, i, d) {
   return wizRenderSchematic(wiz, i, d);
@@ -2961,6 +2988,7 @@ function wizBindHelperActions(wiz, c) {
   var backBtn = document.getElementById('wizBack');
   if (backBtn) backBtn.onclick = wizUndoStep;
   document.getElementById('wizConfirm').onclick = function () {
+    trackEvent('wizard_helper');
     wizPushHistory(wiz);
     wizApplyReport(wiz, c, wizPredictKnownMovers(wiz, c));
     wizSyncPins(wiz);
@@ -2968,6 +2996,7 @@ function wizBindHelperActions(wiz, c) {
     wizSwap(wizRenderStep, { fast: true });
   };
   document.getElementById('wizGameReset').onclick = function () {
+    trackEvent('wizard_reset');
     wizPushHistory(wiz);
     wiz.sim = WIZ_MEM.base.slice();
     wizSyncPins(wiz);
@@ -2978,12 +3007,16 @@ function wizBindHelperActions(wiz, c) {
 }
 function wizRenderReactFork(wiz, driver, d) {
   return '<div class="wizreact">' +
-    '<p class="wizreact-q">What moved?</p>' +
-    '<p class="wizmap-legend"><b>Large arrow</b> — plate from the move. <b>Small</b> — your answer. Didn\'t move — <b>—</b>.</p>' +
+    '<div class="wizfork" id="wizFork">' +
+    '<p class="wizfork-q">Who else jerked?</p>' +
+    '<button type="button" class="btn primary wizfork-none" id="wizForkNone">Nobody — next</button>' +
+    '<button type="button" class="btn ghost wizfork-some" id="wizForkSome">Someone jerked…</button></div>' +
+    '<div class="wizdetail" id="wizDetail" hidden>' +
+    '<button type="button" class="wizdetail-collapse" id="wizDetailCollapse">← Actually nobody</button>' +
     '<p class="wizdetail-hd"><span>←</span> left · <span>—</span> still · <span>→</span> right · <span>!</span> wall</p>' +
     wizBuildAnswerGrid(wiz, driver, d) +
     '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
-    '<span>That was the last mistake: the <b>lock reset</b>. We still record the link, and pins go back to the starting positions.</span></label></div>';
+    '<span>That was the last mistake: the <b>lock reset</b>. We still record the link, and pins go back to the starting positions.</span></label></div></div>';
 }
 function wizBindStepActions(wiz, c) {
   var answersEl = document.getElementById('wizAnswers');
@@ -3009,6 +3042,7 @@ function wizBindStepActions(wiz, c) {
   };
   wizSyncReactions();
   function wizFinish(movers, lockReset) {
+    trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
     wizPushHistory(wiz);
     var failed = wizApplyReport(wiz, c, movers);
     if (lockReset) {
@@ -3023,6 +3057,22 @@ function wizBindStepActions(wiz, c) {
   }
   var backBtn = document.getElementById('wizBack');
   if (backBtn) backBtn.onclick = wizUndoStep;
+  var forkEl = document.getElementById('wizFork');
+  var detailEl = document.getElementById('wizDetail');
+  var forkNone = document.getElementById('wizForkNone');
+  var forkSome = document.getElementById('wizForkSome');
+  var detailCollapse = document.getElementById('wizDetailCollapse');
+  function wizShowDetail(on) {
+    if (forkEl) forkEl.hidden = !!on;
+    if (detailEl) detailEl.hidden = !on;
+    if (confirmBtn) confirmBtn.hidden = !on;
+  }
+  if (forkSome) forkSome.onclick = function () { wizShowDetail(true); };
+  if (detailCollapse) detailCollapse.onclick = function () {
+    wizShowDetail(false);
+    wizSyncReactions();
+  };
+  if (forkNone) forkNone.onclick = function () { wizFinish([], false); };
   if (confirmBtn) confirmBtn.onclick = function () {
     if (!answersEl) return;
     var movers = [], jerks = 0, slides = 0;
@@ -3046,6 +3096,7 @@ function wizBindStepActions(wiz, c) {
     wizFinish(movers, lockReset);
   };
   document.getElementById('wizGameReset').onclick = function () {
+    trackEvent('wizard_reset');
     wizPushHistory(wiz);
     wiz.sim = WIZ_MEM.base.slice();
     wizSyncPins(wiz);
@@ -3124,14 +3175,14 @@ function wizRenderStep() {
   wizSetPanelCompact(true);
   document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
   document.getElementById('linkWizSub').textContent =
-    'Move in-game, mark what shifted';
+    'Who else jerked?';
   document.getElementById('linkWizBody').innerHTML =
     wizRenderCmdStrip(wiz, i, d) + wizRenderReactFork(wiz, i, d);
   document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Back</button>' +
-    '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
+    '<button class="btn primary" type="button" id="wizConfirm" hidden>Next</button></div>' +
     '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Reset the lock</button></p>';
   wizBindStepActions(wiz, c);
 }
@@ -3155,6 +3206,7 @@ function wizRenderDone() {
     setLinkMode('matrix', false);
   };
   toast(left > 0 ? 'Some links unverified - add them manually' : 'Links saved to matrix');
+  trackEvent(left > 0 ? 'wizard_done_partial' : 'wizard_done');
 }
 var WIZ_SCROLL_LOCK = null;
 function wizScrollbarWidth() {
@@ -3239,6 +3291,7 @@ function openLinkWizard() {
     confirmedZero: WIZ_MEM.zero, rows0: 0
   };
   LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
+  trackEvent('wizard_open');
   wizRenderStep();
 }
 function closeLinkWizard() {
@@ -3482,6 +3535,7 @@ function solveNow() {
     }
 
     if (seq === null) {
+      trackEvent('solve_fail');
       body.innerHTML =
         '<div class="sol-head"><span class="sol-title">Solution</span></div>' +
         '<div class="msg err"><b>No safe solution exists</b> for this config. ' +
@@ -3490,6 +3544,7 @@ function solveNow() {
       return;
     }
     if (seq.length === 0) {
+      trackEvent('solve_empty');
       body.innerHTML =
         '<div class="sol-head"><span class="sol-title">Solution</span></div>' +
         '<div class="msg ok">All pins already centered - lock is open. No moves needed.</div>';
@@ -3498,6 +3553,7 @@ function solveNow() {
 
     var check = verifySolution(pins.slice(), link, seq);
     if (!check.ok) {
+      trackEvent('solve_verify_err');
       body.innerHTML = '<div class="msg err">Internal verification error - please report to the site author.</div>';
       return;
     }
@@ -3505,6 +3561,7 @@ function solveNow() {
     if (SKIP_METRICS_ONCE) {
       SKIP_METRICS_ONCE = false;
     } else {
+      trackEvent('solve_ok');
       counterBump();
       reportLockConfig();
     }
@@ -3712,7 +3769,7 @@ function encodeConfig(pinsOverride) {
   }
   return out;
 }
-function decodeConfigV2(code) {
+function decodeConfigV2(code, silent) {
   if (!/^[A-Za-z0-9_-]{5,24}$/.test(code)) return false;
   var bits = [];
   for (var c = 0; c < code.length; c++) {
@@ -3747,7 +3804,7 @@ function decodeConfigV2(code) {
   FLIP = flip;
   try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
   updateFlipLabel();
-  renderCount(); renderPins(); renderDeps();
+  if (!silent) renderCount(); renderPins(); renderDeps();
   return true;
 }
 function normalizeConfigCode(raw) {
@@ -3777,10 +3834,10 @@ function extractConfigCode() {
   if (location.hash.length > 1) return location.hash.slice(1);
   return '';
 }
-function decodeConfig(code) {
+function decodeConfig(code, silent) {
   code = normalizeConfigCode(code);
   var m = /^v1\.(\d)\.(\d+)\.([SO-]+)(?:\.f([01]))?$/i.exec(code);
-  if (!m) return decodeConfigV2(code);
+  if (!m) return decodeConfigV2(code, silent);
   var n = parseInt(m[1], 10);
   if (n < 3 || n > 8 || m[2].length !== n || m[3].length !== n * (n - 1)) return false;
   var ps = m[2].split('').map(Number);
@@ -3802,7 +3859,7 @@ function decodeConfig(code) {
     try { localStorage.setItem('uml-flip', FLIP ? '1' : '0'); } catch (e) {}
     updateFlipLabel();
   }
-  renderCount(); renderPins(); renderDeps();
+  if (!silent) renderCount(); renderPins(); renderDeps();
   return true;
 }
 function configShareUrl() {
@@ -3815,13 +3872,18 @@ function bootConfigFromUrl() {
   if (!raw) return false;
   if (decodeConfig(raw)) {
     history.replaceState(null, '', location.pathname + '?lock=' + encodeURIComponent(encodeConfig(lockBasePins())));
+    if (!matrixEmpty()) setLinkMode('matrix', false);
+    trackEvent('lock_url_ok');
     toast('Lock loaded from link');
     var solver = document.getElementById('solver');
     if (solver) solver.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return true;
   }
   /* show the error only for an explicit ?lock= link, not anchors like #faq / #solver */
-  if (fromQuery) toast('Could not read link - copy the full URL');
+  if (fromQuery) {
+    trackEvent('lock_url_fail');
+    toast('Could not read link - copy the full URL');
+  }
   return false;
 }
 function toast(msg) {
@@ -3871,6 +3933,51 @@ window.addEventListener('hashchange', function () {
 /* ---------- счётчик взломанных замков ---------- */
 var COUNTER_API = 'https://api.unlockmyloot.com';
 var lastCounted = 0;
+
+/* UX funnel: batched /events, no PII (short session sid only) */
+var TRACK_EVENTS = {
+  solve_ok: 1, solve_fail: 1, solve_empty: 1, solve_verify_err: 1,
+  wizard_open: 1, wizard_step_none: 1, wizard_step_marked: 1,
+  wizard_helper: 1, wizard_done: 1, wizard_done_partial: 1, wizard_reset: 1,
+  suggest_show: 1, suggest_apply_ok: 1, suggest_apply_fail: 1, suggest_skip: 1,
+  lock_url_ok: 1, lock_url_fail: 1,
+  pins_edit: 1, mode_matrix: 1, mode_find: 1
+};
+var TRACK_SID = (function () {
+  try {
+    var k = 'uml-track-sid', s = sessionStorage.getItem(k);
+    if (!s) {
+      s = Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+      sessionStorage.setItem(k, s);
+    }
+    return s;
+  } catch (e) { return 'anon'; }
+})();
+var TRACK_Q = [], TRACK_TIMER = 0, TRACK_PINS_SENT = false;
+function trackEvent(name) {
+  if (!TRACK_EVENTS[name]) return;
+  TRACK_Q.push({ e: name, t: Date.now() });
+  if (TRACK_Q.length >= 8) trackFlush();
+  else if (!TRACK_TIMER) TRACK_TIMER = setTimeout(trackFlush, 4000);
+}
+function trackFlush() {
+  clearTimeout(TRACK_TIMER);
+  TRACK_TIMER = 0;
+  if (!TRACK_Q.length) return;
+  var batch = TRACK_Q.splice(0, 24);
+  fetch(COUNTER_API + '/events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sid: TRACK_SID, events: batch }),
+    keepalive: true
+  }).catch(function () {});
+}
+try {
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') trackFlush();
+  });
+  window.addEventListener('pagehide', trackFlush);
+} catch (e) {}
 
 function pluralRu(n, one, few, many) {
   return n === 1 ? one : many;
@@ -4058,7 +4165,7 @@ function applySuggestedLinks(code) {
       savedFlip = FLIP, savedN = N, savedBase = WIZ_MEM.base,
       savedZero = WIZ_MEM.zero ? WIZ_MEM.zero.map(function (r) { return r.slice(); }) : null,
       savedTouched = pinsTouched;
-  if (!decodeConfig(code)) return -1;
+  if (!decodeConfig(code, true)) return -1;
   if (N !== savedN) {
     N = savedN; pins = savedPins; link = savedLink; pinsTouched = savedTouched;
     WIZ_MEM.base = savedBase; WIZ_MEM.zero = savedZero; FLIP = savedFlip;
@@ -4096,29 +4203,55 @@ function applySuggestedLinks(code) {
   SUGGEST_CONFLICTS = conflicts;
   FILL_CELLS = filled;
   renderCount(); renderPins(); renderDeps();
-  FILL_CELLS = null;
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(function () { FILL_CELLS = null; });
+  } else {
+    FILL_CELLS = null;
+  }
   return applied;
 }
+function afterSuggestedLinksApplied(applied, box) {
+  if (applied < 0) {
+    trackEvent('suggest_apply_fail');
+    toast('Could not fill links - enter them manually');
+    return;
+  }
+  trackEvent('suggest_apply_ok');
+  if (box) box.innerHTML = '';
+  setLinkMode('matrix', false);
+  toast(SUGGEST_CONFLICTS
+    ? SUGGEST_CONFLICTS + ' cells differ from your marks - check the matrix'
+    : 'Links filled in - check the matrix and hit Pick lock');
+}
+function suggestStepEl() {
+  return document.getElementById('suggestStep');
+}
+function clearSuggestStep() {
+  var el = suggestStepEl();
+  if (el) el.innerHTML = '';
+}
 function maybeSuggestLinks() {
-  var box = document.getElementById('suggestBox');
+  var box = suggestStepEl();
   if (!box) return;
   if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) {
-    box.innerHTML = '';
-    var stEl = document.getElementById('suggestTop'); if (stEl) stEl.innerHTML = '';
+    clearSuggestStep();
     return;
   }
   clearTimeout(suggestTimer);
-  suggestTimer = setTimeout(function () {
+  function runSuggestLookup() {
     if (SUGGEST_DISMISSED || !matrixNeedsSuggest()) return;
     suggestLookup(function (d) {
       if (!matrixNeedsSuggest() || SUGGEST_DISMISSED) return;
       if (d && d.found) { renderSuggestBox(d); return; }
       maybeShowHelpNudge();
     });
-  }, 600);
+  }
+  if (knownLockFor()) runSuggestLookup();
+  else suggestTimer = setTimeout(runSuggestLookup, 300);
 }
 function renderSuggestBox(d) {
-  var box = document.getElementById('suggestBox');
+  var box = suggestStepEl();
+  if (!box) return;
   var cnt = LOCK_COUNTS[d.code];
   var cntStr = (typeof cnt === 'number') ? ' Opened <b>' + cnt + '</b> times.' : '';
   var msg;
@@ -4133,16 +4266,12 @@ function renderSuggestBox(d) {
     '<button class="btn" type="button" id="sgYes">Fill in</button>' +
     '<button class="btn ghost" type="button" id="sgNo">Enter manually</button>' +
     '</span></div>';
+  trackEvent('suggest_show');
   box.querySelector('#sgYes').onclick = function () {
-    var n = applySuggestedLinks(d.code);
-    if (n >= 0) {
-      box.innerHTML = '';
-      toast(SUGGEST_CONFLICTS
-        ? SUGGEST_CONFLICTS + ' cells differ from your marks - check the matrix'
-        : 'Links filled in - check the matrix and hit Pick lock');
-    }
+    afterSuggestedLinksApplied(applySuggestedLinks(d.code), box);
   };
   box.querySelector('#sgNo').onclick = function () {
+    trackEvent('suggest_skip');
     SUGGEST_DISMISSED = true;
     box.innerHTML = '';
   };
@@ -4154,10 +4283,8 @@ function helpAnnounceOpen() {
   return !!(a && a.classList.contains('open'));
 }
 function clearHelpNudge() {
-  ['suggestBox', 'suggestTop'].forEach(function (id) {
-    var b = document.getElementById(id);
-    if (b && b.querySelector('.helpnudge')) b.innerHTML = '';
-  });
+  var box = suggestStepEl();
+  if (box && box.querySelector('.helpnudge')) box.innerHTML = '';
 }
 /* expand/collapse driven by INLINE styles only (no class) - otherwise the inline
    max-height overrides the class and height does not animate -> matrix jumps. */
@@ -4203,10 +4330,8 @@ function maybeShowHelpNudge() {
     clearHelpNudge();
     return;
   }
-  /* nudge always ABOVE the matrix (#suggestTop) - desktop and mobile */
-  var box = document.getElementById('suggestTop');
-  var other = document.getElementById('suggestBox');
-  if (other && other.querySelector('.helpnudge')) other.innerHTML = '';
+  /* helper invite - step 03 (#suggestStep), visible in both modes */
+  var box = suggestStepEl();
   if (!box || box.querySelector('.helpnudge')) return;
   box.innerHTML =
     '<div class="helpnudge">' +
@@ -4234,6 +4359,8 @@ var _origRenderPins = renderPins;
 renderPins = function () { _origRenderPins(); maybeSuggestLinks(); };
 var _origRenderLinkSum = renderLinkSum;
 renderLinkSum = function () { _origRenderLinkSum(); maybeSuggestLinks(); };
+var _origRenderDeps = renderDeps;
+renderDeps = function () { _origRenderDeps(); maybeSuggestLinks(); };
 function counterBump() {
   var now = Date.now();
   if (now - lastCounted < 8000) return;

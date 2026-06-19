@@ -10,9 +10,9 @@ function loadSuggest(file) {
     return m[0];
   };
   const src = [
-    grab(/var CODE_ABC[\s\S]*?function decodeConfigV2[\s\S]*?\n  return true;\n\}/),
+    grab(/var CODE_ABC[\s\S]*?function decodeConfigV2\(code, silent\)[\s\S]*?\n  return true;\n\}/),
     grab(/function normalizeConfigCode[\s\S]*?\n\}/),
-    grab(/function decodeConfig\(code\)[\s\S]*?\n  return true;\n\}/),
+    grab(/function decodeConfig\(code, silent\)[\s\S]*?\n  return true;\n\}/),
     grab(/function wizEnsureZero[\s\S]*?function syncLinkManualZero[\s\S]*?\n\}/),
     grab(/function lockBasePins[\s\S]*?function applySuggestedLinks[\s\S]*?\n  return applied;\n\}/),
   ].join('\n');
