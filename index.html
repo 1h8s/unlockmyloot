@@ -457,7 +457,7 @@
   .annpanel{max-height:min(90vh,720px);overflow:auto;}
   #linkWizPanel{
     display:flex;flex-direction:column;
-    max-height:min(calc(100dvh - 40px),720px);
+    max-height:min(calc(100dvh - 40px),900px);
     overflow:hidden;
   }
   #linkWizPanel .wizhead{flex-shrink:0;}
@@ -876,11 +876,11 @@
     #linkWizPanel.wiz-compact .wizbody{
       flex:0 0 auto;min-height:0;overflow-x:visible;overflow-y:visible;
     }
-    #linkWizPanel{width:min(580px,100%);}
-    #linkWizPanel.wiz-compact .wizbody{padding:12px 24px 10px;}
+    #linkWizPanel{width:min(725px,100%);}
+    #linkWizPanel.wiz-compact .wizbody{padding:14px 28px 12px;}
     #linkWizPanel.wiz-compact .wizmap-scene{
-      height:clamp(218px,calc(164px + var(--wmap-n,6) * 16px),308px);
-      padding:16px 48px 10px;
+      height:clamp(272px,calc(205px + var(--wmap-n,6) * 20px),385px);
+      padding:18px 56px 12px;
     }
     .wizmap-lock{
       transform:translate(calc(var(--wmap-n,6) * -4px - 10px),calc(var(--wmap-n,6) * 9px + 6px))
