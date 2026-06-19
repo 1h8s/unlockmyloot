@@ -7,19 +7,42 @@ set -euo pipefail
 
 API="${COUNTER_API:-https://api.unlockmyloot.com}/events"
 SECRET="${STATS_SECRET:?Задай STATS_SECRET (wrangler secret put STATS_SECRET)}"
+TMP=$(mktemp)
+trap 'rm -f "$TMP"' EXIT
 
-curl -fsS "${API}?secret=${SECRET}" | python3 - <<'PY'
+HTTP=$(curl -sS -o "$TMP" -w "%{http_code}" "${API}?secret=${SECRET}")
+if [[ "$HTTP" != "200" ]]; then
+  echo "HTTP $HTTP — не удалось получить статистику" >&2
+  if [[ "$HTTP" == "403" ]]; then
+    echo "Неверный STATS_SECRET (wrangler secret put STATS_SECRET)" >&2
+  fi
+  [[ -s "$TMP" ]] && cat "$TMP" >&2 && echo >&2
+  exit 1
+fi
+
+python3 - "$TMP" <<'PY'
 import json, sys
 from datetime import datetime, timezone
 
-d = json.load(sys.stdin)
+with open(sys.argv[1], encoding="utf-8") as f:
+    raw = f.read()
+if not raw.strip():
+    print("Пустой ответ API", file=sys.stderr)
+    sys.exit(1)
+try:
+    d = json.loads(raw)
+except json.JSONDecodeError:
+    print("API вернул не JSON:", raw[:300], file=sys.stderr)
+    sys.exit(1)
+if d.get("error"):
+    print("API:", d.get("error"), file=sys.stderr)
+    sys.exit(1)
+
 opened = d.get("opened", 0)
 today = d.get("today", "?")
 tot = d.get("totals", {})
 tc = d.get("today_counts", {})
-yc = d.get("yesterday_counts", {})
 rates = d.get("rates", {})
-funnel = d.get("funnel", {})
 
 def n(x):
     return f"{int(x):,}".replace(",", " ")

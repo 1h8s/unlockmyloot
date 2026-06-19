@@ -3028,18 +3028,14 @@ function wizBindHelperActions(wiz, c) {
     wizSwap(wizRenderStep, { fast: true });
   };
 }
-function wizRenderReactFork(wiz, driver, d) {
+function wizRenderAnswerPanel(wiz, driver, d) {
   return '<div class="wizreact">' +
-    '<div class="wizfork" id="wizFork">' +
-    '<p class="wizfork-q">Who else jerked?</p>' +
-    '<button type="button" class="btn primary wizfork-none" id="wizForkNone">Nobody — next</button>' +
-    '<button type="button" class="btn ghost wizfork-some" id="wizForkSome">Someone jerked…</button></div>' +
-    '<div class="wizdetail" id="wizDetail" hidden>' +
-    '<button type="button" class="wizdetail-collapse" id="wizDetailCollapse">← Actually nobody</button>' +
+    '<div class="wizobserve"><b>Mark who jerked</b>' +
+    '<span>“Still” is already selected. Change only plates that moved.</span></div>' +
     '<p class="wizdetail-hd"><span>←</span> left · <span>—</span> still · <span>→</span> right · <span>!</span> wall</p>' +
     wizBuildAnswerGrid(wiz, driver, d) +
     '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
-    '<span>That was the last mistake: the <b>lock reset</b>. We still record the link, and pins go back to the starting positions.</span></label></div></div>';
+    '<span>That was the last mistake: the <b>lock reset</b>. We still record the link, and pins go back to the starting positions.</span></label></div>';
 }
 function wizBindStepActions(wiz, c) {
   var answersEl = document.getElementById('wizAnswers');
@@ -3080,22 +3076,8 @@ function wizBindStepActions(wiz, c) {
   }
   var backBtn = document.getElementById('wizBack');
   if (backBtn) backBtn.onclick = wizUndoStep;
-  var forkEl = document.getElementById('wizFork');
-  var detailEl = document.getElementById('wizDetail');
-  var forkNone = document.getElementById('wizForkNone');
-  var forkSome = document.getElementById('wizForkSome');
-  var detailCollapse = document.getElementById('wizDetailCollapse');
-  function wizShowDetail(on) {
-    if (forkEl) forkEl.hidden = !!on;
-    if (detailEl) detailEl.hidden = !on;
-    if (confirmBtn) confirmBtn.hidden = !on;
-  }
-  if (forkSome) forkSome.onclick = function () { wizShowDetail(true); };
-  if (detailCollapse) detailCollapse.onclick = function () {
-    wizShowDetail(false);
-    wizSyncReactions();
-  };
-  if (forkNone) forkNone.onclick = function () { wizFinish([], false); };
+  var noneBtn = document.getElementById('wizNone');
+  if (noneBtn) noneBtn.onclick = function () { wizFinish([], false); };
   if (confirmBtn) confirmBtn.onclick = function () {
     if (!answersEl) return;
     var movers = [], jerks = 0, slides = 0;
@@ -3198,15 +3180,17 @@ function wizRenderStep() {
   wizSetPanelCompact(true);
   document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
   document.getElementById('linkWizSub').textContent =
-    'Who else jerked?';
+    'Step ' + (wiz.step + 1) + ' · move in-game, then mark';
   document.getElementById('linkWizBody').innerHTML =
-    wizRenderCmdStrip(wiz, i, d) + wizRenderReactFork(wiz, i, d);
+    wizRenderCmdStrip(wiz, i, d) + wizRenderAnswerPanel(wiz, i, d);
   document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Back</button>' +
-    '<button class="btn primary" type="button" id="wizConfirm" hidden>Next</button></div>' +
-    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Reset the lock</button></p>';
+    '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
+    '<p class="wizfoot-aside">' +
+    '<button type="button" id="wizNone">Nothing jerked</button>' +
+    ' · <button type="button" id="wizGameReset">Reset the lock</button></p>';
   wizBindStepActions(wiz, c);
 }
 function wizRenderDone() {

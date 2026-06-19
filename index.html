@@ -3086,18 +3086,14 @@ function wizBindHelperActions(wiz, c) {
     wizSwap(wizRenderStep, { fast: true });
   };
 }
-function wizRenderReactFork(wiz, driver, d) {
+function wizRenderAnswerPanel(wiz, driver, d) {
   return '<div class="wizreact">' +
-    '<div class="wizfork" id="wizFork">' +
-    '<p class="wizfork-q">Кто ещё дёрнулся?</p>' +
-    '<button type="button" class="btn primary wizfork-none" id="wizForkNone">Никто — дальше</button>' +
-    '<button type="button" class="btn ghost wizfork-some" id="wizForkSome">Кто-то дёрнулся…</button></div>' +
-    '<div class="wizdetail" id="wizDetail" hidden>' +
-    '<button type="button" class="wizdetail-collapse" id="wizDetailCollapse">← На самом деле никто</button>' +
+    '<div class="wizobserve"><b>Отметь, кто дёрнулся</b>' +
+    '<span>«Нет» уже выбрано. Меняй только те плитки, которые дёрнулись.</span></div>' +
     '<p class="wizdetail-hd"><span>←</span> влево · <span>—</span> стоит · <span>→</span> вправо · <span>!</span> стена</p>' +
     wizBuildAnswerGrid(wiz, driver, d) +
     '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
-    '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label></div></div>';
+    '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label></div>';
 }
 function wizBindStepActions(wiz, c) {
   var answersEl = document.getElementById('wizAnswers');
@@ -3138,22 +3134,8 @@ function wizBindStepActions(wiz, c) {
   }
   var backBtn = document.getElementById('wizBack');
   if (backBtn) backBtn.onclick = wizUndoStep;
-  var forkEl = document.getElementById('wizFork');
-  var detailEl = document.getElementById('wizDetail');
-  var forkNone = document.getElementById('wizForkNone');
-  var forkSome = document.getElementById('wizForkSome');
-  var detailCollapse = document.getElementById('wizDetailCollapse');
-  function wizShowDetail(on) {
-    if (forkEl) forkEl.hidden = !!on;
-    if (detailEl) detailEl.hidden = !on;
-    if (confirmBtn) confirmBtn.hidden = !on;
-  }
-  if (forkSome) forkSome.onclick = function () { wizShowDetail(true); };
-  if (detailCollapse) detailCollapse.onclick = function () {
-    wizShowDetail(false);
-    wizSyncReactions();
-  };
-  if (forkNone) forkNone.onclick = function () { wizFinish([], false); };
+  var noneBtn = document.getElementById('wizNone');
+  if (noneBtn) noneBtn.onclick = function () { wizFinish([], false); };
   if (confirmBtn) confirmBtn.onclick = function () {
     if (!answersEl) return;
     var movers = [], jerks = 0, slides = 0;
@@ -3259,15 +3241,17 @@ function wizRenderStep() {
   wizSetPanelCompact(true);
   document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
   document.getElementById('linkWizSub').textContent =
-    'Кто ещё дёрнулся?';
+    'Шаг ' + (wiz.step + 1) + ' · сдвинь в игре, потом отметь';
   document.getElementById('linkWizBody').innerHTML =
-    wizRenderCmdStrip(wiz, i, d) + wizRenderReactFork(wiz, i, d);
+    wizRenderCmdStrip(wiz, i, d) + wizRenderAnswerPanel(wiz, i, d);
   document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizBack"' + (wizCanUndo() ? '' : ' disabled') + '>Назад</button>' +
-    '<button class="btn primary" type="button" id="wizConfirm" hidden>Дальше</button></div>' +
-    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Сбросил замок</button></p>';
+    '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
+    '<p class="wizfoot-aside">' +
+    '<button type="button" id="wizNone">Никто не дёрнулся</button>' +
+    ' · <button type="button" id="wizGameReset">Сбросил замок</button></p>';
   wizBindStepActions(wiz, c);
 }
 function wizRenderDone() {
