@@ -797,6 +797,7 @@
   .vp-ctrl .btn:disabled{opacity:.45;cursor:not-allowed;}
   .vp-ctrl .btn:disabled:hover{transform:none;border-color:var(--line-2);}
   .vp-feedback{margin-top:14px;text-align:center;overflow:hidden;}
+  .vp-feedback.sol-feedback{margin-top:22px;}
   .vp-feedback[hidden]{display:none!important;}
   .vp-fb-q{margin:0 0 10px;font-size:14px;color:var(--ink-2);max-height:32px;opacity:1;
     transition:opacity .35s var(--ease),max-height .35s var(--ease),margin .35s var(--ease);}
@@ -2634,7 +2635,11 @@ function solveNow() {
       trackEvent('solve_empty');
       body.innerHTML =
         '<div class="sol-head"><span class="sol-title">Решение</span></div>' +
-        '<div class="msg ok">Все штифты уже в центре - замок открыт. Ходов не нужно.</div>';
+        '<div class="msg ok">Все штифты уже в центре - замок открыт. Ходов не нужно.</div>' +
+        solFeedbackHtml();
+      resetSolFeedback();
+      bindSolFeedback();
+      vpSyncFeedback(true);
       return;
     }
 
@@ -2684,6 +2689,28 @@ function dirChipHtml(d) {
     : '<span class="dirchip R">ВПРАВО &rarr;</span>';
 }
 
+function solFeedbackHtml() {
+  return '<div class="vp-feedback sol-feedback" id="vpFeedback" hidden>' +
+    '<p class="vp-fb-q">Сайт помог?</p>' +
+    '<div class="vp-fb-act" id="vpFbAct">' +
+      '<button class="vp-fb-btn vp-fb-up" id="vpFbUp" type="button">Да</button>' +
+      '<button class="vp-fb-btn vp-fb-down" id="vpFbDn" type="button">Нет</button>' +
+    '</div>' +
+    '<p class="vp-fb-hint" id="vpFbHint" hidden>Оценку можно изменить</p>' +
+    '<p class="vp-fb-thanks" id="vpFbThanks">Спасибо!</p>' +
+  '</div>';
+}
+function bindSolFeedback() {
+  var up = document.getElementById('vpFbUp');
+  var dn = document.getElementById('vpFbDn');
+  if (up) up.onclick = function () { vpSubmitFeedback('up'); };
+  if (dn) dn.onclick = function () { vpSubmitFeedback('down'); };
+}
+function resetSolFeedback() {
+  vpFbChecked = false;
+  vpCurrentVote = null;
+}
+
 function renderSolution(fresh) {
   if (!SOL) return;
   var body = document.getElementById('solbody');
@@ -2721,7 +2748,8 @@ function renderSolution(fresh) {
   }
   html += '</div><div class="msg ok">После последнего шага все штифты встанут в центр - замок откроется. ' +
     'Решение проверено симуляцией перед выводом. Кликай по шагам, чтобы отмечать выполненные.</div></div>' +
-    '<div id="solPlayer"' + (SOL_MODE === 'play' ? '' : ' style="display:none"') + '></div>';
+    '<div id="solPlayer"' + (SOL_MODE === 'play' ? '' : ' style="display:none"') + '></div>' +
+    solFeedbackHtml();
   body.innerHTML = html;
   document.getElementById('pvToggle').onchange = function () {
     PV_ON = this.checked;
@@ -2738,6 +2766,9 @@ function renderSolution(fresh) {
   if (fresh) vpIdx = 0;
   buildPlayer();
   setSolMode(SOL_MODE, false);
+  resetSolFeedback();
+  bindSolFeedback();
+  vpSyncFeedback(SOL_MODE === 'list');
 }
 
 /* ---------- визуальный пошаговый режим («Показ») ---------- */
@@ -2761,6 +2792,7 @@ function setSolMode(mode, explicit) {
       if (vp) { vp.classList.remove('show'); void vp.offsetWidth; vp.classList.add('show'); }
     }
   }
+  if (SOL) vpSyncFeedback(SOL_MODE === 'list' || vpIdx >= vpGroups.length);
 }
 
 function buildPlayer() {
@@ -2777,15 +2809,6 @@ function buildPlayer() {
       '<div class="vp-ctrl">' +
         '<button id="vpPrev" class="btn" type="button">&larr; Назад</button>' +
         '<button id="vpNext" class="btn primary" type="button">Далее &rarr;</button>' +
-      '</div>' +
-      '<div class="vp-feedback" id="vpFeedback" hidden>' +
-        '<p class="vp-fb-q">Сайт помог?</p>' +
-        '<div class="vp-fb-act" id="vpFbAct">' +
-          '<button class="vp-fb-btn vp-fb-up" id="vpFbUp" type="button">Да</button>' +
-          '<button class="vp-fb-btn vp-fb-down" id="vpFbDn" type="button">Нет</button>' +
-        '</div>' +
-        '<p class="vp-fb-hint" id="vpFbHint" hidden>Оценку можно изменить</p>' +
-        '<p class="vp-fb-thanks" id="vpFbThanks">Спасибо!</p>' +
       '</div>' +
     '</div>';
   var lockEl = document.getElementById('vpLock');
@@ -2806,11 +2829,8 @@ function buildPlayer() {
   vpStates = [SOL.check.states[0]];
   for (var g = 0; g < vpGroups.length; g++) vpStates.push(SOL.check.states[vpGroups[g].endIdx + 1]);
   if (vpIdx > vpGroups.length) vpIdx = vpGroups.length;
-  vpFbChecked = false;
   document.getElementById('vpPrev').onclick = function () { if (vpIdx > 0) { vpIdx--; playerRender(); } };
   document.getElementById('vpNext').onclick = function () { if (vpIdx < vpGroups.length) { vpIdx++; playerRender(); } };
-  document.getElementById('vpFbUp').onclick = function () { vpSubmitFeedback('up'); };
-  document.getElementById('vpFbDn').onclick = function () { vpSubmitFeedback('down'); };
 }
 
 var vpFbChecked = false;
@@ -2904,6 +2924,7 @@ function playerRender() {
   document.getElementById('vpMove').innerHTML = done ? 'Все штифты в центре' : vpMoveText(vpGroups[vpIdx]);
   document.getElementById('vpPrev').disabled = vpIdx === 0;
   document.getElementById('vpNext').disabled = done;
+  vpSyncFeedback(done);
 }
 
 /* ---------- ссылки / пресеты / сброс ---------- */
