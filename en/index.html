@@ -312,19 +312,19 @@
   .ovdc{fill:var(--accent);}
   .ovcap{font-size:12px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.03em;}
   .ovcap b{color:var(--accent-ink);font-weight:600;}
-  .countrow{display:flex;gap:10px;flex-wrap:wrap;}
-  .countrow button{
+  .countrow{display:flex;align-items:center;gap:12px;}
+  .countstep{
     width:52px;height:52px;border-radius:14px;cursor:pointer;
-    font-family:var(--mono);font-size:17px;
-    background:var(--bg);border:1px solid var(--line-2);color:var(--ink-2);
-    transition:all .3s var(--ease);
+    font-size:24px;font-weight:600;line-height:1;
+    background:var(--bg);border:1px solid var(--line-2);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s var(--ease);
   }
-  .countrow button:hover{border-color:var(--ink-3);transform:translateY(-2px);}
-  .countrow button:active{transform:scale(.95);}
-  .countrow button.on{
-    background:var(--ink);border-color:var(--ink);color:var(--on-ink);
-    box-shadow:var(--ink-shadow);
-  }
+  .countstep:hover:not(:disabled){border-color:var(--ink-3);transform:translateY(-2px);}
+  .countstep:active:not(:disabled){transform:scale(.95);}
+  .countstep:disabled{opacity:.4;cursor:default;}
+  .countval{font-family:var(--mono);font-size:15px;color:var(--ink-3);min-width:104px;text-align:center;letter-spacing:.02em;}
+  .countval b{color:var(--ink);font-weight:600;font-size:19px;font-family:'Outfit',system-ui,sans-serif;}
 
   /* дорожки штифтов: те же ячейки и сетка, что у матрицы */
   .pside{display:block;font-size:10px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;margin-top:1px;font-weight:400;}
@@ -433,17 +433,11 @@
   .wizchip:active{transform:scale(.96);}
   .wizchip:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
   .wizchip input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
-  .wizchip .wizchip-check{
-    width:0;height:13px;opacity:0;transform:scale(.4) rotate(-12deg);flex-shrink:0;
-    transition:width .18s var(--ease),opacity .18s,transform .22s var(--ease),margin .18s;
-    margin-right:0;
-  }
   .wizchip b{margin-left:5px;}
   .wizchip.on{
     border-color:var(--accent);background:var(--accent);color:var(--on-accent);
     box-shadow:var(--pos-glow);
   }
-  .wizchip.on .wizchip-check{width:13px;opacity:1;transform:none;margin-right:7px;}
   .wizmovers{display:flex;flex-direction:column;gap:10px;margin-bottom:4px;}
   .wizmover{display:none;padding:12px 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);}
   .wizmover.show{display:block;}
@@ -459,6 +453,8 @@
   .wizpos-dir{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;letter-spacing:.04em;color:var(--ink);}
   .wizpos-dir svg{flex-shrink:0;transition:transform .18s var(--ease);}
   .wizpos-sub{font-size:11.5px;color:var(--ink-3);line-height:1.35;}
+  .wizpos-sub b{color:var(--ink);font-weight:700;}
+  .wizpos-sub b.wall{color:var(--danger-text);}
   .wizpos:hover{border-color:var(--ink-3);}
   .wizpos:hover .wizpos-dir svg{transform:translateX(var(--nudge,0));}
   .wizpos:active{transform:scale(.97);}
@@ -489,6 +485,7 @@
   .wizfoot-aside button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
   @media(max-width:430px){.wizfoot-actions{grid-template-columns:1fr;}}
   .wizmeta{font-size:12px;color:var(--ink-3);text-align:center;margin-top:10px;}
+  .wizmeta b{color:var(--ink);font-weight:700;}
   .wizpin.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
   .dep.wizflash{animation:wizflash .9s var(--ease);}
   @keyframes wizflash{0%,100%{box-shadow:none;}40%{box-shadow:0 0 0 3px var(--accent),var(--pos-glow);}}
@@ -749,36 +746,156 @@
   .vp-ctrl .btn{min-width:140px;justify-content:center;}
   .vp-ctrl .btn:disabled{opacity:.45;cursor:not-allowed;}
   .vp-ctrl .btn:disabled:hover{transform:none;border-color:var(--line-2);}
-  .vp-feedback{margin-top:14px;text-align:center;overflow:hidden;}
-  .vp-feedback.sol-feedback{margin-top:22px;}
+  .vp-feedback{margin-top:20px;text-align:center;}
+  .vp-feedback.sol-feedback{margin-top:24px;padding-top:22px;border-top:1px solid var(--line);}
   .vp-feedback[hidden]{display:none!important;}
-  .vp-fb-q{margin:0 0 10px;font-size:14px;color:var(--ink-2);max-height:32px;opacity:1;
-    transition:opacity .35s var(--ease),max-height .35s var(--ease),margin .35s var(--ease);}
-  .vp-fb-act{display:flex;gap:10px;justify-content:center;max-height:52px;opacity:1;
-    transition:opacity .4s var(--ease),max-height .4s var(--ease),transform .4s var(--ease);}
+  .vp-fb-q{margin:0 0 12px;font-size:14px;color:var(--ink-2);}
+  .vp-fb-vote{display:flex;gap:10px;justify-content:center;}
   .vp-fb-btn{
     min-width:108px;padding:10px 22px;border-radius:12px;border:1px solid var(--line-2);
-    background:var(--surface);font-size:14px;font-weight:600;cursor:pointer;
-    transition:transform .2s,background .2s,border-color .2s,opacity .35s;}
-  .vp-fb-btn:hover:not(:disabled){transform:translateY(-1px);}
+    background:var(--surface);font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);
+    transition:background .2s,border-color .2s,transform .15s,opacity .35s;
+  }
+  .vp-fb-btn:hover:not(:disabled){border-color:var(--ink-3);}
+  .vp-fb-btn:active:not(:disabled){transform:scale(.97);}
   .vp-fb-btn:disabled{opacity:.55;cursor:default;}
-  .vp-fb-up:hover:not(:disabled){border-color:var(--accent-border);background:var(--accent-soft);}
-  .vp-fb-down:hover:not(:disabled){border-color:var(--danger-border);background:var(--danger-soft);}
-  .vp-fb-btn--sel.vp-fb-up{border-color:var(--accent-border);background:var(--accent-soft);box-shadow:0 0 0 2px rgba(52,168,131,.25);}
-  .vp-fb-btn--sel.vp-fb-down{border-color:var(--danger-border);background:var(--danger-soft);box-shadow:0 0 0 2px rgba(232,93,106,.2);}
-  .vp-fb-hint{margin:10px 0 0;font-size:12px;color:var(--ink-3);}
+  .vp-fb-btn--sel.vp-fb-up{border-color:var(--accent-border);background:var(--accent-soft);color:var(--accent-ink);}
+  .vp-fb-btn--sel.vp-fb-down{border-color:var(--line-2);background:var(--bg);color:var(--ink);}
+  .vp-feedback--detail .vp-fb-q,
+  .vp-feedback--detail .vp-fb-vote{display:none;}
+  .vp-fb-hint{margin:14px 0 0;font-size:12px;color:var(--ink-3);}
   .vp-fb-hint[hidden]{display:none!important;}
+  .vp-feedback--detail .vp-fb-hint{display:none!important;}
   .vp-fb-thanks{
-    display:inline-block;margin:8px 0 0;padding:8px 20px;border-radius:12px;
+    display:inline-block;margin:10px 0 0;padding:8px 20px;border-radius:12px;
     background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-ink);
     font-weight:600;font-size:14px;opacity:0;transform:scale(.92);max-height:0;
     transition:opacity .35s var(--ease),transform .35s var(--ease),max-height .35s var(--ease);}
   .vp-feedback--flash .vp-fb-thanks{opacity:1;transform:scale(1);max-height:40px;}
+  .vp-fb-detail{max-width:460px;margin:0 auto;text-align:left;}
+  .vp-fb-detail[hidden]{display:none!important;}
+  .vp-fb-dq{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--ink);text-align:center;}
+  .vp-fb-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px;}
+  .vp-fb-chip{
+    display:inline-flex;align-items:center;padding:9px 14px;border-radius:10px;
+    border:1px solid var(--line-2);background:var(--bg);cursor:pointer;
+    font-size:13px;font-weight:500;line-height:1.25;text-align:left;
+    transition:border-color .18s,background .18s,color .18s,transform .1s;user-select:none;
+  }
+  .vp-fb-chip:hover{border-color:var(--ink-3);}
+  .vp-fb-chip:active{transform:scale(.96);}
+  .vp-fb-chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .vp-fb-field{margin:0;}
+  .vp-fb-lbl{display:block;margin:0 0 6px;font-size:12px;font-weight:600;color:var(--ink-2);}
+  .vp-fb-lbl span{font-weight:400;color:var(--ink-3);}
+  .vp-fb-note{
+    width:100%;margin:0;display:block;padding:10px 12px;
+    border-radius:12px;border:1px solid var(--line-2);background:var(--surface);
+    font:inherit;font-size:13px;color:var(--ink);resize:vertical;min-height:56px;max-height:120px;}
+  .vp-fb-note::placeholder{color:var(--ink-3);}
+  .vp-fb-note:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent-border);}
+  .vp-fb-note-err{border-color:var(--danger-border)!important;background:var(--danger-soft)!important;}
+  .vp-fb-err{margin:6px 0 0;font-size:12px;line-height:1.35;color:var(--danger-text);}
+  .vp-fb-err[hidden]{display:none!important;}
+  .vp-fb-down-act{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px;align-items:center;}
+  .vp-fb-down-act .btn.primary{justify-content:center;min-width:0;padding:12px 18px;font-size:14px;}
+  .vp-fb-down-act .btn.ghost{
+    margin:0;padding:12px 16px;font-size:13px;
+    background:transparent;border-color:var(--line-2);color:var(--ink-2);
+  }
+  .vp-fb-down-act .btn.ghost:hover{border-color:var(--ink-3);color:var(--ink);background:var(--bg);}
+  @media(max-width:420px){
+    .vp-fb-down-act{grid-template-columns:1fr;}
+    .vp-fb-down-act .btn.ghost{justify-content:center;}
+  }
   @media(prefers-reduced-motion:reduce){
     .vp-plate,.vp-pin,.vp-layer,.vp-bar i{transition-duration:.001s!important;}
     .vp.show{animation:none!important;}
     .vp-plate.active{animation:none!important;box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
-    .vp-fb-q,.vp-fb-act,.vp-fb-thanks,.vp-fb-btn{transition-duration:.001s!important;}
+    .vp-fb-q,.vp-fb-thanks,.vp-fb-btn,.vp-fb-down{transition-duration:.001s!important;animation:none!important;}
+  }
+  /* ===== visual wizard mode ===== */
+  .wizmode{display:inline-flex;gap:2px;padding:3px;margin:0 auto 12px;border-radius:11px;
+    background:var(--bg);border:1px solid var(--line-2);}
+  .wizmode-b{appearance:none;border:0;background:transparent;cursor:pointer;font:inherit;
+    padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-3);
+    transition:background .18s,color .18s;}
+  .wizmode-b:hover{color:var(--ink-2);}
+  .wizmode-b.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .wv{text-align:center;}
+  .wv-cap{margin:0 0 2px;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+  .wv-cap b{color:var(--ink);}
+  .wv-dir{font-weight:700;white-space:nowrap;}
+  .wv-dir.l{color:var(--dir-left);}
+  .wv-dir.r{color:var(--dir-right);}
+  .wv-scene{perspective:1000px;perspective-origin:50% 38%;height:150px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;margin-top:4px;}
+  .wv-lock{position:relative;width:154px;height:54px;transform-style:preserve-3d;
+    transform:translate(-46px,16px) scale(var(--wv-scale,1)) rotateX(-50deg) rotateY(-26deg);}
+  .wv-layer{position:absolute;left:50%;top:50%;width:154px;height:54px;margin:-27px 0 0 -77px;
+    transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -46px)) rotateX(96deg);}
+  .wv-plate{position:absolute;inset:0;border-radius:12px;
+    background:linear-gradient(155deg,#333944,#14171c);border:1px solid #30363f;
+    box-shadow:0 9px 16px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.07);
+    transition:transform .5s var(--ease),border-color .25s,box-shadow .25s;transform:translateX(var(--shift,0px));}
+  .wv-plate::after{content:"";position:absolute;inset:4px 6px;border-radius:8px;
+    background:linear-gradient(155deg,rgba(255,255,255,.06),transparent 45%);pointer-events:none;}
+  .wv-num{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%) translateZ(2px);
+    font-family:var(--mono);font-size:17px;font-weight:600;color:#cdd3da;z-index:7;}
+  .wv-track{position:absolute;left:13px;right:13px;top:66%;height:7px;transform:translateY(-50%);border-radius:5px;
+    background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.9);}
+  .wv-pin{position:absolute;left:50%;top:66%;width:13px;height:13px;border-radius:50%;z-index:6;
+    transform:translate(-50%,-50%) translateZ(1.5px);
+    background:radial-gradient(circle at 34% 30%,#aeb4bc,#6b7178 60%,#454a51);box-shadow:0 1px 2px rgba(0,0,0,.55);
+    transition:background .35s,box-shadow .35s;}
+  .wv-pin.lit{background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
+    box-shadow:0 0 9px rgba(52,168,131,.95),0 0 20px rgba(52,168,131,.5);}
+  .wv-driver{border-color:var(--accent);background:linear-gradient(155deg,#2f4940,#16241f);
+    animation:wvPulse 1.5s var(--ease) infinite;}
+  .wv-driver .wv-num{color:#86ebc2;}
+  .wv-dl{animation:wvPulse 1.5s var(--ease) infinite,wvNudgeL 1.5s var(--ease) infinite;}
+  .wv-dr{animation:wvPulse 1.5s var(--ease) infinite,wvNudgeR 1.5s var(--ease) infinite;}
+  @keyframes wvPulse{
+    0%,100%{box-shadow:0 0 0 2px rgba(52,168,131,.85),0 0 14px 1px rgba(52,168,131,.45),0 9px 16px -8px rgba(0,0,0,.7);}
+    50%{box-shadow:0 0 0 2px rgba(52,168,131,1),0 0 24px 4px rgba(52,168,131,.75),0 9px 16px -8px rgba(0,0,0,.7);}}
+  @keyframes wvNudgeL{0%,100%{transform:translateX(var(--shift,0px));}50%{transform:translateX(calc(var(--shift,0px) - 7px));}}
+  @keyframes wvNudgeR{0%,100%{transform:translateX(var(--shift,0px));}50%{transform:translateX(calc(var(--shift,0px) + 7px));}}
+  .wv-arrow{position:absolute;top:50%;width:22px;height:22px;z-index:8;color:#86ebc2;
+    transform:translateY(-50%) translateZ(3px);}
+  .wv-dl .wv-arrow{left:-7px;}
+  .wv-dr .wv-arrow{right:-7px;}
+  .wv-parrow{position:absolute;top:50%;width:20px;height:20px;z-index:8;display:none;
+    transform:translateY(-50%) translateZ(3px);}
+  .wv-a-l{left:-6px;} .wv-a-r{right:-6px;}
+  .wv-jl{border-color:var(--dir-left)!important;border-style:dashed!important;}
+  .wv-jr{border-color:var(--dir-right)!important;border-style:dashed!important;}
+  .wv-jwall{border-color:var(--danger-text)!important;border-style:dashed!important;animation:wvBuzz .4s var(--ease);}
+  @keyframes wvBuzz{0%,100%{transform:translateX(var(--shift,0px));}25%{transform:translateX(calc(var(--shift,0px) - 3px));}75%{transform:translateX(calc(var(--shift,0px) + 3px));}}
+  .wv-hint{margin:6px 0 10px;font-size:12.5px;color:var(--ink-3);}
+  .wv-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;max-width:430px;margin:0 auto;}
+  .wv-col{display:flex;flex-direction:column;gap:8px;}
+  .wv-opt{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .wv-on{font-size:13px;color:var(--ink-2);white-space:nowrap;}
+  .wv-on b{color:var(--ink);font-weight:700;}
+  .wv-seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden;background:var(--bg);}
+  .wv-b{appearance:none;border:0;border-left:1px solid var(--line-2);background:transparent;cursor:pointer;
+    width:34px;height:32px;font-size:15px;font-weight:700;color:var(--ink-3);line-height:1;
+    display:inline-flex;align-items:center;justify-content:center;transition:background .15s,color .15s,box-shadow .15s;}
+  .wv-b:first-child{border-left:0;}
+  .wv-b:hover{color:var(--ink);background:var(--surface);}
+  .wv-b.wall{color:var(--danger-text);}
+  .wv-b.l.on{background:var(--dir-left-soft);color:var(--dir-left);box-shadow:inset 0 0 0 2px var(--dir-left);}
+  .wv-b.r.on{background:var(--accent-soft);color:var(--dir-right);box-shadow:inset 0 0 0 2px var(--dir-right);}
+  .wv-b.c.on{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink-3);}
+  .wv-b.wall.on{background:var(--danger-soft);color:var(--danger-text);box-shadow:inset 0 0 0 2px var(--danger-text);}
+  .wv-reset{display:flex;gap:8px;align-items:flex-start;max-width:430px;margin:12px auto 0;
+    font-size:12.5px;color:var(--ink-2);text-align:left;cursor:pointer;}
+  .wv-reset[hidden]{display:none!important;}
+  .wv-reset input{margin-top:2px;}
+  @media(max-width:460px){.wv-opts{grid-template-columns:1fr;}}
+  @media(prefers-reduced-motion:reduce){
+    .wv-plate,.wv-driver,.wv-dl,.wv-dr{animation:none!important;}
+    .wv-driver{box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
   }
 
   .steps{margin-top:10px;}
@@ -944,20 +1061,20 @@
     .pstep{padding:22px 14px;}
     .ptitle{font-size:18px;}
     /* обе таблицы: одинаковые компактные ячейки, в подписи строки только номер */
-    table{border-spacing:4px;}
-    .dep{min-width:36px;width:36px;height:36px;border-radius:9px;}
-    .hole{width:36px;height:36px;border-radius:9px;font-size:11px;}
+    table{border-spacing:3px;}
+    .dep{min-width:34px;width:34px;height:34px;border-radius:9px;}
+    .hole{width:34px;height:34px;border-radius:9px;font-size:11px;}
     .flipbtn{padding:5px 9px;font-size:10.5px;}
     th.rowh .rlbl{display:none;}
     th.rowh .pside{display:none;}
-    th.rowh{padding-right:8px;}
-    th.corner{font-size:9.5px;padding-right:8px;}
+    th.rowh{padding-right:6px;}
+    th.corner{font-size:8.5px;padding-right:6px;line-height:1.25;}
     /* решение */
     .stepmove{font-size:15px;}
     .stepnum{min-width:32px;height:32px;}
     .mini{gap:10px;}
     .minihole{width:9px;height:9px;}
-    .countrow button{width:46px;height:46px;}
+    .countstep{width:46px;height:46px;}
     /* полоса DTF: статистика во всю ширину, кнопка вниз */
     .dtfband{padding:18px 16px;gap:16px;}
     .db-stats{width:100%;justify-content:space-between;gap:12px;}
@@ -1364,6 +1481,10 @@
   <div class="wizpanel" role="dialog" aria-modal="true" aria-labelledby="linkWizTitle">
     <button class="wizclose" id="linkWizClose" type="button" aria-label="Close">&times;</button>
     <div class="wizhead">
+      <div class="wizmode" id="linkWizMode" role="tablist" aria-label="Wizard view">
+        <button type="button" class="wizmode-b" data-m="text" role="tab">Text</button>
+        <button type="button" class="wizmode-b on" data-m="visual" role="tab">Visual</button>
+      </div>
       <div class="wiztag" id="linkWizTag">Step-by-step discovery</div>
       <div class="wiztitle" id="linkWizTitle">Safe link finder</div>
       <p class="wizsub" id="linkWizSub"></p>
@@ -1659,28 +1780,28 @@ function init(n) {
   document.getElementById('solution').style.display = 'none';
 }
 
+function setPlateCount(c) {
+  if (c < 3 || c > 8 || c === N) return;
+  var oldPins = pins, oldLink = link, oldN = N;
+  N = c;
+  pins = new Array(N).fill(4);
+  link = [];
+  for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
+  for (var i2 = 0; i2 < Math.min(oldN, N); i2++) {
+    pins[i2] = oldPins[i2];
+    for (var j = 0; j < Math.min(oldN, N); j++) link[i2][j] = oldLink[i2][j];
+  }
+  wizMemReset();
+  renderCount(); renderPins(); renderDeps();
+}
 function renderCount() {
   var row = document.getElementById('countrow');
-  row.innerHTML = '';
-  for (var c = 3; c <= 8; c++) (function (c) {
-    var b = document.createElement('button');
-    b.textContent = c;
-    if (c === N) b.className = 'on';
-    b.onclick = function () {
-      var oldPins = pins, oldLink = link, oldN = N;
-      N = c;
-      pins = new Array(N).fill(4);
-      link = [];
-      for (var i = 0; i < N; i++) link.push(new Array(N).fill(0));
-      for (var i2 = 0; i2 < Math.min(oldN, N); i2++) {
-        pins[i2] = oldPins[i2];
-        for (var j = 0; j < Math.min(oldN, N); j++) link[i2][j] = oldLink[i2][j];
-      }
-      wizMemReset();
-      renderCount(); renderPins(); renderDeps();
-    };
-    row.appendChild(b);
-  })(c);
+  row.innerHTML =
+    '<button type="button" class="countstep" id="countMinus" aria-label="Fewer plates"' + (N <= 3 ? ' disabled' : '') + '>&minus;</button>' +
+    '<span class="countval"><b>' + N + '</b> plates</span>' +
+    '<button type="button" class="countstep" id="countPlus" aria-label="More plates"' + (N >= 8 ? ' disabled' : '') + '>+</button>';
+  document.getElementById('countMinus').onclick = function () { setPlateCount(N - 1); };
+  document.getElementById('countPlus').onclick = function () { setPlateCount(N + 1); };
 }
 
 /* порядок строк: по умолчанию как в игре - 1 снизу (N..1 сверху вниз),
@@ -2183,6 +2304,153 @@ function wizMaybeSuggest() {
     };
   });
 }
+function wizFinishStep(wiz, c, movers, lockReset) {
+  if (c.helper) trackEvent('wizard_helper');
+  else trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
+  var failed = wizApplyReport(wiz, c, movers);
+  if (lockReset) {
+    wiz.sim = WIZ_MEM.base.slice();
+    toast('Link saved. The lock reset: pins are back to the starting positions');
+  } else if (failed) {
+    toast('Move blocked - link saved, we will come back to this plate');
+  }
+  wizSyncPins(wiz);
+  wiz.cmd = null;
+  wizRenderStep();
+}
+/* ===== visual wizard mode: same brain (movers/links), different look ===== */
+var WIZ_VIEW = 'visual';
+try { if (localStorage.getItem('uml-wizmode') === 'text') WIZ_VIEW = 'text'; } catch (e) {}
+var WV_SVG_L = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M11 5l-7 7 7 7M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var WV_SVG_R = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 5l7 7-7 7M20 12H4" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function wizSyncModeBtns() {
+  var bs = document.querySelectorAll('#linkWizMode .wizmode-b');
+  for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-m') === WIZ_VIEW);
+}
+function wizSetView(v, render) {
+  WIZ_VIEW = (v === 'text') ? 'text' : 'visual';
+  try { localStorage.setItem('uml-wizmode', WIZ_VIEW); } catch (e) {}
+  wizSyncModeBtns();
+  if (render && LINK_WIZ && LINK_WIZ.cmd) wizRenderStep();
+}
+(function () {
+  var m = document.getElementById('linkWizMode');
+  if (m) m.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.wizmode-b') : null;
+    if (b) wizSetView(b.getAttribute('data-m'), true);
+  });
+})();
+function wvOptsFor(wiz, j, d) {
+  var opts = wizMoverOptions(wiz.sim[j], d), L = null, R = null;
+  for (var s = 0; s < opts.length; s++) {
+    var o = opts[s];
+    if (o.link * d > 0) L = o; else R = o;
+  }
+  return { l: L, r: R };
+}
+function wizRenderStepVisual(wiz, c) {
+  var i = c.driver, d = c.d, dl = d > 0;
+  var WV = { pw: 154, marg: 12, center: 4 };
+  var step = (WV.pw - 2 * WV.marg) / 6;
+  var scale = Math.max(0.62, Math.min(1, 5.4 / N));
+  var lock = '';
+  for (var p = 0; p < N; p++) {
+    var sh = (WV.center - wiz.sim[p]) * step;
+    var cls = 'wv-plate' + (p === i ? (dl ? ' wv-driver wv-dl' : ' wv-driver wv-dr') : '');
+    var inner = '<span class="wv-num">' + (p + 1) + '</span><div class="wv-track"></div>' +
+      '<div class="wv-pin' + (wiz.sim[p] === 4 ? ' lit' : '') + '"></div>';
+    if (p === i) inner += '<div class="wv-arrow">' + (dl ? WV_SVG_L : WV_SVG_R) + '</div>';
+    else inner += '<span class="wv-parrow" data-j="' + p + '"></span>';
+    lock += '<div class="wv-layer" style="--s:' + p + '"><div class="' + cls + '" data-j="' + p + '" style="--shift:' + sh + 'px">' + inner + '</div></div>';
+  }
+  function seg(j) {
+    var o = wvOptsFor(wiz, j, d);
+    var lWall = o.l && o.l.jerk, rWall = o.r && o.r.jerk;
+    return '<div class="wv-opt"><span class="wv-on">plate <b>' + (j + 1) + '</b></span>' +
+      '<div class="wv-seg" data-j="' + j + '">' +
+      '<button type="button" class="wv-b l' + (lWall ? ' wall' : '') + '" data-d="l">' + (lWall ? '✕' : '←') + '</button>' +
+      '<button type="button" class="wv-b c on" data-d="c">•</button>' +
+      '<button type="button" class="wv-b r' + (rWall ? ' wall' : '') + '" data-d="r">' + (rWall ? '✕' : '→') + '</button></div></div>';
+  }
+  var colL = '', colR = '';
+  for (var j = 0; j < N; j++) { if (j === i) continue; if ((j + 1) % 2) colL += seg(j); else colR += seg(j); }
+  document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
+  document.getElementById('linkWizSub').textContent = c.helper
+    ? 'Helper move: walk this plate away from the wall. Its links are already known.'
+    : 'Step ' + (wiz.step + 1) + ' · move it in-game and mark who jerked.';
+  wizProgress(wiz);
+  document.getElementById('linkWizBody').innerHTML =
+    '<div class="wv">' +
+    '<p class="wv-cap">Move <b>plate ' + (i + 1) + '</b> <span class="wv-dir ' + (dl ? 'l' : 'r') + '">' + (dl ? 'left' : 'right') + '</span></p>' +
+    '<div class="wv-scene"><div class="wv-lock" style="--wv-scale:' + scale.toFixed(3) + '">' + lock + '</div></div>' +
+    '<p class="wv-hint">Which plates moved? (✕ — hit the wall)</p>' +
+    '<div class="wv-opts"><div class="wv-col">' + colL + '</div><div class="wv-col">' + colR + '</div></div>' +
+    '<label class="wv-reset" id="wvReset" hidden><input type="checkbox" id="wvResetCb"> The lock reset (pins returned to the start)</label>' +
+    '</div>';
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions">' +
+    '<button class="btn" type="button" id="wizNone">Nothing jerked</button>' +
+    '<button class="btn primary" type="button" id="wizConfirm">Next</button></div>' +
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Reset the lock by accident</button></p>';
+  wizBindVisualActions(wiz, c);
+}
+function wizBindVisualActions(wiz, c) {
+  var i = c.driver, d = c.d;
+  var WV = { pw: 154, marg: 12, center: 4 }, step = (WV.pw - 2 * WV.marg) / 6;
+  var state = {};
+  for (var j = 0; j < N; j++) if (j !== i) state[j] = 'c';
+  var body = document.getElementById('linkWizBody');
+  function wvJerk(j, dir) { var o = wvOptsFor(wiz, +j, d); return dir === 'l' ? (o.l && o.l.jerk) : (o.r && o.r.jerk); }
+  function wvArrow(a, side, color) {
+    if (!a) return; a.style.display = 'block'; a.className = 'wv-parrow wv-a-' + side; a.style.color = color; a.innerHTML = side === 'l' ? WV_SVG_L : WV_SVG_R;
+  }
+  function paint() {
+    body.querySelectorAll('.wv-seg').forEach(function (s) {
+      var j = +s.dataset.j;
+      s.querySelectorAll('.wv-b').forEach(function (b) { b.classList.toggle('on', state[j] === b.dataset.d); });
+    });
+    body.querySelectorAll('.wv-plate').forEach(function (pl) {
+      var j = +pl.dataset.j; if (j === i) return;
+      var base = (WV.center - wiz.sim[j]) * step;
+      var o = wvOptsFor(wiz, j, d), pa = pl.querySelector('.wv-parrow');
+      pl.classList.remove('wv-jl', 'wv-jr', 'wv-jwall');
+      if (pa) { pa.style.display = 'none'; }
+      if (state[j] === 'l') {
+        if (o.l && o.l.jerk) { pl.classList.add('wv-jwall'); pl.style.setProperty('--shift', base + 'px'); wvArrow(pa, 'l', '#e0564f'); }
+        else { pl.classList.add('wv-jl'); pl.style.setProperty('--shift', (base - step) + 'px'); wvArrow(pa, 'l', '#6ea8ff'); }
+      } else if (state[j] === 'r') {
+        if (o.r && o.r.jerk) { pl.classList.add('wv-jwall'); pl.style.setProperty('--shift', base + 'px'); wvArrow(pa, 'r', '#e0564f'); }
+        else { pl.classList.add('wv-jr'); pl.style.setProperty('--shift', (base + step) + 'px'); wvArrow(pa, 'r', '#62c7a4'); }
+      } else { pl.style.setProperty('--shift', base + 'px'); }
+    });
+    var anyWall = false;
+    for (var k in state) { if (state[k] === 'l' && wvJerk(k, 'l')) anyWall = true; if (state[k] === 'r' && wvJerk(k, 'r')) anyWall = true; }
+    var rb = document.getElementById('wvReset'); if (rb) { rb.hidden = !anyWall; if (!anyWall) document.getElementById('wvResetCb').checked = false; }
+  }
+  body.querySelector('.wv-opts').onclick = function (e) {
+    var b = e.target.closest ? e.target.closest('.wv-b') : null; if (!b) return;
+    state[+b.closest('.wv-seg').dataset.j] = b.dataset.d; paint();
+  };
+  document.getElementById('wizNone').onclick = function () { wizFinishStep(wiz, c, [], false); };
+  document.getElementById('wizConfirm').onclick = function () {
+    var movers = [], jerks = 0, slides = 0;
+    for (var j = 0; j < N; j++) {
+      if (j === i || state[j] === 'c') continue;
+      var o = wvOptsFor(wiz, j, d), opt = state[j] === 'l' ? o.l : o.r;
+      if (!opt) continue;
+      if (opt.jerk) jerks++; else slides++;
+      movers.push({ plate: j, link: opt.link, jerk: opt.jerk });
+    }
+    if (jerks > 0 && slides > 0) { toast('If something hit the wall, the move failed - nothing could slide. Check your marks'); return; }
+    var lockReset = jerks > 0 && document.getElementById('wvResetCb').checked;
+    wizFinishStep(wiz, c, movers, lockReset);
+  };
+  document.getElementById('wizGameReset').onclick = function () {
+    trackEvent('wizard_reset'); wiz.sim = WIZ_MEM.base.slice(); wizSyncPins(wiz); wiz.cmd = null;
+    toast('Pins are back to the starting positions, found links kept'); wizRenderStep();
+  };
+  paint();
+}
 function wizBindStepActions(wiz, c, chipsEl, moversEl) {
   function wizSyncMovers() {
     chipsEl.querySelectorAll('.wizchip').forEach(function (lab) {
@@ -2214,20 +2482,7 @@ function wizBindStepActions(wiz, c, chipsEl, moversEl) {
     box.hidden = !hasJerk;
     if (!hasJerk) document.getElementById('wizLockResetCb').checked = false;
   }
-  function wizFinish(movers, lockReset) {
-    if (c.helper) trackEvent('wizard_helper');
-    else trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
-    var failed = wizApplyReport(wiz, c, movers);
-    if (lockReset) {
-      wiz.sim = WIZ_MEM.base.slice();
-      toast('Link saved. The lock reset: pins are back to the starting positions');
-    } else if (failed) {
-      toast('Move blocked - link saved, we will come back to this plate');
-    }
-    wizSyncPins(wiz);
-    wiz.cmd = null;
-    wizRenderStep();
-  }
+  function wizFinish(movers, lockReset) { wizFinishStep(wiz, c, movers, lockReset); }
   document.getElementById('wizNone').onclick = function () { wizFinish([], false); };
   document.getElementById('wizConfirm').onclick = function () {
     var movers = [], bad = false, jerks = 0, slides = 0;
@@ -2272,8 +2527,8 @@ function wizMoverPanel(wiz, j, d) {
       ? WIZ_SVG_ARR_L + '<span>LEFT</span>'
       : '<span>RIGHT</span>' + WIZ_SVG_ARR_R;
     var sub = o.jerk
-      ? 'hit the wall: pin stayed at ' + o.pos
-      : 'pin ' + old + ' &rarr; ' + o.pos;
+      ? 'pin ' + old + ' &rarr; <b class="wall">&times;</b> (hits the wall)'
+      : 'pin ' + old + ' &rarr; <b>' + o.pos + '</b>';
     var html = '<button type="button" class="wizpos' + (left ? ' dir-l' : ' dir-r') + (o.jerk ? ' jerk' : '') + '" style="--nudge:' + (left ? '-2px' : '2px') + '"' +
       ' data-j="' + j + '" data-l="' + o.link + '" data-jerk="' + (o.jerk ? 1 : 0) + '">' +
       '<span class="wizpos-dir">' + dir + '</span>' +
@@ -2291,10 +2546,12 @@ function wizRenderStep() {
     if (!wiz.cmd) { wizRenderDone(); return; }
   }
   var c = wiz.cmd, i = c.driver, d = c.d;
+  wizSyncModeBtns();
+  if (WIZ_VIEW === 'visual') { wizRenderStepVisual(wiz, c); return; }
   var chips = '', moversHtml = '';
   for (var j = 0; j < N; j++) {
     if (j === i) continue;
-    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox">' + WIZ_SVG_CHECK + 'plate<b>' + (j + 1) + '</b></label>';
+    chips += '<label class="wizchip" data-j="' + j + '"><input type="checkbox">plate<b>' + (j + 1) + '</b></label>';
     moversHtml += wizMoverPanel(wiz, j, d);
   }
   document.getElementById('linkWizTitle').textContent = 'Plate ' + (i + 1);
@@ -2306,7 +2563,7 @@ function wizRenderStep() {
     wizRenderPinsBar(wiz.sim, i) +
     '<div class="wizcmd"><div class="lbl">In-game move</div><div class="plate">plate <b>' + (i + 1) + '</b></div>' +
     '<div class="move ' + (d > 0 ? 'dir-l' : 'dir-r') + '">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
-    '<p class="wizmeta">pin ' + wiz.sim[i] + ' → ' + (wiz.sim[i] + d) + ' · no need to undo</p></div>' +
+    '<p class="wizmeta">pin ' + wiz.sim[i] + ' → <b>' + (wiz.sim[i] + d) + '</b> · no need to undo</p></div>' +
     '<p class="wizpick">What jerked with plate <b>' + (i + 1) + '</b>?</p>' +
     '<div class="wizchips" id="wizChips">' + chips + '</div>' +
     '<div class="wizmovers" id="wizMovers">' + moversHtml + '</div>' +
@@ -2334,8 +2591,11 @@ function wizRenderDone() {
       : 'If something does not match the game - fix cells manually or restart the wizard.') + '</p>' + wizRenderPinsBar(LINK_WIZ.sim);
   document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
-    '<div class="wizfoot-actions"><button class="btn primary" type="button" id="wizDone">Close</button></div>';
+    '<div class="wizfoot-actions">' +
+    '<button class="btn ghost" type="button" id="wizDone">Just close</button>' +
+    '<button class="btn primary" type="button" id="wizRestore">Restore pins &amp; close</button></div>';
   document.getElementById('wizDone').onclick = closeLinkWizard;
+  document.getElementById('wizRestore').onclick = function () { wizRestorePins(); closeLinkWizard(); };
   toast(left > 0 ? 'Some links unverified - add them manually' : 'Links saved to matrix');
 }
 function openLinkWizard() {
@@ -2358,6 +2618,11 @@ function closeLinkWizard() {
   document.getElementById('linkWizBack').classList.remove('open');
   document.getElementById('linkWizBack').setAttribute('aria-hidden', 'true');
   LINK_WIZ = null;
+}
+/* after the wizard the pins are often shifted by probing - restore the originals. */
+function wizRestorePins() {
+  var b = lockBasePins();
+  if (b && b.length === N) { pins = b.slice(); pinsTouched = true; renderPins(); }
 }
 (function bindLinkWizard() {
   var btn = document.getElementById('linkHelpBtn');
@@ -2618,9 +2883,31 @@ function dirChipHtml(d) {
 function solFeedbackHtml() {
   return '<div class="vp-feedback sol-feedback" id="vpFeedback" hidden>' +
     '<p class="vp-fb-q">Did this help?</p>' +
-    '<div class="vp-fb-act" id="vpFbAct">' +
+    '<div class="vp-fb-vote" id="vpFbAct">' +
       '<button class="vp-fb-btn vp-fb-up" id="vpFbUp" type="button">Yes</button>' +
       '<button class="vp-fb-btn vp-fb-down" id="vpFbDn" type="button">No</button>' +
+    '</div>' +
+    '<div class="vp-fb-detail" id="vpFbDown" hidden>' +
+      '<p class="vp-fb-dq">What went wrong? Pick any that apply</p>' +
+      '<div class="vp-fb-chips" id="vpFbChips">' +
+        '<button type="button" class="vp-fb-chip" data-r="wrong_solution">Wrong solution</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="wizard_confusing">Wizard confusing</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="suggest_wrong">Suggest was wrong</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="input_unclear">Hard to understand input</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="slow_bug">Slow / buggy</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="old_ui_better">Old UI was better</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="still_bad">Still awkward</button>' +
+        '<button type="button" class="vp-fb-chip" data-r="other">Other</button>' +
+      '</div>' +
+      '<div class="vp-fb-field">' +
+        '<label class="vp-fb-lbl" for="vpFbNote">Comment <span>(optional)</span></label>' +
+        '<textarea class="vp-fb-note" id="vpFbNote" rows="2" maxlength="280" placeholder="Anything else to improve?"></textarea>' +
+        '<p class="vp-fb-err" id="vpFbNoteErr" hidden>We didn\'t save the comment with profanity - but your rating and reasons are in, thanks.</p>' +
+      '</div>' +
+      '<div class="vp-fb-down-act">' +
+        '<button class="btn primary" type="button" id="vpFbDownSend">Send</button>' +
+        '<button class="btn ghost" type="button" id="vpFbDownSkip">Skip</button>' +
+      '</div>' +
     '</div>' +
     '<p class="vp-fb-hint" id="vpFbHint" hidden>You can change your vote</p>' +
     '<p class="vp-fb-thanks" id="vpFbThanks">Thanks!</p>' +
@@ -2630,11 +2917,32 @@ function bindSolFeedback() {
   var up = document.getElementById('vpFbUp');
   var dn = document.getElementById('vpFbDn');
   if (up) up.onclick = function () { vpSubmitFeedback('up'); };
-  if (dn) dn.onclick = function () { vpSubmitFeedback('down'); };
+  if (dn) dn.onclick = function () { vpShowDownDetail(); };
+  var chips = document.getElementById('vpFbChips');
+  if (chips) chips.onclick = function (e) {
+    var b = e.target.closest ? e.target.closest('.vp-fb-chip') : null;
+    if (!b) return;
+    b.classList.toggle('on');
+  };
+  var send = document.getElementById('vpFbDownSend');
+  if (send) send.onclick = function () { vpSubmitDownFeedback(false); };
+  var skip = document.getElementById('vpFbDownSkip');
+  if (skip) skip.onclick = function () { vpSubmitDownFeedback(true); };
+  var noteEl = document.getElementById('vpFbNote');
+  if (noteEl) noteEl.oninput = vpClearNoteErr;
 }
 function resetSolFeedback() {
   vpFbChecked = false;
   vpCurrentVote = null;
+  vpFbSubmitted = false;
+  vpApplyReasons([]);
+  var noteEl = document.getElementById('vpFbNote');
+  if (noteEl) noteEl.value = '';
+  vpClearNoteErr();
+  var root = document.getElementById('vpFeedback');
+  if (root) root.classList.remove('vp-feedback--detail', 'vp-feedback--flash');
+  var hint = document.getElementById('vpFbHint');
+  if (hint) hint.hidden = true;
 }
 
 function renderSolution(fresh) {
@@ -2762,22 +3070,92 @@ function buildPlayer() {
 var vpFbChecked = false;
 var vpCurrentVote = null;
 var vpFbFlashTimer = 0;
+var vpFbSubmitted = false;
+var VP_FB_BANNED = [
+  'хуй', 'хуя', 'хуе', 'хуи', 'хуйн', 'пизд', 'еба', 'ебл', 'ебан', 'ебу', 'ебт', 'ебн',
+  'бля', 'бляд', 'сука', 'сукин', 'мудил', 'мудо', 'пидор', 'пидар', 'педик', 'гандон',
+  'шлюх', 'долбое', 'долбо', 'ублюд', 'мраз', 'гавно', 'говно', 'zaebal', 'заеб',
+  'fuck', 'shit', 'bitch', 'cunt', 'asshole', 'nigger', 'faggot'
+];
+
+function vpNormalizeProfanity(s) {
+  return String(s || '').toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[@4]/g, 'a').replace(/3/g, 'e').replace(/0/g, 'o').replace(/1/g, 'i').replace(/\$/g, 's')
+    .replace(/[^a-z\u0400-\u04ff]/g, '');
+}
+
+function vpNoteBlocked(s) {
+  var n = vpNormalizeProfanity(s);
+  if (!n) return false;
+  for (var i = 0; i < VP_FB_BANNED.length; i++) {
+    if (n.indexOf(VP_FB_BANNED[i]) >= 0) return true;
+  }
+  return false;
+}
+
+function vpClearNoteErr() {
+  var err = document.getElementById('vpFbNoteErr');
+  var noteEl = document.getElementById('vpFbNote');
+  if (err) err.hidden = true;
+  if (noteEl) noteEl.classList.remove('vp-fb-note-err');
+}
+
+function vpShowNoteErr() {
+  var err = document.getElementById('vpFbNoteErr');
+  var noteEl = document.getElementById('vpFbNote');
+  if (err) err.hidden = false;
+  if (noteEl) {
+    noteEl.classList.add('vp-fb-note-err');
+    noteEl.focus();
+  }
+}
+
+function vpSelectedReasons() {
+  var out = [];
+  document.querySelectorAll('#vpFbChips .vp-fb-chip.on').forEach(function (b) {
+    if (b.dataset.r) out.push(b.dataset.r);
+  });
+  return out;
+}
+
+function vpApplyReasons(reasons) {
+  document.querySelectorAll('#vpFbChips .vp-fb-chip').forEach(function (b) {
+    b.classList.toggle('on', reasons && reasons.indexOf(b.dataset.r) >= 0);
+  });
+}
 
 function vpApplyVote(vote) {
   vpCurrentVote = vote || null;
   var up = document.getElementById('vpFbUp');
   var dn = document.getElementById('vpFbDn');
   var hint = document.getElementById('vpFbHint');
+  var down = document.getElementById('vpFbDown');
   if (up) up.classList.toggle('vp-fb-btn--sel', vote === 'up');
   if (dn) dn.classList.toggle('vp-fb-btn--sel', vote === 'down');
-  if (hint) hint.hidden = !vote;
+  if (hint) hint.hidden = !vpFbSubmitted;
+  if (down && vote !== 'down') down.hidden = true;
+}
+
+function vpShowDownDetail() {
+  var down = document.getElementById('vpFbDown');
+  var el = document.getElementById('vpFeedback');
+  if (down) down.hidden = false;
+  if (el) {
+    el.classList.remove('vp-feedback--flash');
+    el.classList.add('vp-feedback--detail');
+  }
+  var hint = document.getElementById('vpFbHint');
+  if (hint) hint.hidden = true;
 }
 
 function vpHideFeedback() {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
   el.hidden = true;
-  el.classList.remove('vp-feedback--flash');
+  el.classList.remove('vp-feedback--flash', 'vp-feedback--detail');
+  var down = document.getElementById('vpFbDown');
+  if (down) down.hidden = true;
 }
 
 function vpShowFeedback() {
@@ -2789,23 +3167,50 @@ function vpShowFeedback() {
 function vpFlashThanks() {
   var el = document.getElementById('vpFeedback');
   if (!el) return;
+  var down = document.getElementById('vpFbDown');
+  if (down) down.hidden = true;
+  vpFbSubmitted = true;
   clearTimeout(vpFbFlashTimer);
+  el.classList.remove('vp-feedback--detail');
   el.classList.add('vp-feedback--flash');
+  var hint = document.getElementById('vpFbHint');
+  if (hint) hint.hidden = false;
   vpFbFlashTimer = setTimeout(function () { el.classList.remove('vp-feedback--flash'); }, 1400);
+}
+
+function vpPostFeedback(vote, reasons, note) {
+  fetch(COUNTER_API + '/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ vote: vote, reasons: reasons || [], note: note || '' }),
+    keepalive: true
+  }).then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.ok && j.vote) {
+        vpApplyVote(j.vote);
+        if (j.reasons) vpApplyReasons(j.reasons);
+      }
+    })
+    .catch(function () {});
 }
 
 function vpSubmitFeedback(vote) {
   vpApplyVote(vote);
-  fetch(COUNTER_API + '/feedback', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ vote: vote }),
-    keepalive: true
-  }).then(function (r) { return r.json(); })
-    .then(function (j) {
-      if (j && j.ok && j.vote) vpApplyVote(j.vote);
-    })
-    .catch(function () {});
+  vpPostFeedback(vote, [], '');
+  vpFlashThanks();
+}
+
+function vpSubmitDownFeedback(skipReasons) {
+  var noteEl = document.getElementById('vpFbNote');
+  var note = noteEl ? noteEl.value.trim() : '';
+  /* a profane comment must NOT block submission: always record the vote and
+     reasons, just drop the text and show a soft notice. */
+  var dropped = false;
+  if (note && vpNoteBlocked(note)) { note = ''; dropped = true; }
+  var reasons = skipReasons ? [] : vpSelectedReasons();
+  vpApplyVote('down');
+  vpPostFeedback('down', reasons, note);
+  if (dropped) vpShowNoteErr(); else vpClearNoteErr();
   vpFlashThanks();
 }
 
@@ -2819,7 +3224,15 @@ function vpSyncFeedback(done) {
     fetch(COUNTER_API + '/feedback')
       .then(function (r) { return r.json(); })
       .then(function (j) {
-        if (j && j.voted && j.vote) vpApplyVote(j.vote);
+        if (j && j.voted && j.vote) {
+          vpFbSubmitted = true;
+          vpApplyVote(j.vote);
+          if (j.reasons) vpApplyReasons(j.reasons);
+          if (j.note) {
+            var noteEl = document.getElementById('vpFbNote');
+            if (noteEl) noteEl.value = j.note;
+          }
+        }
       })
       .catch(function () {});
   }
