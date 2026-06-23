@@ -52,6 +52,21 @@ print(f"Взломано (solve_ok счётчик): {n(opened)}")
 fb = d.get("feedback", {})
 if fb:
     print(f"Оценка сайта: 👍 {n(fb.get('up', 0))}  👎 {n(fb.get('down', 0))}")
+    dr = fb.get("down_reasons") or {}
+    if dr:
+        labels = {
+            "wrong_solution": "Решение неверное",
+            "wizard_confusing": "Помощник запутал",
+            "suggest_wrong": "Подсказка неверная",
+            "input_unclear": "Не понял ввод",
+            "slow_bug": "Тормозит / глючит",
+            "old_ui_better": "Старая схема лучше",
+            "still_bad": "Всё равно неудобно",
+            "other": "Другое",
+        }
+        print("Причины 👎:")
+        for k in sorted(dr.keys(), key=lambda x: -dr[x]):
+            print(f"  {labels.get(k, k):22} {n(dr[k])}")
 print("─" * 52)
 print("Всего:")
 for k in sorted(tot.keys()):

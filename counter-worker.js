@@ -55,6 +55,32 @@ var TRACK_EVENTS = {
   pins_edit: 1, mode_matrix: 1, mode_find: 1,
   feedback_up: 1, feedback_down: 1
 };
+var FB_REASONS = {
+  wrong_solution: 1, wizard_confusing: 1, suggest_wrong: 1,
+  input_unclear: 1, slow_bug: 1, old_ui_better: 1, still_bad: 1, other: 1
+};
+var FB_BANNED = [
+  "хуй", "хуя", "хуе", "хуи", "хуйн", "пизд", "еба", "ебл", "ебан", "ебу", "ебт", "ебн",
+  "бля", "бляд", "сука", "сукин", "мудил", "мудо", "пидор", "пидар", "педик", "гандон",
+  "шлюх", "долбое", "долбо", "ублюд", "мраз", "гавно", "говно", "zaebal", "заеб",
+  "fuck", "shit", "bitch", "cunt", "asshole", "nigger", "faggot"
+];
+
+function normalizeProfanity(s) {
+  return String(s || "").toLowerCase()
+    .replace(/ё/g, "е")
+    .replace(/[@4]/g, "a").replace(/3/g, "e").replace(/0/g, "o").replace(/1/g, "i").replace(/\$/g, "s")
+    .replace(/[^a-z\u0400-\u04ff]/g, "");
+}
+
+function noteBlocked(s) {
+  var n = normalizeProfanity(s);
+  if (!n) return false;
+  for (var i = 0; i < FB_BANNED.length; i++) {
+    if (n.indexOf(FB_BANNED[i]) >= 0) return true;
+  }
+  return false;
+}
 var TRACK_RING_MAX = 80;
 var TRACK_DAY_KEEP = 14;
 
@@ -206,7 +232,8 @@ export class Counter {
       yesterday_counts: yesterdayCounts,
       feedback: {
         up: (await this.state.storage.get("fb:all:up")) || 0,
-        down: (await this.state.storage.get("fb:all:down")) || 0
+        down: (await this.state.storage.get("fb:all:down")) || 0,
+        down_reasons: await this.readFeedbackReasons()
       },
       funnel: {
         wizard_open: wOpen,
@@ -245,7 +272,40 @@ export class Counter {
     if (delta > 0) await this.state.storage.put("ev:day:" + day, 1);
   }
 
-  async recordFeedback(ip, vote) {
+  async readFeedbackReasons() {
+    var out = {};
+    for (var r in FB_REASONS) {
+      var n = (await this.state.storage.get("fb:reason:" + r)) || 0;
+      if (n) out[r] = n;
+    }
+    return out;
+  }
+
+  normalizeFbRec(raw) {
+    if (!raw) return null;
+    if (typeof raw === "string") return { v: raw, reasons: [], note: "" };
+    if (raw && (raw.v === "up" || raw.v === "down")) {
+      return {
+        v: raw.v,
+        reasons: Array.isArray(raw.reasons) ? raw.reasons : [],
+        note: String(raw.note || "").slice(0, 280)
+      };
+    }
+    return null;
+  }
+
+  async bumpReasons(reasons, delta) {
+    if (!Array.isArray(reasons) || !delta) return;
+    for (var i = 0; i < reasons.length; i++) {
+      var r = reasons[i];
+      if (!FB_REASONS[r]) continue;
+      var ck = "fb:reason:" + r;
+      var n = (await this.state.storage.get(ck)) || 0;
+      await this.state.storage.put(ck, Math.max(0, n + delta));
+    }
+  }
+
+  async recordFeedback(ip, vote, reasons, note) {
     ip = String(ip || "").trim();
     if (!ip || ip.length > 64) {
       return { status: 400, body: { ok: false, error: "no_ip" } };
@@ -253,24 +313,40 @@ export class Counter {
     if (vote !== "up" && vote !== "down") {
       return { status: 400, body: { ok: false, error: "bad_vote" } };
     }
+    var cleanReasons = [];
+    if (vote === "down" && Array.isArray(reasons)) {
+      var seen = {};
+      for (var ri = 0; ri < reasons.length && cleanReasons.length < 8; ri++) {
+        var rr = reasons[ri];
+        if (FB_REASONS[rr] && !seen[rr]) { seen[rr] = 1; cleanReasons.push(rr); }
+      }
+    }
+    note = vote === "down" ? String(note || "").trim().slice(0, 280) : "";
+    // грубый коммент не теряет голос/причины: просто отбрасываем текст.
+    if (note && noteBlocked(note)) note = "";
     var key = "fb:ip:" + ip;
-    var prev = await this.state.storage.get(key);
-    if (prev === vote) {
-      return { status: 200, body: { ok: true, vote: vote, same: true } };
+    var prev = this.normalizeFbRec(await this.state.storage.get(key));
+    var next = { v: vote, reasons: vote === "down" ? cleanReasons : [], note: note };
+    if (prev && prev.v === next.v &&
+        JSON.stringify(prev.reasons) === JSON.stringify(next.reasons) &&
+        prev.note === next.note) {
+      return { status: 200, body: { ok: true, vote: vote, reasons: cleanReasons, same: true } };
     }
     var now = Date.now();
     if (prev) {
-      var oldCk = prev === "up" ? "fb:all:up" : "fb:all:down";
+      var oldCk = prev.v === "up" ? "fb:all:up" : "fb:all:down";
       var oldN = (await this.state.storage.get(oldCk)) || 0;
       await this.state.storage.put(oldCk, Math.max(0, oldN - 1));
-      await this.bumpEventDelta(prev === "up" ? "feedback_up" : "feedback_down", -1, now);
+      await this.bumpEventDelta(prev.v === "up" ? "feedback_up" : "feedback_down", -1, now);
+      if (prev.v === "down") await this.bumpReasons(prev.reasons, -1);
     }
-    await this.state.storage.put(key, vote);
+    await this.state.storage.put(key, next);
     var ck = vote === "up" ? "fb:all:up" : "fb:all:down";
     var n = (await this.state.storage.get(ck)) || 0;
     await this.state.storage.put(ck, n + 1);
     await this.bumpEvent(vote === "up" ? "feedback_up" : "feedback_down", now);
-    return { status: 200, body: { ok: true, vote: vote, changed: !!prev } };
+    if (vote === "down") await this.bumpReasons(cleanReasons, 1);
+    return { status: 200, body: { ok: true, vote: vote, reasons: cleanReasons, changed: !!prev } };
   }
 
   async resetFeedback(secret) {
@@ -285,15 +361,16 @@ export class Counter {
     await this.state.storage.put("fb:all:down", 0);
     await this.state.storage.put("ev:all:feedback_up", 0);
     await this.state.storage.put("ev:all:feedback_down", 0);
+    for (var r in FB_REASONS) await this.state.storage.put("fb:reason:" + r, 0);
     return { status: 200, body: { ok: true, deleted_ips: del.length } };
   }
 
   async feedbackStatus(ip) {
     ip = String(ip || "").trim();
     if (!ip) return { voted: false };
-    var v = await this.state.storage.get("fb:ip:" + ip);
-    if (!v) return { voted: false };
-    return { voted: true, vote: v };
+    var rec = this.normalizeFbRec(await this.state.storage.get("fb:ip:" + ip));
+    if (!rec) return { voted: false };
+    return { voted: true, vote: rec.v, reasons: rec.reasons, note: rec.note || "" };
   }
 
   /* Удаляет копилку замков (lk:* каталог + pi:* подсказки). opened не трогает. */
@@ -476,7 +553,7 @@ export class Counter {
       var ipPost = req.headers.get("X-Uml-IP") || "";
       var fbBody = {};
       try { fbBody = await req.json(); } catch (e) {}
-      var fbRes = await this.recordFeedback(ipPost, fbBody.vote);
+      var fbRes = await this.recordFeedback(ipPost, fbBody.vote, fbBody.reasons, fbBody.note);
       return new Response(JSON.stringify(fbRes.body), {
         status: fbRes.status,
         headers: { "Content-Type": "application/json" }
