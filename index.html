@@ -989,9 +989,11 @@
   .wv-hint{margin:6px 0 10px;font-size:12.5px;color:var(--ink-3);}
   .wv-helpnote{margin:12px auto 0;max-width:430px;font-size:13px;line-height:1.5;color:var(--ink-2);text-align:center;}
   .wv-helpnote b{color:var(--ink);font-weight:600;}
-  .wv-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;max-width:430px;margin:0 auto;}
-  .wv-col{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  /* две колонки на ПК, но порядок ЕСТЕСТВЕННЫЙ (1,3,4,5,6 сверху вниз, потом
+     вторая колонка); на мобилке - одна колонка по порядку */
+  .wv-opts{column-count:2;column-gap:8px;max-width:430px;margin:0 auto;}
   .wv-opt{min-width:0;display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px;align-items:center;
+    break-inside:avoid;margin-bottom:6px;
     padding:5px 6px;border-radius:10px;background:var(--bg);border:1px solid var(--line);
     animation:wvAnswerIn .32s var(--ease) both;animation-delay:calc(40ms + var(--wi,0) * 18ms);}
   .wv-tile-id{text-align:center;line-height:1.05;}
@@ -1019,7 +1021,7 @@
   .wv-reset[hidden]{display:none!important;}
   .wv-reset input{margin-top:1px;accent-color:var(--danger-text);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
   .wv-reset b{color:var(--ink);font-weight:700;}
-  @media(max-width:460px){.wv-opts{grid-template-columns:1fr;}.wv-opt{grid-template-columns:26px minmax(0,1fr);}.wv-b{min-height:32px;font-size:14px;}}
+  @media(max-width:460px){.wv-opts{column-count:1;}.wv-opt{grid-template-columns:26px minmax(0,1fr);}.wv-b{min-height:32px;font-size:14px;}}
   @media(prefers-reduced-motion:reduce){
     .wv-plate,.wv-driver,.wv-dl,.wv-dr,.wv-opt{animation:none!important;}
     .wv-driver{box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
@@ -2831,7 +2833,7 @@ function wizRenderHelperVisual(wiz, c) {
 function wizRenderStepVisual(wiz, c) {
   if (c.helper) { wizRenderHelperVisual(wiz, c); return; }
   var i = c.driver, d = c.d, dl = d > 0;          // dl = плитка-цель едет влево
-  // плитки-ответы: нечётные слева, чётные справа
+  // плитки-ответы в естественном порядке; раскладку по колонкам делает CSS
   function seg(j, order) {
     var o = wvOptsFor(wiz, j, d);
     var lWall = o.l && o.l.jerk, rWall = o.r && o.r.jerk;
@@ -2842,8 +2844,8 @@ function wizRenderStepVisual(wiz, c) {
       '<button type="button" class="wv-b c on" data-d="c">—</button>' +
       '<button type="button" class="wv-b r' + (rWall ? ' wall' : '') + '" data-d="r">' + (rWall ? '!' : '→') + '</button></div></div>';
   }
-  var colL = '', colR = '', order = 0;
-  for (var j = 0; j < N; j++) { if (j === i) continue; var t = seg(j, order++); if ((j + 1) % 2) colL += t; else colR += t; }
+  var opts = '', order = 0;
+  for (var j = 0; j < N; j++) { if (j === i) continue; opts += seg(j, order++); }
   document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
   document.getElementById('linkWizSub').innerHTML = c.helper
     ? 'Вспомогательный ход: увести плитку от стены. Связи уже известны.'
@@ -2857,7 +2859,7 @@ function wizRenderStepVisual(wiz, c) {
   wvBody.innerHTML =
     '<div class="wv">' +
     wizRenderSchematic(wiz, i, d) +
-    '<div class="wv-opts"><div class="wv-col">' + colL + '</div><div class="wv-col">' + colR + '</div></div>' +
+    '<div class="wv-opts">' + opts + '</div>' +
     '<label class="wv-reset" id="wvReset" hidden><input type="checkbox" id="wvResetCb">' +
     '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label>' +
     '</div>';
