@@ -283,27 +283,78 @@
   .pstep{padding:38px 40px;}
   .panel > * + *{border-top:1px solid var(--line);}
   .duo > .pstep + .pstep{border-top:1px solid var(--line);}
-  .phead{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;margin-bottom:6px;}
+  .phead{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:0;align-items:baseline;margin-bottom:6px;}
   .phead-flip{grid-template-columns:auto 1fr auto;}
   .phead-flip .pdesc{grid-column:2 / -1;}
   .pnum{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
   .ptitle{font-size:21px;font-weight:600;letter-spacing:-.02em;}
-  .pdesc{grid-column:2;color:var(--ink-2);font-size:15px;max-width:68ch;}
+  .pdesc{grid-column:2;color:var(--ink-2);font-size:15px;max-width:68ch;margin-top:14px;}
+  .pdesc[hidden]{display:none;}
+  .pq{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+    width:20px;height:20px;margin-left:7px;border-radius:50%;border:1px solid var(--line-2);
+    background:var(--bg);color:var(--ink-3);font-family:var(--mono);font-size:12px;font-weight:700;line-height:1;
+    cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+  .pq:hover{border-color:var(--ink-3);color:var(--ink);}
+  .pq.on{background:var(--accent);border-color:var(--accent);color:#fff;}
   .pbody{margin-top:22px;}
 
   /* количество плиток + схема нумерации */
   .step01{display:grid;gap:28px;}
+  .step01 .pbody{display:flex;justify-content:center;}
   @media(min-width:861px){
     /* gap 72 = два внутренних отступа панели: правая колонка стартует там же,
        где заголовок 03 в блоке ниже */
-    .step01{grid-template-columns:1fr 1fr;align-items:start;gap:72px;}
-    .step01 .pbody{display:flex;justify-content:center;}
+    .step01{grid-template-columns:1fr 1fr;align-items:stretch;gap:72px;}
+    /* левая колонка тянется на высоту правой (с примером); счётчик плиток
+       центрируем по вертикали в оставшемся месте под заголовком */
+    .countcol{display:flex;flex-direction:column;}
+    .countcol .pbody{flex:1;align-items:center;margin-top:0;}
   }
   .phead-nonum{grid-template-columns:1fr;}
   .phead-nonum .pdesc{grid-column:1;}
   .orderbox{display:flex;flex-direction:column;gap:6px;align-items:stretch;}
   .orderbox .orderviz,.orderbox .ovcap{align-self:center;}
   .orderbox .orderviz{margin-top:16px;}
+  .pdesc-ord{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;}
+  .pdesc-ord p{margin:0;max-width:46ch;}
+  .pdesc-ord .orderviz{margin-top:4px;}
+  .excta{margin-top:16px;display:flex;flex-direction:column;align-items:flex-start;gap:11px;
+    padding:16px 18px;border:1px solid var(--accent-border);border-radius:14px;background:var(--accent-soft);}
+  .excta-q{margin:0;font-size:14.5px;line-height:1.45;color:var(--ink);font-weight:500;}
+  .excta .btn{align-self:flex-start;}
+  /* ===== обучающий тур (авто-демо) ===== */
+  .tourmask{position:fixed;inset:0;z-index:58;background:rgba(8,10,12,.45);
+    animation:tourFade .3s ease;}
+  .tourmask[hidden]{display:none;}
+  @keyframes tourFade{from{opacity:0;}to{opacity:1;}}
+  .tourpop{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:90;
+    width:min(560px,calc(100% - 24px));background:var(--surface);border:1px solid var(--accent-border);
+    border-radius:16px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55);padding:15px 18px;
+    display:flex;flex-direction:column;gap:11px;animation:tourPopIn .3s var(--ease);}
+  .tourpop[hidden]{display:none;}
+  @keyframes tourPopIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
+  .tourpop-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-ink);}
+  .tourpop-body{font-size:14.5px;line-height:1.5;color:var(--ink);}
+  .tourpop-body b{color:var(--ink);font-weight:600;}
+  .tourpop-foot{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;margin-top:1px;flex-wrap:wrap;}
+  .tourpop-skip{background:none;border:0;padding:0;color:var(--ink-3);font:inherit;font-size:13px;cursor:pointer;}
+  .tourpop-skip:hover{color:var(--ink);}
+  .tourpop-foot .btn{min-width:120px;justify-content:center;}
+  .tour-hl{box-shadow:0 0 0 3px var(--accent),0 0 0 8px var(--accent-soft)!important;
+    border-radius:12px;animation:tourPulse 1.4s var(--ease) infinite;}
+  @keyframes tourPulse{
+    0%,100%{box-shadow:0 0 0 3px var(--accent),0 0 16px 2px rgba(52,168,131,.45);}
+    50%{box-shadow:0 0 0 3px var(--accent),0 0 26px 6px rgba(52,168,131,.8);}}
+  @media(prefers-reduced-motion:reduce){.tourpop,.tourmask,.tour-hl{animation:none!important;}}
+  /* подсказка тура внутри помощника (чтобы не перекрывать его шапку) */
+  .wiztour{margin:0 0 12px;padding:12px 14px;border:1px solid var(--accent-border);border-radius:12px;
+    background:var(--accent-soft);display:flex;flex-direction:column;gap:7px;}
+  .wiztour-tag{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-ink);}
+  .wiztour-body{font-size:13.5px;line-height:1.5;color:var(--ink);}
+  .wiztour-body b{font-weight:600;}
+  .wiztour-skip{align-self:flex-start;background:none;border:0;padding:0;color:var(--ink-3);
+    font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;}
+  .wiztour-skip:hover{color:var(--ink);}
   .ovp{fill:var(--bg);stroke:var(--line-2);stroke-width:1.5;}
   .ovp1{stroke:var(--accent);fill:var(--accent-soft);}
   .ovt{fill:var(--ink-3);font-family:var(--mono);font-size:11px;}
@@ -384,20 +435,14 @@
   }
   .wizback.open{opacity:1;pointer-events:auto;}
   .wizpanel{
-    width:min(520px,100%);max-height:min(90vh,720px);overflow:auto;
+    width:min(520px,100%);
+    display:flex;flex-direction:column;overflow:hidden;
     background:var(--surface);border:1px solid var(--line);border-radius:22px;
     box-shadow:var(--panel-shadow);position:relative;
     transform:translateY(18px) scale(.97);transition:transform .4s var(--ease);
-    scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;
   }
-  .wizpanel::-webkit-scrollbar{width:10px;}
-  .wizpanel::-webkit-scrollbar-track{background:transparent;margin:22px 0;}
-  .wizpanel::-webkit-scrollbar-thumb{
-    background:var(--line-2);border-radius:10px;
-    border:3px solid transparent;background-clip:content-box;
-  }
-  .wizpanel::-webkit-scrollbar-thumb:hover{background:var(--ink-3);background-clip:content-box;}
-  .wizpanel::-webkit-scrollbar-corner{background:transparent;}
+  .annpanel{max-height:min(90vh,720px);overflow:auto;}
+  #linkWizPanel{max-height:min(calc(100dvh - 32px),900px);}
   .wizback.open .wizpanel{transform:none;}
   .wizclose{
     position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;
@@ -405,16 +450,36 @@
     font-size:20px;line-height:1;transition:all .2s;
   }
   .wizclose:hover{border-color:var(--ink-3);color:var(--ink);}
-  .wizhead{padding:26px 26px 0;}
+  .wizhead{flex-shrink:0;padding:22px 26px 0;}
   .wiztag{
     font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
     color:var(--accent-ink);margin-bottom:8px;
   }
   .wiztitle{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px;padding-right:36px;}
+  .wiztitle-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding-right:30px;}
+  .wiztitle-row .wiztitle{margin-bottom:0;padding-right:0;}
+  .wizhelp{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1px solid var(--line-2);
+    background:var(--bg);color:var(--ink-3);font-family:var(--mono);font-size:13px;font-weight:700;line-height:1;
+    cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+    transition:background .15s,color .15s,border-color .15s;}
+  .wizhelp:hover{border-color:var(--ink-3);color:var(--ink);}
+  .wizhelp.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .wizhelp[hidden]{display:none;}
+  .wizsub[hidden]{display:none;}
   .wizsub{color:var(--ink-2);font-size:14px;line-height:1.5;}
-  .wizprog{height:4px;background:var(--line);border-radius:4px;margin:18px 26px 0;overflow:hidden;}
+  .wizsub-pop{margin:2px 0 0;padding:10px 12px;border:1px solid var(--line-2);border-radius:10px;
+    background:var(--bg);color:var(--ink-2);font-size:13px;line-height:1.5;}
+  .wizsub-pop .wv-dir{font-weight:700;}
+  .wizsub-pop[hidden]{display:none;}
+  .wizprog{height:4px;background:var(--line);border-radius:4px;margin:14px 0 0;overflow:hidden;}
   .wizprog i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .5s var(--ease);}
-  .wizbody{padding:20px 26px;}
+  .wizbody{
+    flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+    padding:16px 26px;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent;
+  }
+  .wizbody::-webkit-scrollbar{width:8px;}
+  .wizbody::-webkit-scrollbar-track{background:transparent;}
+  .wizbody::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px;border:2px solid transparent;background-clip:content-box;}
   .wizcmd{
     text-align:center;padding:22px 18px;border-radius:16px;
     background:linear-gradient(165deg,var(--accent-soft),var(--bg));
@@ -446,6 +511,8 @@
   .wizpin b{color:var(--ink);font-weight:600;}
   .wizpin.wall{border-color:var(--danger-border);color:var(--danger-text);background:var(--danger-soft);}
   .wizpick{font-size:14px;font-weight:600;margin-bottom:10px;}
+  .wizhelpnote{margin:14px 0 0;font-size:14px;line-height:1.5;color:var(--ink-2);}
+  .wizhelpnote b{color:var(--ink);font-weight:600;}
   .wizchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
   .wizchip{
     display:inline-flex;align-items:center;padding:9px 14px;border-radius:10px;
@@ -508,9 +575,11 @@
   .wizlockreset input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer;}
   .wizlockreset b{color:var(--ink);}
   .wizfoot{
-    display:flex;flex-direction:column;gap:12px;padding:0 22px 22px;
+    flex-shrink:0;display:flex;flex-direction:column;gap:10px;
+    padding:14px 22px 18px;border-top:1px solid var(--line);background:var(--surface);
   }
   .wizfoot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .wizfoot-actions--single{grid-template-columns:1fr;}
   .wizfoot-actions .btn{width:100%;justify-content:center;min-width:0;}
   .wizfoot-aside{text-align:center;line-height:1.35;}
   .wizfoot-aside button{
@@ -861,24 +930,23 @@
     .vp-plate.active{animation:none!important;box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
     .vp-fb-q,.vp-fb-thanks,.vp-fb-btn,.vp-fb-down{transition-duration:.001s!important;animation:none!important;}
   }
-  /* ===== визуальный режим помощника ===== */
-  .wizmode{display:inline-flex;gap:2px;padding:3px;margin:0 auto 12px;border-radius:11px;
+  /* ===== визуальный режим помощника: 3D-замок + сегменты (высота сцены под N) ===== */
+  .wizmode{display:inline-flex;gap:3px;padding:3px;margin:0 auto 9px;border-radius:11px;
     background:var(--bg);border:1px solid var(--line-2);}
   .wizmode-b{appearance:none;border:0;background:transparent;cursor:pointer;font:inherit;
-    padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-3);
+    padding:5px 16px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--ink-3);
     transition:background .18s,color .18s;}
   .wizmode-b:hover{color:var(--ink-2);}
-  .wizmode-b.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .wizmode-b.on{background:var(--accent);color:#fff;}
   .wv{text-align:center;}
-  .wv-cap{margin:0 0 2px;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
-  .wv-cap b{color:var(--ink);}
   .wv-dir{font-weight:700;white-space:nowrap;}
   .wv-dir.l{color:var(--dir-left);}
   .wv-dir.r{color:var(--dir-right);}
-  .wv-scene{perspective:1000px;perspective-origin:50% 38%;height:150px;overflow:hidden;
+  .wizbody.wv-body{padding:4px 26px 14px;}
+  .wv-scene{perspective:1000px;perspective-origin:50% 46%;height:var(--wv-scene-h,280px);overflow:hidden;
     display:flex;align-items:center;justify-content:center;margin-top:4px;}
   .wv-lock{position:relative;width:154px;height:54px;transform-style:preserve-3d;
-    transform:translate(-46px,16px) scale(var(--wv-scale,1)) rotateX(-50deg) rotateY(-26deg);}
+    transform:translate(-46px,var(--wv-lock-y,80px)) scale(var(--wv-scale,1)) rotateX(-50deg) rotateY(-26deg);}
   .wv-layer{position:absolute;left:50%;top:50%;width:154px;height:54px;margin:-27px 0 0 -77px;
     transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -46px)) rotateX(96deg);}
   .wv-plate{position:absolute;inset:0;border-radius:12px;
@@ -892,7 +960,7 @@
   .wv-track{position:absolute;left:13px;right:13px;top:66%;height:7px;transform:translateY(-50%);border-radius:5px;
     background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.9);}
   .wv-pin{position:absolute;left:50%;top:66%;width:13px;height:13px;border-radius:50%;z-index:6;
-    transform:translate(-50%,-50%) translateZ(1.5px);
+    transform:translateX(calc(-1 * var(--shift,0px))) translate(-50%,-50%) translateZ(1.5px);
     background:radial-gradient(circle at 34% 30%,#aeb4bc,#6b7178 60%,#454a51);box-shadow:0 1px 2px rgba(0,0,0,.55);
     transition:background .35s,box-shadow .35s;}
   .wv-pin.lit{background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
@@ -919,30 +987,189 @@
   .wv-jwall{border-color:var(--danger-text)!important;border-style:dashed!important;animation:wvBuzz .4s var(--ease);}
   @keyframes wvBuzz{0%,100%{transform:translateX(var(--shift,0px));}25%{transform:translateX(calc(var(--shift,0px) - 3px));}75%{transform:translateX(calc(var(--shift,0px) + 3px));}}
   .wv-hint{margin:6px 0 10px;font-size:12.5px;color:var(--ink-3);}
-  .wv-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;max-width:430px;margin:0 auto;}
-  .wv-col{display:flex;flex-direction:column;gap:8px;}
-  .wv-opt{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .wv-on{font-size:13px;color:var(--ink-2);white-space:nowrap;}
-  .wv-on b{color:var(--ink);font-weight:700;}
-  .wv-seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden;background:var(--bg);}
-  .wv-b{appearance:none;border:0;border-left:1px solid var(--line-2);background:transparent;cursor:pointer;
-    width:34px;height:32px;font-size:15px;font-weight:700;color:var(--ink-3);line-height:1;
-    display:inline-flex;align-items:center;justify-content:center;transition:background .15s,color .15s,box-shadow .15s;}
-  .wv-b:first-child{border-left:0;}
-  .wv-b:hover{color:var(--ink);background:var(--surface);}
+  .wv-helpnote{margin:12px auto 0;max-width:430px;font-size:13px;line-height:1.5;color:var(--ink-2);text-align:center;}
+  .wv-helpnote b{color:var(--ink);font-weight:600;}
+  .wv-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;max-width:430px;margin:0 auto;}
+  .wv-col{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .wv-opt{min-width:0;display:grid;grid-template-columns:30px minmax(0,1fr);gap:6px;align-items:center;
+    padding:5px 6px;border-radius:10px;background:var(--bg);border:1px solid var(--line);
+    animation:wvAnswerIn .32s var(--ease) both;animation-delay:calc(40ms + var(--wi,0) * 18ms);}
+  .wv-tile-id{text-align:center;line-height:1.05;}
+  .wv-tile-id b{display:block;font-size:13px;color:var(--ink);font-weight:700;}
+  .wv-tile-id span{display:block;font-family:var(--mono);font-size:9px;color:var(--ink-3);}
+  .wv-seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+  .wv-b{appearance:none;cursor:pointer;min-height:34px;padding:3px 2px;border-radius:8px;
+    border:1px solid var(--line-2);background:var(--bg);color:var(--ink);line-height:1;
+    font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s,background .15s,box-shadow .15s,transform .1s;}
+  .wv-b:hover{border-color:var(--ink-3);}
+  .wv-b:active{transform:scale(.97);}
   .wv-b.wall{color:var(--danger-text);}
-  .wv-b.l.on{background:var(--dir-left-soft);color:var(--dir-left);box-shadow:inset 0 0 0 2px var(--dir-left);}
-  .wv-b.r.on{background:var(--accent-soft);color:var(--dir-right);box-shadow:inset 0 0 0 2px var(--dir-right);}
-  .wv-b.c.on{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink-3);}
-  .wv-b.wall.on{background:var(--danger-soft);color:var(--danger-text);box-shadow:inset 0 0 0 2px var(--danger-text);}
-  .wv-reset{display:flex;gap:8px;align-items:flex-start;max-width:430px;margin:12px auto 0;
-    font-size:12.5px;color:var(--ink-2);text-align:left;cursor:pointer;}
+  .wv-b.c.on{background:var(--bg);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line);}
+  .wv-b.l.on{border-color:var(--dir-left);background:var(--dir-left-soft);color:var(--dir-left);}
+  .wv-b.r.on{border-color:var(--pos);background:var(--pos-soft);color:var(--pos-ink);box-shadow:0 8px 22px -18px var(--pos);}
+  .wv-b.wall.on{border-color:var(--danger-border);background:var(--danger-soft);color:var(--danger-text);}
+  @keyframes wvAnswerIn{from{opacity:0;transform:translateY(8px) scale(.992);}to{opacity:1;transform:none;}}
+  .wv-reset{display:flex;gap:10px;align-items:flex-start;max-width:430px;margin:14px auto 2px;
+    padding:12px 14px;border-radius:12px;border:1px solid var(--danger-border);background:var(--danger-soft);
+    font-size:13px;line-height:1.45;color:var(--ink-2);text-align:left;cursor:pointer;
+    transition:border-color .2s,box-shadow .2s;}
+  .wv-reset:hover{border-color:var(--danger-text);}
+  .wv-reset:has(input:checked){border-color:var(--danger-text);box-shadow:0 0 0 1px var(--danger-border);}
   .wv-reset[hidden]{display:none!important;}
-  .wv-reset input{margin-top:2px;}
-  @media(max-width:460px){.wv-opts{grid-template-columns:1fr;}}
+  .wv-reset input{margin-top:1px;accent-color:var(--danger-text);width:16px;height:16px;flex-shrink:0;cursor:pointer;}
+  .wv-reset b{color:var(--ink);font-weight:700;}
+  @media(max-width:460px){.wv-opts{grid-template-columns:1fr;}.wv-opt{grid-template-columns:26px minmax(0,1fr);}.wv-b{min-height:32px;font-size:14px;}}
   @media(prefers-reduced-motion:reduce){
-    .wv-plate,.wv-driver,.wv-dl,.wv-dr{animation:none!important;}
+    .wv-plate,.wv-driver,.wv-dl,.wv-dr,.wv-opt{animation:none!important;}
     .wv-driver{box-shadow:0 0 0 2px var(--accent),0 0 16px 2px rgba(52,168,131,.55)!important;}
+  }
+  /* схема замка в помощнике (плоский визуал) */
+  .wizmap{margin:0 0 4px;padding:0 2px;overflow:visible;}
+  .wizmap-gamestep{
+    margin:0 0 12px;padding:14px 16px;border-radius:14px;text-align:center;
+    background:linear-gradient(165deg,var(--accent-soft),var(--bg));
+    border:2px solid var(--accent-border);
+    font-size:15px;line-height:1.45;color:var(--ink);
+  }
+  .wizmap-gamestep b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--accent-ink);}
+  .wizmap-gamestep .wizmap-game-dir{font-size:18px;font-weight:800;white-space:nowrap;}
+  .wizmap--left .wizmap-gamestep .wizmap-game-dir{color:var(--dir-left);}
+  .wizmap--right .wizmap-gamestep .wizmap-game-dir{color:var(--dir-right);}
+  .wizmap-gamestep-hint{display:block;margin-top:4px;font-size:12px;font-weight:500;color:var(--ink-3);}
+  .wizmap-scene{
+    position:relative;
+    height:clamp(150px,calc(118px + var(--wmap-n,6) * 11px),208px);
+    display:flex;align-items:center;justify-content:center;
+    perspective:820px;perspective-origin:50% 50%;
+    padding:10px 34px 4px;overflow:visible;
+  }
+  .wizmap-lock{
+    position:relative;width:118px;height:42px;transform-style:preserve-3d;
+    transform:translate(calc(var(--wmap-n,6) * -3px - 6px),calc(var(--wmap-n,6) * 7px + 8px))
+      scale(calc(.86 * var(--wmap-scale,1))) rotateX(-50deg) rotateY(-22deg);
+  }
+  .wizmap-layer{
+    position:absolute;left:50%;top:50%;width:118px;height:42px;margin:-21px 0 0 -59px;
+    transform-style:preserve-3d;transform:translateZ(calc(var(--s) * -34px)) rotateX(96deg);
+  }
+  .wizmap-plate{
+    position:absolute;inset:0;border-radius:10px;
+    background:linear-gradient(155deg,#3a4049,#171a20);border:1px solid #3a424d;
+    box-shadow:0 6px 12px -6px rgba(0,0,0,.65);
+    transform:translateX(var(--shift,0));
+    transition:transform .45s var(--ease),border-color .25s,box-shadow .25s;
+  }
+  .wizmap-plate::after{
+    content:"";position:absolute;inset:3px 5px;border-radius:7px;
+    background:linear-gradient(155deg,rgba(255,255,255,.07),transparent 45%);pointer-events:none;
+  }
+  .wizmap-plate.active{
+    border-color:var(--accent);background:linear-gradient(155deg,#2f4940,#16241f);
+    animation:wmapPulse 1.6s var(--ease) infinite;
+  }
+  .wizmap--left .wizmap-plate.active{border-color:var(--dir-left);}
+  @keyframes wmapPulse{
+    0%,100%{box-shadow:0 0 0 2px rgba(52,168,131,.75),0 0 12px 1px rgba(52,168,131,.4),0 6px 12px -6px rgba(0,0,0,.65);}
+    50%{box-shadow:0 0 0 2px rgba(52,168,131,1),0 0 20px 3px rgba(52,168,131,.65),0 6px 12px -6px rgba(0,0,0,.65);}
+  }
+  @keyframes wmapNudgeL{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) - 5px))}}
+  @keyframes wmapNudgeR{0%,100%{transform:translateX(var(--shift))}50%{transform:translateX(calc(var(--shift) + 5px))}}
+  .wizmap--left .wizmap-plate.active{animation:wmapPulse 1.6s var(--ease) infinite,wmapNudgeL 1.6s var(--ease) infinite;}
+  .wizmap--right .wizmap-plate.active{
+    animation:wmapPulse 1.6s var(--ease) infinite,wmapNudgeR 1.6s var(--ease) infinite;
+    border-color:var(--dir-right);
+  }
+  .wizmap-num{
+    position:absolute;left:-27px;top:50%;transform:translateY(-50%);
+    z-index:6;font-family:var(--mono);font-size:13px;font-weight:700;line-height:1;
+    text-align:center;color:var(--ink);
+  }
+  .wizmap-plate.active .wizmap-num{color:var(--pos-ink);}
+  .wizmap--left .wizmap-plate.active .wizmap-num{color:var(--dir-left);}
+  .wizmap--right .wizmap-plate.active .wizmap-num{color:var(--dir-right);}
+  .wizmap-track{
+    position:absolute;left:10px;right:10px;top:50%;height:6px;transform:translateY(-50%);
+    border-radius:4px;background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.85);
+  }
+  .wizmap-hole{
+    position:absolute;top:50%;width:7px;height:7px;border-radius:50%;
+    transform:translate(-50%,-50%);background:#0a0c0f;box-shadow:inset 0 1px 2px rgba(0,0,0,.9);
+  }
+  .wizmap-hole--c{box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);}
+  .wizmap-pin{
+    position:absolute;top:50%;width:12px;height:12px;border-radius:50%;z-index:4;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 34% 30%,#aeb4bc,#6b7178 60%,#454a51);
+    box-shadow:0 1px 2px rgba(0,0,0,.5);
+    transition:left .45s var(--ease),background .3s,box-shadow .3s;
+  }
+  .wizmap-plate.active .wizmap-pin{
+    background:radial-gradient(circle at 34% 30%,#f2f5f8,#c5ccd4 56%,#8a929c);
+    box-shadow:0 0 8px rgba(255,255,255,.55);
+  }
+  .wizmap-arrow{
+    position:absolute;top:50%;z-index:8;display:flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:999px;color:#fff;
+    background:var(--accent);box-shadow:0 0 14px rgba(52,168,131,.55);
+    animation:wmapArrow 1.1s var(--ease) infinite;
+  }
+  .wizmap-arrow svg{width:15px;height:15px;}
+  .wizmap-arrow--left{left:-14px;transform:translateY(-50%);}
+  .wizmap-arrow--right{right:-14px;transform:translateY(-50%);}
+  .wizmap--left .wizmap-arrow{background:var(--dir-left);box-shadow:0 0 14px rgba(37,99,201,.45);}
+  .wizmap--right .wizmap-arrow{background:var(--dir-right);}
+  @keyframes wmapArrow{0%,100%{opacity:1;transform:translateY(-50%) scale(1)}50%{opacity:.88;transform:translateY(-50%) scale(1.08)}}
+  .wizmap-plate.shifted{
+    animation:none!important;
+    border-width:2px;border-style:dashed;
+    box-shadow:0 0 0 1px rgba(255,255,255,.04),0 6px 12px -6px rgba(0,0,0,.65);
+  }
+  .wizmap-plate.shift-left{border-color:rgba(110,168,255,.55);}
+  .wizmap-plate.shift-right{border-color:rgba(98,199,164,.55);}
+  .wizmap-plate.shift-wall{border-color:var(--danger-border);}
+  .wizmap-plate.shifted .wizmap-num{color:var(--ink-2);}
+  .wizmap-plate.shift-left .wizmap-num{color:var(--dir-left);}
+  .wizmap-plate.shift-right .wizmap-num{color:var(--dir-right);}
+  .wizmap-plate.shift-wall .wizmap-num{color:var(--danger-text);}
+  .wizmap-plate.shifted .wizmap-pin{
+    background:radial-gradient(circle at 34% 30%,#ffe8a8,#d4a84a 56%,#9a7028);
+    box-shadow:0 0 8px rgba(212,168,74,.75);
+  }
+  /* штифт горит зелёным ТОЛЬКО на 4-й позиции (цель) */
+  .wizmap-pin.lit,
+  .wizmap-plate.active .wizmap-pin.lit,
+  .wizmap-plate.shifted .wizmap-pin.lit{
+    background:radial-gradient(circle at 34% 30%,#86ebc2,#34a883 56%,#1c7a5c);
+    box-shadow:0 0 9px rgba(52,168,131,.9);
+  }
+  .wizmap-react{
+    position:absolute;top:50%;z-index:7;
+    width:22px;height:22px;border-radius:999px;
+    display:flex;align-items:center;justify-content:center;
+    transform:translateY(-50%);
+    color:#fff;pointer-events:none;
+    box-shadow:0 0 12px rgba(0,0,0,.35);
+  }
+  .wizmap-react[hidden]{display:none!important;}
+  .wizmap-react svg{width:13px;height:13px;}
+  .wizmap-react--left{left:-12px;background:var(--dir-left);box-shadow:0 0 14px rgba(37,99,201,.55);}
+  .wizmap-react--right{right:-12px;background:var(--dir-right);box-shadow:0 0 14px rgba(52,168,131,.5);}
+  .wizmap-react--wall{
+    top:2px;left:50%;transform:translateX(-50%);
+    min-width:22px;height:22px;padding:0 5px;border-radius:999px;
+    font-family:var(--mono);font-size:13px;font-weight:800;line-height:1;
+    background:var(--danger-soft);border:2px solid var(--danger-border);
+    color:var(--danger-text);box-shadow:0 0 12px rgba(220,80,80,.35);
+  }
+  .wizmap-caption{
+    margin:10px 0 0;padding:11px 14px;border-radius:13px;text-align:center;
+    background:var(--bg);border:1px solid var(--line);
+    font-size:14.5px;font-weight:600;line-height:1.4;color:var(--ink);
+  }
+  .wizmap-caption b{font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  @media(prefers-reduced-motion:reduce){
+    .wizmap-plate.active,.wizmap-arrow{animation:none!important;}
   }
 
   .steps{margin-top:10px;}
@@ -1090,7 +1317,7 @@
     .phead-flip .ptitle{grid-column:1;}
     .phead-flip .flipbtn{grid-column:2;justify-self:end;}
     .phead-flip .pdesc{grid-column:1 / -1;}
-    .pdesc{grid-column:1;}
+    .pdesc{grid-column:1;margin-top:0;}
     .pbody{margin-left:0;}
     .hole{width:40px;height:40px;border-radius:11px;}
     .mini{padding-left:0;}
@@ -1134,7 +1361,6 @@
     .duo{display:grid;grid-template-columns:1fr 1fr;}
     .duo > .pstep + .pstep{border-top:none;border-left:1px solid var(--line);}
     .duo .pstep{padding:26px 22px;}
-    .duo .pdesc{min-height:92px;}
     .duo .pbody{margin-top:16px;}
     .duo .depscroll{display:flex;justify-content:center;}
     .hole,.dep{width:40px;height:40px;min-width:40px;border-radius:11px;}
@@ -1152,7 +1378,6 @@
     .duo > .pstep + .pstep{border-top:none;border-left:1px solid var(--line);}
     /* описания выравниваются по высоте, чтобы тела колонок стартовали на одном уровне;
        таблицы шагов 02 и 03 построены одинаково, поэтому строки параллельны сами собой */
-    .duo .pdesc{min-height:69px;}
     .duo .pbody{margin-top:18px;}
     .duo .depscroll{display:flex;justify-content:center;}
     .faq{padding:0 0 60px;}
@@ -1303,38 +1528,44 @@
   <main class="panel rise" style="--d:5" id="solver">
     <div class="pstep">
       <div class="step01">
-        <div>
+        <div class="countcol">
           <div class="phead">
             <span class="pnum">01</span>
-            <span class="ptitle">Сколько плиток в замке</span>
-            <p class="pdesc">Простые замки - 4-5 плиток, обычные - 6, сложные - 7-8.</p>
+            <span class="ptitle">Сколько плиток в замке<button class="pq" type="button" aria-label="Подсказка" aria-expanded="false">?</button></span>
+            <p class="pdesc" hidden>Простые замки - 4-5 плиток, обычные - 6, сложные - 7-8.</p>
           </div>
           <div class="pbody"><div class="countrow" id="countrow"></div></div>
         </div>
         <div class="orderbox">
           <div class="phead phead-nonum">
-            <span class="ptitle">Как считать плитки</span>
-            <p class="pdesc">Мини-схема замка, как ты видишь его в игре.</p>
+            <span class="ptitle">Как считать плитки<button class="pq" type="button" aria-label="Подсказка" aria-expanded="false">?</button></span>
+            <div class="pdesc pdesc-ord" hidden>
+              <p>Нумерация идёт от ближней плитки к дальней. Можно считать и с конца - от дальней к ближней: номера плиток при этом сохраняются.</p>
+              <svg class="orderviz" width="190" height="104" viewBox="0 0 190 104" fill="none" aria-hidden="true">
+                <rect x="55" y="4"  width="80"  height="15" rx="6" class="ovp"/>
+                <rect x="45" y="25" width="100" height="16" rx="7" class="ovp"/>
+                <rect x="33" y="47" width="124" height="17" rx="8" class="ovp"/>
+                <rect x="19" y="70" width="152" height="22" rx="9" class="ovp ovp1"/>
+                <text x="63" y="15.5" class="ovt">4</text>
+                <text x="141" y="15.5" class="ovt">дальняя</text>
+                <text x="53" y="37" class="ovt">3</text>
+                <text x="41" y="59.5" class="ovt">2</text>
+                <text x="28" y="85.5" class="ovt ovt1">1</text>
+                <circle cx="59"  cy="81" r="2.4" class="ovd"/>
+                <circle cx="71"  cy="81" r="2.4" class="ovd"/>
+                <circle cx="83"  cy="81" r="2.4" class="ovd"/>
+                <circle cx="95"  cy="81" r="3"   class="ovdc"/>
+                <circle cx="107" cy="81" r="2.4" class="ovd"/>
+                <circle cx="119" cy="81" r="2.4" class="ovd"/>
+                <circle cx="131" cy="81" r="2.4" class="ovd"/>
+              </svg>
+              <div class="ovcap"><b>1</b> - ближняя к тебе, счёт вглубь замка</div>
+            </div>
           </div>
-          <svg class="orderviz" width="190" height="104" viewBox="0 0 190 104" fill="none" aria-hidden="true">
-            <rect x="55" y="4"  width="80"  height="15" rx="6" class="ovp"/>
-            <rect x="45" y="25" width="100" height="16" rx="7" class="ovp"/>
-            <rect x="33" y="47" width="124" height="17" rx="8" class="ovp"/>
-            <rect x="19" y="70" width="152" height="22" rx="9" class="ovp ovp1"/>
-            <text x="63" y="15.5" class="ovt">4</text>
-            <text x="141" y="15.5" class="ovt">дальняя</text>
-            <text x="53" y="37" class="ovt">3</text>
-            <text x="41" y="59.5" class="ovt">2</text>
-            <text x="28" y="85.5" class="ovt ovt1">1</text>
-            <circle cx="59"  cy="81" r="2.4" class="ovd"/>
-            <circle cx="71"  cy="81" r="2.4" class="ovd"/>
-            <circle cx="83"  cy="81" r="2.4" class="ovd"/>
-            <circle cx="95"  cy="81" r="3"   class="ovdc"/>
-            <circle cx="107" cy="81" r="2.4" class="ovd"/>
-            <circle cx="119" cy="81" r="2.4" class="ovd"/>
-            <circle cx="131" cy="81" r="2.4" class="ovd"/>
-          </svg>
-          <div class="ovcap"><b>1</b> - ближняя к тебе, счёт вглубь замка</div>
+          <div class="excta">
+            <p class="excta-q">Первый раз здесь? Не знаешь, как работает сайт?</p>
+            <button class="btn primary" id="exampleCtaBtn" type="button">Показать на примере</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1343,12 +1574,12 @@
     <div class="pstep">
       <div class="phead phead-flip">
         <span class="pnum">02</span>
-        <span class="ptitle">Где сейчас штифты</span>
+        <span class="ptitle">Где сейчас штифты<button class="pq" type="button" aria-label="Подсказка" aria-expanded="false">?</button></span>
         <button class="flipbtn" id="flipBtn" type="button" title="Перевернуть порядок строк">
           <svg width="11" height="13" viewBox="0 0 11 13" fill="none"><path d="M3 12V1.5M3 1.5 1 4m2-2.5L5 4M8 1v10.5M8 11.5 6 9m2 2.5L10 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span id="flipLbl">1 сверху</span>
         </button>
-        <p class="pdesc">У каждой плитки 7 отверстий, счёт слева направо. Кликни на текущую позицию штифта. Цель - позиция 4 (с точкой): там штифт выскакивает вверх.</p>
+        <p class="pdesc" hidden>У каждой плитки 7 отверстий, счёт слева направо. Кликни на текущую позицию штифта. Цель - позиция 4 (с точкой): там штифт выскакивает вверх.</p>
       </div>
       <div class="pbody">
         <div class="depscroll"><table id="pins"></table></div>
@@ -1358,12 +1589,12 @@
     <div class="pstep">
       <div class="phead phead-flip">
         <span class="pnum">03</span>
-        <span class="ptitle">Связи между плитками</span>
+        <span class="ptitle">Связи между плитками<button class="pq" type="button" aria-label="Подсказка" aria-expanded="false">?</button></span>
         <button class="helpbtn" id="linkHelpBtn" type="button" disabled title="Сначала укажи позиции штифтов на шаге 02">
           <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.8" stroke="currentColor" stroke-width="1.5"/><path d="M5.4 5.1a1.8 1.8 0 0 1 3.5.7c0 1.1-1.7 1.2-1.7 2.4M7 10.2h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           Помощник
         </button>
-        <p class="pdesc">Сдвинь каждую плитку на шаг и верни обратно. Отметь, кто дёрнулся вместе с ней и куда. Связи бывают односторонними: 1 может тянуть 3, даже если 3 не тянет 1.</p>
+        <p class="pdesc" hidden>Сдвинь каждую плитку на шаг и верни обратно. Отметь, кто дёрнулся вместе с ней и куда. Связи бывают односторонними: 1 может тянуть 3, даже если 3 не тянет 1.</p>
       </div>
       <div class="pbody">
         <div id="suggestTop"></div>
@@ -1526,7 +1757,7 @@
   </div>
 </div>
 <div class="wizback" id="linkWizBack" aria-hidden="true">
-  <div class="wizpanel" role="dialog" aria-modal="true" aria-labelledby="linkWizTitle">
+  <div class="wizpanel" id="linkWizPanel" role="dialog" aria-modal="true" aria-labelledby="linkWizTitle">
     <button class="wizclose" id="linkWizClose" type="button" aria-label="Закрыть">&times;</button>
     <div class="wizhead">
       <div class="wizmode" id="linkWizMode" role="tablist" aria-label="Вид помощника">
@@ -1534,8 +1765,11 @@
         <button type="button" class="wizmode-b on" data-m="visual" role="tab">Визуал</button>
       </div>
       <div class="wiztag" id="linkWizTag">Пошаговый поиск</div>
-      <div class="wiztitle" id="linkWizTitle">Безопасные связи</div>
-      <p class="wizsub" id="linkWizSub"></p>
+      <div class="wiztitle-row">
+        <div class="wiztitle" id="linkWizTitle">Безопасные связи</div>
+        <button class="wizhelp" id="wizHelpBtn" type="button" aria-label="Подсказка к шагу" aria-expanded="false">?</button>
+      </div>
+      <div class="wizsub wizsub-pop" id="linkWizSub" hidden></div>
       <div class="wizprog" id="linkWizProg" hidden><i id="linkWizProgBar" style="width:0%"></i></div>
     </div>
     <div class="wizbody" id="linkWizBody"></div>
@@ -1546,8 +1780,8 @@
 <aside class="fixnote" id="revertNote" role="status" aria-live="polite" hidden>
   <button class="fixnote-close" id="revertNoteClose" type="button" aria-label="Закрыть">&times;</button>
   <div class="fixnote-tag">Обновление</div>
-  <p class="fixnote-title">Вернули привычный ввод</p>
-  <p class="fixnote-body">Увидел, что прошлое обновление не всем зашло — откатил обратно. Спасибо, что оставляете обратную связь!</p>
+  <p class="fixnote-title">Стало ещё лучше! (я надеюсь)</p>
+  <p class="fixnote-body">Добавил визуального помощника со схемой замка и обучающий пример «Показать на примере» — вводить связи стало проще.</p>
 </aside>
 <!-- 50k celebration + confetti (off)
 <aside class="fixnote" id="fixNote" role="status" aria-live="polite" hidden>
@@ -1948,7 +2182,14 @@ function animateRowSwap(tableIds, rerender) {
     PINS_EDITED[+b.dataset.i] = true;
     pins[+b.dataset.i] = +b.dataset.p;
     if (!TRACK_PINS_SENT) { TRACK_PINS_SENT = true; trackEvent('pins_edit'); }
-    WIZ_MEM.base = null; /* ручная правка позиций: новый снимок исходного состояния при следующем открытии мастера */
+    /* Правка штифтов = новая попытка/замок. Сбрасываем СНИМОК и ПРОГРЕСС
+       помощника (base + zero), иначе при след. открытии мастер «продолжит»
+       со старой картой известных ячеек (resume) и применит связи прошлого
+       замка - отсюда «связи сами сдвигаются». СВЯЗИ НЕ ТРОГАЕМ: они могут
+       быть верными (человек просто поправил позицию). Старое решение прячем,
+       чтобы оно не вводило в заблуждение - пользователь перевзломает. */
+    wizMemReset();
+    if (SOL) { SOL = null; document.getElementById('solution').style.display = 'none'; }
     renderPins();
   });
   var fb = document.getElementById('flipBtn');
@@ -1962,6 +2203,66 @@ function animateRowSwap(tableIds, rerender) {
     });
   };
   updateFlipLabel();
+})();
+
+/* Плавный показ/скрытие подсказки: высота + отступы + лёгкий сдвиг. Анимируем
+   и margin/padding, чтобы при сворачивании не оставалось пустого блока, а потом
+   резкого прыжка. Меряем реальные значения - работает для любой длины текста. */
+function slideClearAnim(el) {
+  el.style.maxHeight = ''; el.style.opacity = ''; el.style.transform = '';
+  el.style.overflow = ''; el.style.transition = '';
+  el.style.marginTop = ''; el.style.marginBottom = '';
+  el.style.paddingTop = ''; el.style.paddingBottom = '';
+}
+function slideToggle(el, show) {
+  if (!el) return;
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (el._slideT) { clearTimeout(el._slideT); el._slideT = 0; }
+  var EASE = 'cubic-bezier(.4,0,.2,1)';
+  var TR = 'max-height .32s ' + EASE + ', opacity .27s ease, transform .32s ' + EASE +
+           ', margin .32s ' + EASE + ', padding .32s ' + EASE;
+  if (reduce) { el.hidden = !show; slideClearAnim(el); return; }
+  if (show) {
+    el.hidden = false;
+    el.style.transition = 'none'; el.style.overflow = 'hidden';
+    el.style.maxHeight = 'none'; el.style.opacity = '1'; el.style.transform = 'none';
+    el.style.marginTop = ''; el.style.marginBottom = ''; el.style.paddingTop = ''; el.style.paddingBottom = '';
+    var cs = getComputedStyle(el);
+    var h = el.scrollHeight, mt = cs.marginTop, mb = cs.marginBottom, pt = cs.paddingTop, pb = cs.paddingBottom;
+    el.style.maxHeight = '0px'; el.style.opacity = '0'; el.style.transform = 'translateY(-6px)';
+    el.style.marginTop = '0px'; el.style.marginBottom = '0px'; el.style.paddingTop = '0px'; el.style.paddingBottom = '0px';
+    void el.offsetHeight;
+    el.style.transition = TR;
+    el.style.maxHeight = h + 'px'; el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+    el.style.marginTop = mt; el.style.marginBottom = mb; el.style.paddingTop = pt; el.style.paddingBottom = pb;
+    el._slideT = setTimeout(function () { el._slideT = 0; if (!el.hidden) slideClearAnim(el); }, 350);
+  } else {
+    var cs2 = getComputedStyle(el);
+    el.style.overflow = 'hidden'; el.style.transition = 'none';
+    el.style.maxHeight = el.scrollHeight + 'px'; el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+    el.style.marginTop = cs2.marginTop; el.style.marginBottom = cs2.marginBottom;
+    el.style.paddingTop = cs2.paddingTop; el.style.paddingBottom = cs2.paddingBottom;
+    void el.offsetHeight;
+    el.style.transition = TR;
+    el.style.maxHeight = '0px'; el.style.opacity = '0'; el.style.transform = 'translateY(-6px)';
+    el.style.marginTop = '0px'; el.style.marginBottom = '0px'; el.style.paddingTop = '0px'; el.style.paddingBottom = '0px';
+    el._slideT = setTimeout(function () { el._slideT = 0; el.hidden = true; slideClearAnim(el); }, 340);
+  }
+}
+/* «?» у заголовков шагов на главной: разворачивают/прячут описание шага */
+(function bindStepHelp() {
+  document.addEventListener('click', function (e) {
+    var q = e.target.closest ? e.target.closest('.pq') : null;
+    if (!q) return;
+    var head = q.closest('.phead');
+    var desc = head && head.querySelector('.pdesc');
+    if (!desc) return;
+    var show = desc.hidden;
+    slideToggle(desc, show);
+    q.classList.toggle('on', show);
+    q.setAttribute('aria-expanded', show ? 'true' : 'false');
+  });
 })();
 
 var DEPSTATE = [
@@ -2314,6 +2615,7 @@ function wizRenderIntro() {
   document.getElementById('linkWizTitle').textContent = 'Безопасный поиск связей';
   document.getElementById('linkWizSub').textContent =
     'Обычно один ход на плитку. Сдвинул в игре и отметил, кто дёрнулся. Дальше считаем сами.';
+  wizHelpInline();
   document.getElementById('linkWizProg').hidden = true;
   document.getElementById('linkWizBody').innerHTML =
     '<div id="wizSuggest"></div>' +
@@ -2322,11 +2624,12 @@ function wizRenderIntro() {
   document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
-    '<button class="btn primary" type="button" id="wizStart">Начать</button>' +
-    '<button class="btn ghost" type="button" id="wizCancelIntro">Отмена</button></div>';
+    '<button class="btn ghost" type="button" id="wizCancelIntro">Отмена</button>' +
+    '<button class="btn primary" type="button" id="wizStart">Начать</button></div>';
   document.getElementById('wizStart').onclick = function () { wizRenderStep(); };
   document.getElementById('wizCancelIntro').onclick = closeLinkWizard;
   wizMaybeSuggest();
+  wizSyncPanelMode();
 }
 /* подсказка связей из копилки прямо в помощнике: если расстановку уже вскрывали,
    предлагаем подставить известные связи и добить остальное пробами. */
@@ -2341,8 +2644,8 @@ function wizMaybeSuggest() {
     var lc = LOCK_COUNTS[d.code];
     var lcStr = (typeof lc === 'number') ? ' Открыт <b>' + lc + '</b> раз.' : '';
     var lead = d.name
-      ? 'Похоже на замок: <b>' + d.name + '</b>.' + lcStr + ' Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.'
-      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+      ? 'Похоже на замок: <b>' + d.name + '</b>.' + lcStr + ' <b>Важно:</b> связи верны только без прокачанного навыка взлома. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.'
+      : 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. <b>Важно:</b> связи верны только без прокачанного навыка взлома. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
     el.innerHTML = '<div class="wizsuggest">' +
       '<div class="wizsuggest-head"><span class="beta-chip">Бета</span><p>' + lead + ' ' +
       '(сейчас неизвестно <b>' + unk + '</b> ' + pluralRu(unk, 'связь', 'связи', 'связей') + ')</p></div>' +
@@ -2366,8 +2669,13 @@ function wizMaybeSuggest() {
   });
 }
 function wizFinishStep(wiz, c, movers, lockReset) {
-  if (c.helper) trackEvent('wizard_helper');
-  else trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
+  if (c.helper) {
+    trackEvent('wizard_helper');
+    // вспомогательный ход: связи этой плитки уже известны - применяем их сами,
+    // чтобы случайное «Дальше» без отметок не стёрло найденные связи.
+    movers = wizPredictKnownMovers(wiz, c);
+    lockReset = false;
+  } else trackEvent(movers.length ? 'wizard_step_marked' : 'wizard_step_none');
   var failed = wizApplyReport(wiz, c, movers);
   if (lockReset) {
     wiz.sim = WIZ_MEM.base.slice();
@@ -2388,10 +2696,16 @@ function wizSyncModeBtns() {
   var bs = document.querySelectorAll('#linkWizMode .wizmode-b');
   for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-m') === WIZ_VIEW);
 }
+function wizSyncPanelMode() {
+  var panel = document.querySelector('#linkWizBack .wizpanel');
+  if (!panel) return;
+  panel.classList.toggle('wizpanel--visual', WIZ_VIEW === 'visual' && !!LINK_WIZ && !!LINK_WIZ.cmd);
+}
 function wizSetView(v, render) {
   WIZ_VIEW = (v === 'text') ? 'text' : 'visual';
   try { localStorage.setItem('uml-wizmode', WIZ_VIEW); } catch (e) {}
   wizSyncModeBtns();
+  wizSyncPanelMode();
   if (render && LINK_WIZ && LINK_WIZ.cmd) wizRenderStep();
 }
 (function () {
@@ -2400,7 +2714,34 @@ function wizSetView(v, render) {
     var b = e.target.closest ? e.target.closest('.wizmode-b') : null;
     if (b) wizSetView(b.getAttribute('data-m'), true);
   });
+  var hb = document.getElementById('wizHelpBtn');
+  if (hb) hb.addEventListener('click', function () {
+    var sub = document.getElementById('linkWizSub');
+    if (!sub) return;
+    var show = sub.hidden;
+    slideToggle(sub, show);
+    hb.classList.toggle('on', show);
+    hb.setAttribute('aria-expanded', show ? 'true' : 'false');
+  });
 })();
+/* сброс инлайн-стилей анимации (чтобы при смене шага поповер не «залип») */
+function wizSubClearAnim(sub) {
+  if (!sub) return;
+  if (sub._slideT) { clearTimeout(sub._slideT); sub._slideT = 0; }
+  slideClearAnim(sub);
+}
+/* Экран ШАГА: описание/подсказку прячем за «?» рядом с заголовком (компактно). */
+function wizHelpStep() {
+  var sub = document.getElementById('linkWizSub'), hb = document.getElementById('wizHelpBtn');
+  if (sub) { wizSubClearAnim(sub); sub.classList.add('wizsub-pop'); sub.hidden = true; }
+  if (hb) { hb.hidden = false; hb.classList.remove('on'); hb.setAttribute('aria-expanded', 'false'); }
+}
+/* Экран интро/итога: текст показываем обычным образом, «?» прячем. */
+function wizHelpInline() {
+  var sub = document.getElementById('linkWizSub'), hb = document.getElementById('wizHelpBtn');
+  if (sub) { wizSubClearAnim(sub); sub.classList.remove('wizsub-pop'); sub.hidden = false; }
+  if (hb) hb.hidden = true;
+}
 /* для каждой не-драйверной плитки: вариант «плитка влево» и «плитка вправо» */
 function wvOptsFor(wiz, j, d) {
   var opts = wizMoverOptions(wiz.sim[j], d), L = null, R = null;
@@ -2410,57 +2751,124 @@ function wvOptsFor(wiz, j, d) {
   }
   return { l: L, r: R };
 }
-function wizRenderStepVisual(wiz, c) {
-  var i = c.driver, d = c.d, dl = d > 0;          // dl = плитка-цель едет влево
-  var WV = { pw: 154, marg: 12, center: 4 };
-  var step = (WV.pw - 2 * WV.marg) / 6;
-  var scale = Math.max(0.62, Math.min(1, 5.4 / N)); // авто-подгон высоты под число плиток
-  // 3D-замок
-  var lock = '';
+var WMAP_PW = 118, WMAP_MARG = 11, WMAP_CENTER = 4, WMAP_STEP = (WMAP_PW - 2 * WMAP_MARG) / 6;
+function wizMapPlateShift(pin) { return (WMAP_CENTER - pin) * WMAP_STEP; }
+function wizMapPinLeft(pin) { return (WMAP_MARG + WMAP_STEP * (pin - 1)) + 'px'; }
+function wizRenderSchematic(wiz, driver, d) {
+  var moveLeft = d > 0;
+  var dirCls = moveLeft ? 'wizmap--left' : 'wizmap--right';
+  var capMove = moveLeft ? 'влево' : 'вправо';
+  var scale = Math.max(0.68, Math.min(1.1, 5.94 / N)) * 1.5;
+  var sceneH = Math.round(Math.max(226, 141 + N * 24));
+  var layers = '';
   for (var p = 0; p < N; p++) {
-    var sh = (WV.center - wiz.sim[p]) * step;
-    var cls = 'wv-plate' + (p === i ? (dl ? ' wv-driver wv-dl' : ' wv-driver wv-dr') : '');
-    var inner = '<span class="wv-num">' + (p + 1) + '</span><div class="wv-track"></div>' +
-      '<div class="wv-pin' + (wiz.sim[p] === 4 ? ' lit' : '') + '"></div>';
-    if (p === i) inner += '<div class="wv-arrow">' + (dl ? WV_SVG_L : WV_SVG_R) + '</div>';
-    else inner += '<span class="wv-parrow" data-j="' + p + '"></span>';
-    lock += '<div class="wv-layer" style="--s:' + p + '"><div class="' + cls + '" data-j="' + p + '" style="--shift:' + sh + 'px">' + inner + '</div></div>';
+    var active = p === driver;
+    var pin = wiz.sim[p];
+    var holes = '';
+    for (var k = 0; k < 7; k++) {
+      holes += '<span class="wizmap-hole' + (k === 3 ? ' wizmap-hole--c' : '') + '" style="left:' +
+        (WMAP_MARG + WMAP_STEP * k) + 'px"></span>';
+    }
+    var arrow = active
+      ? '<span class="wizmap-arrow wizmap-arrow--' + (moveLeft ? 'left' : 'right') + '" aria-hidden="true">' +
+        (moveLeft ? WIZ_SVG_ARR_L : WIZ_SVG_ARR_R) + '</span>'
+      : '';
+    layers += '<div class="wizmap-layer" data-plate="' + p + '" style="--s:' + p + '"><div class="wizmap-plate' +
+      (active ? ' active' : '') + '" data-j="' + p + '" style="--shift:' + wizMapPlateShift(pin) + 'px">' +
+      '<span class="wizmap-num">' + (p + 1) + '</span><div class="wizmap-track"></div>' + holes +
+      '<span class="wizmap-pin' + (pin === 4 ? ' lit' : '') + '" style="left:' + wizMapPinLeft(pin) + '"></span>' +
+      '<span class="wizmap-react" hidden aria-hidden="true"></span>' + arrow + '</div></div>';
   }
-  // список сегментов: нечётные слева, чётные справа
-  function seg(j) {
-    var o = wvOptsFor(wiz, j, d);
-    var lWall = o.l && o.l.jerk, rWall = o.r && o.r.jerk;
-    return '<div class="wv-opt"><span class="wv-on">плитка <b>' + (j + 1) + '</b></span>' +
-      '<div class="wv-seg" data-j="' + j + '">' +
-      '<button type="button" class="wv-b l' + (lWall ? ' wall' : '') + '" data-d="l">' + (lWall ? '✕' : '←') + '</button>' +
-      '<button type="button" class="wv-b c on" data-d="c">•</button>' +
-      '<button type="button" class="wv-b r' + (rWall ? ' wall' : '') + '" data-d="r">' + (rWall ? '✕' : '→') + '</button></div></div>';
-  }
-  var colL = '', colR = '';
-  for (var j = 0; j < N; j++) { if (j === i) continue; if ((j + 1) % 2) colL += seg(j); else colR += seg(j); }
+  return '<div class="wizmap ' + dirCls + '" id="linkWizMap" role="img" aria-label="Схема замка: сдвинь плитку ' +
+    (driver + 1) + ' ' + capMove + '">' +
+    '<div class="wizmap-scene" style="--wmap-n:' + N + ';height:' + sceneH + 'px">' +
+    '<div class="wizmap-lock" style="--wmap-n:' + N + ';--wmap-scale:' + scale.toFixed(3) + '">' +
+    layers + '</div></div></div>';
+}
+/* вспомогательный ход: связи плитки уже известны - не просим отмечать, просто
+   показываем «сдвинь эту плитку (и кто за ней поедет) → Дальше»; связи мастер
+   применит сам (wizFinishStep видит c.helper). */
+function wizRenderHelperVisual(wiz, c) {
+  var i = c.driver, d = c.d, dl = d > 0;
+  var movers = wizPredictKnownMovers(wiz, c);
+  var names = movers.map(function (m) { return (m.plate + 1); });
   document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
-  document.getElementById('linkWizSub').textContent = c.helper
-    ? 'Вспомогательный ход: увести плитку от стены. Связи уже известны.'
-    : 'Шаг ' + (wiz.step + 1) + ' · сдвинь в игре и отметь, кто дёрнулся.';
+  document.getElementById('linkWizSub').innerHTML = 'Вспомогательный ход: уводим плитки от стены. Связи запишутся сами.';
+  wizHelpStep();
   wizProgress(wiz);
-  document.getElementById('linkWizBody').innerHTML =
+  var wvBody = document.getElementById('linkWizBody');
+  wvBody.classList.remove('dir-left'); wvBody.classList.add('wv-body');
+  wizSyncPanelMode();
+  var coText = movers.length
+    ? 'Вместе с ней поедут <b>' + (movers.length > 1 ? 'плитки ' : 'плитка ') + names.join(', ') + '</b> - это уже известно, отмечать ничего не нужно.'
+    : 'Никто за ней не потянется.';
+  wvBody.innerHTML =
     '<div class="wv">' +
-    '<p class="wv-cap">Сдвинь <b>плитку ' + (i + 1) + '</b> <span class="wv-dir ' + (dl ? 'l' : 'r') + '">' + (dl ? 'влево' : 'вправо') + '</span></p>' +
-    '<div class="wv-scene"><div class="wv-lock" style="--wv-scale:' + scale.toFixed(3) + '">' + lock + '</div></div>' +
-    '<p class="wv-hint">Какие плитки сдвинулись? (✕ — упёрлась в стену)</p>' +
-    '<div class="wv-opts"><div class="wv-col">' + colL + '</div><div class="wv-col">' + colR + '</div></div>' +
-    '<label class="wv-reset" id="wvReset" hidden><input type="checkbox" id="wvResetCb"> Замок сбросился (штифты вернулись к исходным)</label>' +
+    wizRenderSchematic(wiz, i, d) +
+    '<p class="wv-helpnote">Это <b>уже проверенная плитка</b>. Сдвинь её <b>' + (dl ? 'влево' : 'вправо') + '</b> в игре, чтобы освободить другую. ' + coText + ' Просто жми «Дальше».</p>' +
     '</div>';
   document.getElementById('linkWizFoot').innerHTML =
-    '<div class="wizfoot-actions">' +
-    '<button class="btn" type="button" id="wizNone">Никто не дёрнулся</button>' +
+    '<div class="wizfoot-actions wizfoot-actions--single">' +
+    '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Случайно сбросил замок</button></p>';
+  movers.forEach(function (m) {
+    var layer = wvBody.querySelector('.wizmap-layer[data-plate="' + m.plate + '"]');
+    var pl = layer && layer.querySelector('.wizmap-plate');
+    if (!pl) return;
+    var pin = pl.querySelector('.wizmap-pin'), react = pl.querySelector('.wizmap-react');
+    var newPin = wiz.sim[m.plate] + m.link * d, moveLeft = (m.link * d > 0);
+    pl.classList.add('shifted', moveLeft ? 'shift-left' : 'shift-right');
+    if (pin) { pin.style.left = wizMapPinLeft(newPin); pin.classList.toggle('lit', newPin === 4); }
+    pl.style.setProperty('--shift', wizMapPlateShift(newPin) + 'px');
+    if (react) { react.hidden = false; react.className = 'wizmap-react wizmap-react--' + (moveLeft ? 'left' : 'right'); react.innerHTML = moveLeft ? WIZ_SVG_ARR_L : WIZ_SVG_ARR_R; }
+  });
+  document.getElementById('wizConfirm').onclick = function () { wizFinishStep(wiz, c, [], false); };
+  document.getElementById('wizGameReset').onclick = function () {
+    trackEvent('wizard_reset'); wiz.sim = WIZ_MEM.base.slice(); wizSyncPins(wiz); wiz.cmd = null;
+    toast('Штифты вернулись к исходным, найденные связи сохранены'); wizRenderStep();
+  };
+}
+function wizRenderStepVisual(wiz, c) {
+  if (c.helper) { wizRenderHelperVisual(wiz, c); return; }
+  var i = c.driver, d = c.d, dl = d > 0;          // dl = плитка-цель едет влево
+  // плитки-ответы: нечётные слева, чётные справа
+  function seg(j, order) {
+    var o = wvOptsFor(wiz, j, d);
+    var lWall = o.l && o.l.jerk, rWall = o.r && o.r.jerk;
+    return '<div class="wv-opt" data-j="' + j + '" style="--wi:' + order + '">' +
+      '<div class="wv-tile-id"><b>' + (j + 1) + '</b><span>' + wiz.sim[j] + '</span></div>' +
+      '<div class="wv-seg" data-j="' + j + '">' +
+      '<button type="button" class="wv-b l' + (lWall ? ' wall' : '') + '" data-d="l">' + (lWall ? '!' : '←') + '</button>' +
+      '<button type="button" class="wv-b c on" data-d="c">—</button>' +
+      '<button type="button" class="wv-b r' + (rWall ? ' wall' : '') + '" data-d="r">' + (rWall ? '!' : '→') + '</button></div></div>';
+  }
+  var colL = '', colR = '', order = 0;
+  for (var j = 0; j < N; j++) { if (j === i) continue; var t = seg(j, order++); if ((j + 1) % 2) colL += t; else colR += t; }
+  document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
+  document.getElementById('linkWizSub').innerHTML = c.helper
+    ? 'Вспомогательный ход: увести плитку от стены. Связи уже известны.'
+    : 'Сдвинь в игре <span class="wv-dir ' + (dl ? 'l' : 'r') + '">' + (dl ? 'влево' : 'вправо') + '</span> и отметь, какие плитки дёрнулись вместе с ней. Кнопка <b>!</b> — плитка упёрлась в стену.';
+  wizHelpStep();
+  wizProgress(wiz);
+  var wvBody = document.getElementById('linkWizBody');
+  wvBody.classList.remove('dir-left');
+  wvBody.classList.add('wv-body');
+  wizSyncPanelMode();
+  wvBody.innerHTML =
+    '<div class="wv">' +
+    wizRenderSchematic(wiz, i, d) +
+    '<div class="wv-opts"><div class="wv-col">' + colL + '</div><div class="wv-col">' + colR + '</div></div>' +
+    '<label class="wv-reset" id="wvReset" hidden><input type="checkbox" id="wvResetCb">' +
+    '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label>' +
+    '</div>';
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions wizfoot-actions--single">' +
     '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
     '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Случайно сбросил замок</button></p>';
   wizBindVisualActions(wiz, c);
 }
 function wizBindVisualActions(wiz, c) {
   var i = c.driver, d = c.d;
-  var WV = { pw: 154, marg: 12, center: 4 }, step = (WV.pw - 2 * WV.marg) / 6;
   var state = {};                                 // j -> 'c'|'l'|'r'
   for (var j = 0; j < N; j++) if (j !== i) state[j] = 'c';
   var body = document.getElementById('linkWizBody');
@@ -2469,33 +2877,40 @@ function wizBindVisualActions(wiz, c) {
       var j = +s.dataset.j;
       s.querySelectorAll('.wv-b').forEach(function (b) { b.classList.toggle('on', state[j] === b.dataset.d); });
     });
-    body.querySelectorAll('.wv-plate').forEach(function (pl) {
-      var j = +pl.dataset.j; if (j === i) return;
-      var base = (WV.center - wiz.sim[j]) * step;
-      var o = wvOptsFor(wiz, j, d), pa = pl.querySelector('.wv-parrow');
-      pl.classList.remove('wv-jl', 'wv-jr', 'wv-jwall');
-      if (pa) { pa.style.display = 'none'; }
-      if (state[j] === 'l') {
-        if (o.l && o.l.jerk) { pl.classList.add('wv-jwall'); pl.style.setProperty('--shift', base + 'px'); wvArrow(pa, 'l', '#e0564f'); }
-        else { pl.classList.add('wv-jl'); pl.style.setProperty('--shift', (base - step) + 'px'); wvArrow(pa, 'l', '#6ea8ff'); }
-      } else if (state[j] === 'r') {
-        if (o.r && o.r.jerk) { pl.classList.add('wv-jwall'); pl.style.setProperty('--shift', base + 'px'); wvArrow(pa, 'r', '#e0564f'); }
-        else { pl.classList.add('wv-jr'); pl.style.setProperty('--shift', (base + step) + 'px'); wvArrow(pa, 'r', '#62c7a4'); }
-      } else { pl.style.setProperty('--shift', base + 'px'); }
+    body.querySelectorAll('.wizmap-layer').forEach(function (layer) {
+      var j = +layer.dataset.plate; if (j === i) return;
+      var pl = layer.querySelector('.wizmap-plate'); if (!pl) return;
+      var pin = pl.querySelector('.wizmap-pin'), react = pl.querySelector('.wizmap-react');
+      var basePin = wiz.sim[j];
+      pl.classList.remove('shifted', 'shift-left', 'shift-right', 'shift-wall');
+      if (react) { react.hidden = true; react.className = 'wizmap-react'; react.innerHTML = ''; }
+      if (pin) { pin.style.left = wizMapPinLeft(basePin); pin.classList.toggle('lit', basePin === 4); }
+      pl.style.setProperty('--shift', wizMapPlateShift(basePin) + 'px');
+      var o = wvOptsFor(wiz, j, d);
+      var opt = state[j] === 'l' ? o.l : (state[j] === 'r' ? o.r : null);
+      if (!opt) return;
+      var moveLeft = state[j] === 'l';
+      pl.classList.add('shifted');
+      if (react) react.hidden = false;
+      if (opt.jerk) {
+        pl.classList.add('shift-wall');
+        if (react) { react.className = 'wizmap-react wizmap-react--wall'; react.textContent = '!'; }
+      } else {
+        pl.classList.add(moveLeft ? 'shift-left' : 'shift-right');
+        if (pin) { pin.style.left = wizMapPinLeft(opt.pos); pin.classList.toggle('lit', opt.pos === 4); }
+        pl.style.setProperty('--shift', wizMapPlateShift(opt.pos) + 'px');
+        if (react) { react.className = 'wizmap-react wizmap-react--' + (moveLeft ? 'left' : 'right'); react.innerHTML = moveLeft ? WIZ_SVG_ARR_L : WIZ_SVG_ARR_R; }
+      }
     });
     var anyWall = false;
     for (var k in state) { if (state[k] === 'l' && wvJerk(k, 'l')) anyWall = true; if (state[k] === 'r' && wvJerk(k, 'r')) anyWall = true; }
     var rb = document.getElementById('wvReset'); if (rb) { rb.hidden = !anyWall; if (!anyWall) document.getElementById('wvResetCb').checked = false; }
   }
   function wvJerk(j, dir) { var o = wvOptsFor(wiz, +j, d); return dir === 'l' ? (o.l && o.l.jerk) : (o.r && o.r.jerk); }
-  function wvArrow(a, side, color) {
-    if (!a) return; a.style.display = 'block'; a.className = 'wv-parrow wv-a-' + side; a.style.color = color; a.innerHTML = side === 'l' ? WV_SVG_L : WV_SVG_R;
-  }
   body.querySelector('.wv-opts').onclick = function (e) {
     var b = e.target.closest ? e.target.closest('.wv-b') : null; if (!b) return;
     state[+b.closest('.wv-seg').dataset.j] = b.dataset.d; paint();
   };
-  document.getElementById('wizNone').onclick = function () { wizFinishStep(wiz, c, [], false); };
   document.getElementById('wizConfirm').onclick = function () {
     var movers = [], jerks = 0, slides = 0;
     for (var j = 0; j < N; j++) {
@@ -2603,6 +3018,37 @@ function wizMoverPanel(wiz, j, d) {
     '<div class="wizmover-head">Плитка <b>' + (j + 1) + '</b>: куда дёрнулась?</div>' +
     '<div class="wizposrow">' + btnL + btnR + '</div></div>';
 }
+/* текстовый вид вспомогательного хода: команда + что поедет, без отметок */
+function wizRenderHelperText(wiz, c) {
+  var i = c.driver, d = c.d;
+  var movers = wizPredictKnownMovers(wiz, c);
+  var names = movers.map(function (m) { return (m.plate + 1); });
+  document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
+  document.getElementById('linkWizSub').textContent = 'Вспомогательный ход: уводим плитки от стены. Связи запишутся сами.';
+  wizHelpStep();
+  wizProgress(wiz);
+  var coText = movers.length
+    ? 'Вместе с ней поедут <b>' + (names.length > 1 ? 'плитки ' : 'плитка ') + names.join(', ') + '</b>. Это уже известно - отмечать ничего не нужно, просто сделай ход.'
+    : 'Никто за ней не потянется. Просто сделай ход.';
+  document.getElementById('linkWizBody').innerHTML =
+    wizRenderPinsBar(wiz.sim, i) +
+    '<div class="wizcmd"><div class="lbl">Сдвинь в игре</div>' +
+    '<div class="plate">плитка <b>' + (i + 1) + '</b></div>' +
+    '<div class="move ' + (d > 0 ? 'dir-l' : 'dir-r') + '">' + (d > 0 ? WIZ_SVG_L : WIZ_SVG_R) + plateMoveLabel(d) + '</div>' +
+    '<p class="wizmeta">штифт ' + wiz.sim[i] + ' → <b>' + (wiz.sim[i] + d) + '</b> · откатывать не нужно</p></div>' +
+    '<p class="wizhelpnote">Это <b>уже проверенная плитка</b>. ' + coText + '</p>';
+  document.getElementById('linkWizBody').classList.remove('wv-body');
+  document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
+  document.getElementById('linkWizFoot').innerHTML =
+    '<div class="wizfoot-actions wizfoot-actions--single">' +
+    '<button class="btn primary" type="button" id="wizConfirm">Дальше</button></div>' +
+    '<p class="wizfoot-aside"><button type="button" id="wizGameReset">Случайно сбросил замок</button></p>';
+  document.getElementById('wizConfirm').onclick = function () { wizFinishStep(wiz, c, [], false); };
+  document.getElementById('wizGameReset').onclick = function () {
+    trackEvent('wizard_reset'); wiz.sim = WIZ_MEM.base.slice(); wizSyncPins(wiz); wiz.cmd = null;
+    toast('Штифты вернулись к исходным, найденные связи сохранены'); wizRenderStep();
+  };
+}
 function wizRenderStep() {
   var wiz = LINK_WIZ;
   if (!wiz.cmd) {
@@ -2614,7 +3060,9 @@ function wizRenderStep() {
   }
   var c = wiz.cmd, i = c.driver, d = c.d;
   wizSyncModeBtns();
+  wizSyncPanelMode();
   if (WIZ_VIEW === 'visual') { wizRenderStepVisual(wiz, c); return; }
+  if (c.helper) { wizRenderHelperText(wiz, c); return; }
   var chips = '', moversHtml = '';
   for (var j = 0; j < N; j++) {
     if (j === i) continue;
@@ -2624,7 +3072,8 @@ function wizRenderStep() {
   document.getElementById('linkWizTitle').textContent = 'Плитка ' + (i + 1);
   document.getElementById('linkWizSub').textContent = c.helper
     ? 'Вспомогательный ход: увести плитку от стены. Связи этой плитки уже известны.'
-    : 'Шаг ' + (wiz.step + 1) + ' · сдвинь в игре и отметь, кто дёрнулся.';
+    : 'Шаг ' + (wiz.step + 1) + ' · сдвинь плитку в игре и отметь, какие плитки дёрнулись вместе с ней. Откатывать ходы не нужно.';
+  wizHelpStep();
   wizProgress(wiz);
   document.getElementById('linkWizBody').innerHTML =
     wizRenderPinsBar(wiz.sim, i) +
@@ -2637,7 +3086,9 @@ function wizRenderStep() {
     '<div class="wizmovers" id="wizMovers">' + moversHtml + '</div>' +
     '<label class="wizlockreset" id="wizLockReset" hidden><input type="checkbox" id="wizLockResetCb">' +
     '<span>Это была последняя ошибка: <b>замок сбросился</b>. Связь всё равно запишем, а штифты вернём к исходным позициям.</span></label>';
+  document.getElementById('linkWizBody').classList.remove('wv-body');
   document.getElementById('linkWizBody').classList.toggle('dir-left', d > 0);
+  wizSyncPanelMode();
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
     '<button class="btn" type="button" id="wizNone">Никто не дёрнулся</button>' +
@@ -2653,6 +3104,7 @@ function wizRenderDone() {
   document.getElementById('linkWizSub').textContent = left > 0
     ? 'Часть связей не проверить, не ударившись в стену.'
     : 'Матрица обновлена. Перепроверь связи и жми «Взломать».';
+  wizHelpInline();
   document.getElementById('linkWizBody').innerHTML =
     '<p class="wizwhy">' + (left > 0
       ? 'Плитки у стены заблокировали оставшиеся пробы. <b>Эти связи не записаны</b> - если решить замок сейчас, ход может удариться в стену. Отметь их в матрице вручную или сдвинь блокирующую плитку в игре и запусти мастер заново.'
@@ -2661,11 +3113,12 @@ function wizRenderDone() {
   document.getElementById('linkWizBody').classList.remove('dir-left');
   document.getElementById('linkWizFoot').innerHTML =
     '<div class="wizfoot-actions">' +
-    '<button class="btn ghost" type="button" id="wizDone">Просто закрыть</button>' +
-    '<button class="btn primary" type="button" id="wizRestore">Вернуть штифты и закрыть</button></div>';
+    '<button class="btn ghost" type="button" id="wizRestore">Вернуть штифты и закрыть</button>' +
+    '<button class="btn primary" type="button" id="wizDone">Просто закрыть</button></div>';
   document.getElementById('wizDone').onclick = closeLinkWizard;
   document.getElementById('wizRestore').onclick = function () { wizRestorePins(); closeLinkWizard(); };
   toast(left > 0 ? 'Часть связей не проверена - впиши вручную' : 'Связи записаны в матрицу');
+  wizSyncPanelMode();
 }
 function openLinkWizard() {
   if (!pinsConfigured()) return;
@@ -2691,6 +3144,7 @@ function closeLinkWizard() {
   var back = document.getElementById('linkWizBack');
   back.classList.remove('open');
   back.setAttribute('aria-hidden', 'true');
+  wizSyncPanelMode();
   LINK_WIZ = null;
 }
 /* после мастера штифты часто сдвинуты пробами - вернуть к исходным (из снимка). */
@@ -3502,7 +3956,7 @@ var DEMO_LOCK = {
   links: [[0,1,-1],[0,2,-1],[0,4,-1],[1,3,1],[1,5,1],[2,1,1],[2,5,-1],[4,0,-1],[5,2,1],[5,4,1]]
 };
 var SKIP_METRICS_ONCE = false;
-document.getElementById('demoBtn').onclick = function () {
+function loadDemo() {
   SKIP_METRICS_ONCE = true;
   N = DEMO_LOCK.n;
   pins = DEMO_LOCK.pins.slice();
@@ -3515,7 +3969,154 @@ document.getElementById('demoBtn').onclick = function () {
   updateLinkHelpBtn();
   toast('Реальный замок: дверь башни Старого Лагеря');
   solveNow();
-};
+}
+document.getElementById('demoBtn').onclick = loadDemo;
+
+/* ===== Обучающий тур: авто-демо, ведёт через помощника на готовом замке ===== */
+(function tourModule() {
+  var mask = document.createElement('div');
+  mask.className = 'tourmask'; mask.hidden = true;
+  var pop = document.createElement('div');
+  pop.className = 'tourpop'; pop.hidden = true;
+  pop.innerHTML =
+    '<div class="tourpop-tag" id="tourTag"></div>' +
+    '<div class="tourpop-body" id="tourBody"></div>' +
+    '<div class="tourpop-foot"><button class="tourpop-skip" id="tourSkip" type="button">Пропустить</button>' +
+    '<button class="btn primary" id="tourNextBtn" type="button">Дальше</button></div>';
+  document.body.appendChild(mask);
+  document.body.appendChild(pop);
+  var elBody = pop.querySelector('#tourBody'), elTag = pop.querySelector('#tourTag'), elNext = pop.querySelector('#tourNextBtn');
+  var idx = -1, prevView = 'visual', hlEl = null, active = false;
+
+  function highlight(el) {
+    if (hlEl) hlEl.classList.remove('tour-hl');
+    hlEl = el || null;
+    if (hlEl) hlEl.classList.add('tour-hl');
+  }
+  /* грузим реальный замок, но связи плиток 4 и 6 (индексы 3 и 5) оставляем
+     неизвестными - их и «дозаполним» помощником в туре. */
+  function setupDemo() {
+    N = DEMO_LOCK.n;
+    pins = DEMO_LOCK.pins.slice();
+    link = []; for (var a = 0; a < N; a++) link.push(new Array(N).fill(0));
+    WIZ_MEM.zero = wizMk2d(false);
+    DEMO_LOCK.links.forEach(function (l) { if (l[0] === 3 || l[0] === 5) return; link[l[0]][l[1]] = l[2]; });
+    for (var i = 0; i < N; i++) for (var j = 0; j < N; j++)
+      if (i !== j && i !== 3 && i !== 5 && link[i][j] === 0) WIZ_MEM.zero[i][j] = true;
+    pinsTouched = true; WIZ_MEM.base = pins.slice(); SOL = null;
+    document.getElementById('solution').style.display = 'none';
+    renderCount(); renderPins(); renderDeps(); updateLinkHelpBtn();
+  }
+  function openWiz() {
+    prevView = WIZ_VIEW; WIZ_VIEW = 'visual';
+    WIZ_MEM.zero = WIZ_MEM.zero || wizMk2d(false);
+    LINK_WIZ = { sim: pins.slice(), cmd: null, step: 0, confirmedZero: WIZ_MEM.zero, rows0: 0 };
+    LINK_WIZ.rows0 = wizRowsLeft(LINK_WIZ);
+    var back = document.getElementById('linkWizBack');
+    back.classList.add('open'); back.setAttribute('aria-hidden', 'false');
+    wizSyncPanelMode();
+  }
+  /* вынужденный шаг помощника + заранее выбранные ответы; и кнопка помощника,
+     и кнопка тура ведут через advance текущего шага */
+  function wizStep(driver, d, answers) {
+    LINK_WIZ.cmd = { driver: driver, d: d, helper: false };
+    wizRenderStepVisual(LINK_WIZ, LINK_WIZ.cmd);
+    (answers || []).forEach(function (a) {
+      var btn = document.querySelector('.wv-seg[data-j="' + a.j + '"] .wv-b[data-d="' + a.dir + '"]');
+      if (btn) btn.click();
+    });
+    var adv = function () { var s = STEPS[idx]; if (s && s.advance) s.advance(); };
+    var cf = document.getElementById('wizConfirm'); if (cf) cf.onclick = adv;
+    var gr = document.getElementById('wizGameReset'); if (gr) gr.onclick = adv;
+    highlight(cf);
+    // подсказку тура показываем ВНУТРИ помощника, чтобы не перекрывать его шапку
+    var st = STEPS[idx], body = document.getElementById('linkWizBody');
+    if (st && body) {
+      var ban = document.createElement('div');
+      ban.className = 'wiztour';
+      ban.innerHTML = '<div class="wiztour-tag">' + st.tag + '</div>' +
+        '<div class="wiztour-body">' + st.body + '</div>' +
+        '<button class="wiztour-skip" type="button">Пропустить тур</button>';
+      body.insertBefore(ban, body.firstChild);
+      ban.querySelector('.wiztour-skip').onclick = doSkip;
+    }
+  }
+  function applyWizReport(d, answers) {
+    var movers = (answers || []).map(function (a) {
+      var o = wvOptsFor(LINK_WIZ, a.j, d), opt = a.dir === 'l' ? o.l : o.r;
+      return { plate: a.j, link: opt.link, jerk: opt.jerk };
+    });
+    wizApplyReport(LINK_WIZ, LINK_WIZ.cmd, movers);
+    wizSyncPins(LINK_WIZ);
+  }
+
+  /* плитка 6 (индекс 5) тянет плитки 3 и 5 (индексы 2,4); плитка 4 (индекс 3) изолирована.
+     Штифты плиток у края, поэтому помощник ведёт их к центру (d=-1 = вправо). */
+  var A1 = [{ j: 2, dir: 'r' }, { j: 4, dir: 'r' }];
+  var STEPS = [
+    { tag: 'Демо', mask: false, next: 'Открыть помощника',
+      body: 'Покажу на готовом примере. Положение штифтов уже введено, и <b>половина связей</b> известна. Дозаполним матрицу - это можно сделать вручную или <b>помощником</b>. Открою помощника.',
+      enter: function () { setupDemo(); },
+      advance: function () { go(1); } },
+    { tag: 'Помощник · шаг 1', wiz: true,
+      body: 'Помощник просит сдвинуть <b>плитку 6 вправо</b>. Двигаю её в игре - вместе с ней вправо поехали <b>плитки 3 и 5</b>, я их отметил. Жми <b>«Дальше»</b>.',
+      enter: function () { openWiz(); wizStep(5, -1, A1); },
+      advance: function () { applyWizReport(-1, A1); go(2); } },
+    { tag: 'Помощник · шаг 2', wiz: true,
+      body: 'Теперь <b>плитка 4</b>. Сдвинул её - <b>никто не дёрнулся</b>. Значит связей у неё нет: просто жми <b>«Дальше»</b>.',
+      enter: function () { wizStep(3, -1, []); },
+      advance: function () { applyWizReport(-1, []); go(3); } },
+    { tag: 'Готово', mask: true, next: 'Взломать',
+      body: 'Матрица заполнена полностью. Закрываем помощника - осталось нажать <b>«Взломать»</b>.',
+      enter: function () {
+        closeLinkWizard(); WIZ_VIEW = prevView;
+        pins = DEMO_LOCK.pins.slice(); pinsTouched = true; renderPins(); renderDeps();
+        highlight(document.getElementById('solveBtn'));
+      },
+      advance: function () { SKIP_METRICS_ONCE = true; solveNow(); setTimeout(function () { go(4); }, 450); } },
+    { tag: 'Решение', mask: false, next: 'Понятно',
+      body: 'Готово - вот <b>безопасный путь</b>: порядок ходов, который откроет замок и не сломает отмычку. Так же решается любой твой замок - введи штифты, заполни связи (сам или помощником) и жми «Взломать».',
+      enter: function () { highlight(null); var s = document.getElementById('solution'); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'center' }); },
+      advance: function () { stop(); } }
+  ];
+
+  function render() {
+    var s = STEPS[idx];
+    if (s.wiz) { pop.hidden = true; mask.hidden = true; return; } // подсказка внутри помощника
+    elTag.textContent = s.tag;
+    elBody.innerHTML = s.body;
+    mask.hidden = !s.mask;
+    if (s.next) { elNext.hidden = false; elNext.textContent = s.next; } else { elNext.hidden = true; }
+    pop.hidden = false;
+  }
+  function go(n) {
+    if (n >= STEPS.length) { stop(); return; }
+    idx = n;
+    if (STEPS[idx].enter) STEPS[idx].enter();
+    render();
+  }
+  function start() {
+    if (active) return;
+    active = true; idx = -1;
+    trackEvent('tour_start');
+    document.getElementById('solver').scrollIntoView({ behavior: 'auto', block: 'start' });
+    go(0);
+  }
+  function stop() {
+    active = false; highlight(null);
+    pop.hidden = true; mask.hidden = true;
+    trackEvent('tour_end');
+  }
+  function doSkip() {
+    trackEvent('tour_skip');
+    if (LINK_WIZ) { closeLinkWizard(); WIZ_VIEW = prevView; }
+    stop();
+  }
+  elNext.onclick = function () { var s = STEPS[idx]; if (s && s.advance) s.advance(); };
+  pop.querySelector('#tourSkip').onclick = doSkip;
+  var cta = document.getElementById('exampleCtaBtn');
+  if (cta) cta.onclick = function () { trackEvent('example_cta'); start(); };
+})();
 document.getElementById('resetBtn').onclick = function () {
   pinsTouched = false;
   init(6);
@@ -3851,9 +4452,9 @@ function renderSuggestBox(d) {
   var cntStr = (typeof cnt === 'number') ? ' Открыт <b>' + cnt + '</b> раз.' : '';
   var msg;
   if (d.name) {
-    msg = 'Похоже на замок: <b>' + d.name + '</b>.' + cntStr + ' Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+    msg = 'Похоже на замок: <b>' + d.name + '</b>.' + cntStr + ' <b>Важно:</b> связи верны только без прокачанного навыка взлома. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   } else {
-    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
+    msg = 'Эту расстановку уже вскрывали <b>' + d.count + '</b> раз. <b>Важно:</b> связи верны только без прокачанного навыка взлома. Проверь матрицу, а если ход не совпал - напиши в комментариях на DTF или в личку.';
   }
   trackEvent('suggest_show');
   box.innerHTML = '<div class="suggest">' +
@@ -3980,7 +4581,7 @@ try { loadLockCounts(); } catch (e) {}
 if (!bootConfigFromUrl()) init(6);
 maybeShowLinkHelpAnnounce();
 
-var REVERT_NOTE_KEY = 'uml-revert-ui-v1';
+var REVERT_NOTE_KEY = 'uml-note-visual-2026-06';
 function closeRevertNote() {
   var el = document.getElementById('revertNote');
   if (!el) return;
@@ -3989,12 +4590,15 @@ function closeRevertNote() {
   try { localStorage.setItem(REVERT_NOTE_KEY, '1'); } catch (e) {}
 }
 function maybeShowRevertNote() {
-  try { if (localStorage.getItem(REVERT_NOTE_KEY)) return; } catch (e) {}
+  var force = /[?&]note=1(\b|&|$)/.test(location.search); /* ?note=1 - превью без записи флага */
+  try { if (!force && localStorage.getItem(REVERT_NOTE_KEY)) return; } catch (e) {}
   var el = document.getElementById('revertNote');
   if (!el) return;
   setTimeout(function () {
     el.hidden = false;
     requestAnimationFrame(function () { el.classList.add('show'); });
+    /* показали один раз - больше не показываем (даже без закрытия) */
+    if (!force) { try { localStorage.setItem(REVERT_NOTE_KEY, '1'); } catch (e) {} }
   }, 1200);
 }
 (function bindRevertNote() {
