@@ -737,6 +737,11 @@
   #solution{display:none;scroll-margin-top:24px;}
   .sol-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
   .sol-title{font-size:21px;font-weight:600;letter-spacing:-.02em;}
+  /* unified solution footer: primary button on top, feedback quieter below, one divider */
+  .sol-foot{margin-top:24px;padding-top:22px;border-top:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .sol-foot .btn{min-width:220px;justify-content:center;gap:8px;}
+  .sol-foot .vp-feedback.sol-feedback{margin-top:0;padding-top:0;border-top:0;}
   .sol-meta{font-family:var(--mono);font-size:13px;color:var(--ink-3);}
   .sol-meta b{color:var(--accent-ink);font-weight:600;}
   .skel{height:54px;border-radius:13px;margin:10px 0;
@@ -3438,8 +3443,15 @@ function renderSolution(fresh) {
   html += '</div><div class="msg ok">After the last step all pins reach center - lock opens. ' +
     'Solution verified by simulation. Click steps to mark done.</div></div>' +
     '<div id="solPlayer"' + (SOL_MODE === 'play' ? '' : ' style="display:none"') + '></div>' +
-    solFeedbackHtml();
+    '<div class="sol-foot">' +
+      '<button class="btn primary" type="button" id="solNewLock">' +
+        '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3.2v9.6M3.2 8h9.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' +
+        'New lock</button>' +
+      solFeedbackHtml() +
+    '</div>';
   body.innerHTML = html;
+  var solNL = document.getElementById('solNewLock');
+  if (solNL) solNL.onclick = newLockAndScroll;
   document.getElementById('pvToggle').onchange = function () {
     PV_ON = this.checked;
     var pvs = document.querySelectorAll('.steppv');
@@ -4040,11 +4052,19 @@ document.getElementById('demoBtn').onclick = loadDemo;
   var cta = document.getElementById('exampleCtaBtn');
   if (cta) cta.onclick = function () { trackEvent('example_cta'); start(); };
 })();
-document.getElementById('resetBtn').onclick = function () {
+function resetAll() {
   pinsTouched = false;
   init(6);
   history.replaceState(null, '', location.pathname);
-};
+}
+document.getElementById('resetBtn').onclick = resetAll;
+/* "New lock" from the solution panel: reset and scroll back to the solver top */
+function newLockAndScroll() {
+  resetAll();
+  trackEvent('new_lock');
+  var s = document.getElementById('solver');
+  if (s) s.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 document.getElementById('shareBtn').onclick = function () {
   var code = encodeConfig(lockBasePins());
   var url = location.origin + location.pathname + '?lock=' + encodeURIComponent(code);
@@ -4067,7 +4087,7 @@ var TRACK_EVENTS = {
   wizard_helper: 1, wizard_done: 1, wizard_done_partial: 1, wizard_reset: 1,
   suggest_show: 1, suggest_apply_ok: 1, suggest_apply_fail: 1, suggest_skip: 1,
   lock_url_ok: 1, lock_url_fail: 1,
-  pins_edit: 1
+  pins_edit: 1, new_lock: 1
 };
 var TRACK_SID = (function () {
   try {
